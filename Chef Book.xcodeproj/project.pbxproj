@@ -1,0 +1,626 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6375465E2C2648BB002FEFA3 /* Chef_BookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6375465D2C2648BB002FEFA3 /* Chef_BookApp.swift */; };
+		637546602C2648BB002FEFA3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6375465F2C2648BB002FEFA3 /* ContentView.swift */; };
+		637546622C2648BB002FEFA3 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637546612C2648BB002FEFA3 /* Item.swift */; };
+		637546642C2648BD002FEFA3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 637546632C2648BD002FEFA3 /* Assets.xcassets */; };
+		637546682C2648BD002FEFA3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 637546672C2648BD002FEFA3 /* Preview Assets.xcassets */; };
+		637546722C2648BD002FEFA3 /* Chef_BookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637546712C2648BD002FEFA3 /* Chef_BookTests.swift */; };
+		6375467C2C2648BD002FEFA3 /* Chef_BookUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6375467B2C2648BD002FEFA3 /* Chef_BookUITests.swift */; };
+		6375467E2C2648BD002FEFA3 /* Chef_BookUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6375467D2C2648BD002FEFA3 /* Chef_BookUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6375466E2C2648BD002FEFA3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 637546522C2648BB002FEFA3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 637546592C2648BB002FEFA3;
+			remoteInfo = "Chef Book";
+		};
+		637546782C2648BD002FEFA3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 637546522C2648BB002FEFA3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 637546592C2648BB002FEFA3;
+			remoteInfo = "Chef Book";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		6375465A2C2648BB002FEFA3 /* Chef Book.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chef Book.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6375465D2C2648BB002FEFA3 /* Chef_BookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chef_BookApp.swift; sourceTree = "<group>"; };
+		6375465F2C2648BB002FEFA3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		637546612C2648BB002FEFA3 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		637546632C2648BD002FEFA3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		637546652C2648BD002FEFA3 /* Chef_Book.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Chef_Book.entitlements; sourceTree = "<group>"; };
+		637546672C2648BD002FEFA3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		6375466D2C2648BD002FEFA3 /* Chef BookTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Chef BookTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		637546712C2648BD002FEFA3 /* Chef_BookTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chef_BookTests.swift; sourceTree = "<group>"; };
+		637546772C2648BD002FEFA3 /* Chef BookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Chef BookUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6375467B2C2648BD002FEFA3 /* Chef_BookUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chef_BookUITests.swift; sourceTree = "<group>"; };
+		6375467D2C2648BD002FEFA3 /* Chef_BookUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chef_BookUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		637546572C2648BB002FEFA3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6375466A2C2648BD002FEFA3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		637546742C2648BD002FEFA3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		637546512C2648BB002FEFA3 = {
+			isa = PBXGroup;
+			children = (
+				6375465C2C2648BB002FEFA3 /* Chef Book */,
+				637546702C2648BD002FEFA3 /* Chef BookTests */,
+				6375467A2C2648BD002FEFA3 /* Chef BookUITests */,
+				6375465B2C2648BB002FEFA3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6375465B2C2648BB002FEFA3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6375465A2C2648BB002FEFA3 /* Chef Book.app */,
+				6375466D2C2648BD002FEFA3 /* Chef BookTests.xctest */,
+				637546772C2648BD002FEFA3 /* Chef BookUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6375465C2C2648BB002FEFA3 /* Chef Book */ = {
+			isa = PBXGroup;
+			children = (
+				6375465D2C2648BB002FEFA3 /* Chef_BookApp.swift */,
+				6375465F2C2648BB002FEFA3 /* ContentView.swift */,
+				637546612C2648BB002FEFA3 /* Item.swift */,
+				637546632C2648BD002FEFA3 /* Assets.xcassets */,
+				637546652C2648BD002FEFA3 /* Chef_Book.entitlements */,
+				637546662C2648BD002FEFA3 /* Preview Content */,
+			);
+			path = "Chef Book";
+			sourceTree = "<group>";
+		};
+		637546662C2648BD002FEFA3 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				637546672C2648BD002FEFA3 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		637546702C2648BD002FEFA3 /* Chef BookTests */ = {
+			isa = PBXGroup;
+			children = (
+				637546712C2648BD002FEFA3 /* Chef_BookTests.swift */,
+			);
+			path = "Chef BookTests";
+			sourceTree = "<group>";
+		};
+		6375467A2C2648BD002FEFA3 /* Chef BookUITests */ = {
+			isa = PBXGroup;
+			children = (
+				6375467B2C2648BD002FEFA3 /* Chef_BookUITests.swift */,
+				6375467D2C2648BD002FEFA3 /* Chef_BookUITestsLaunchTests.swift */,
+			);
+			path = "Chef BookUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		637546592C2648BB002FEFA3 /* Chef Book */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 637546812C2648BD002FEFA3 /* Build configuration list for PBXNativeTarget "Chef Book" */;
+			buildPhases = (
+				637546562C2648BB002FEFA3 /* Sources */,
+				637546572C2648BB002FEFA3 /* Frameworks */,
+				637546582C2648BB002FEFA3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Chef Book";
+			productName = "Chef Book";
+			productReference = 6375465A2C2648BB002FEFA3 /* Chef Book.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6375466C2C2648BD002FEFA3 /* Chef BookTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 637546842C2648BD002FEFA3 /* Build configuration list for PBXNativeTarget "Chef BookTests" */;
+			buildPhases = (
+				637546692C2648BD002FEFA3 /* Sources */,
+				6375466A2C2648BD002FEFA3 /* Frameworks */,
+				6375466B2C2648BD002FEFA3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6375466F2C2648BD002FEFA3 /* PBXTargetDependency */,
+			);
+			name = "Chef BookTests";
+			productName = "Chef BookTests";
+			productReference = 6375466D2C2648BD002FEFA3 /* Chef BookTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		637546762C2648BD002FEFA3 /* Chef BookUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 637546872C2648BD002FEFA3 /* Build configuration list for PBXNativeTarget "Chef BookUITests" */;
+			buildPhases = (
+				637546732C2648BD002FEFA3 /* Sources */,
+				637546742C2648BD002FEFA3 /* Frameworks */,
+				637546752C2648BD002FEFA3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				637546792C2648BD002FEFA3 /* PBXTargetDependency */,
+			);
+			name = "Chef BookUITests";
+			productName = "Chef BookUITests";
+			productReference = 637546772C2648BD002FEFA3 /* Chef BookUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		637546522C2648BB002FEFA3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					637546592C2648BB002FEFA3 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					6375466C2C2648BD002FEFA3 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 637546592C2648BB002FEFA3;
+					};
+					637546762C2648BD002FEFA3 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 637546592C2648BB002FEFA3;
+					};
+				};
+			};
+			buildConfigurationList = 637546552C2648BB002FEFA3 /* Build configuration list for PBXProject "Chef Book" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 637546512C2648BB002FEFA3;
+			productRefGroup = 6375465B2C2648BB002FEFA3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				637546592C2648BB002FEFA3 /* Chef Book */,
+				6375466C2C2648BD002FEFA3 /* Chef BookTests */,
+				637546762C2648BD002FEFA3 /* Chef BookUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		637546582C2648BB002FEFA3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				637546682C2648BD002FEFA3 /* Preview Assets.xcassets in Resources */,
+				637546642C2648BD002FEFA3 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6375466B2C2648BD002FEFA3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		637546752C2648BD002FEFA3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		637546562C2648BB002FEFA3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				637546602C2648BB002FEFA3 /* ContentView.swift in Sources */,
+				637546622C2648BB002FEFA3 /* Item.swift in Sources */,
+				6375465E2C2648BB002FEFA3 /* Chef_BookApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		637546692C2648BD002FEFA3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				637546722C2648BD002FEFA3 /* Chef_BookTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		637546732C2648BD002FEFA3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6375467C2C2648BD002FEFA3 /* Chef_BookUITests.swift in Sources */,
+				6375467E2C2648BD002FEFA3 /* Chef_BookUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6375466F2C2648BD002FEFA3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 637546592C2648BB002FEFA3 /* Chef Book */;
+			targetProxy = 6375466E2C2648BD002FEFA3 /* PBXContainerItemProxy */;
+		};
+		637546792C2648BD002FEFA3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 637546592C2648BB002FEFA3 /* Chef Book */;
+			targetProxy = 637546782C2648BD002FEFA3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		6375467F2C2648BD002FEFA3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		637546802C2648BD002FEFA3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		637546822C2648BD002FEFA3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Chef Book/Chef_Book.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Chef Book/Preview Content\"";
+				DEVELOPMENT_TEAM = 563QLP6S55;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bwt.Chef-Book";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		637546832C2648BD002FEFA3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Chef Book/Chef_Book.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Chef Book/Preview Content\"";
+				DEVELOPMENT_TEAM = 563QLP6S55;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bwt.Chef-Book";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		637546852C2648BD002FEFA3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 563QLP6S55;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bwt.Chef-BookTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Chef Book.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Chef Book";
+			};
+			name = Debug;
+		};
+		637546862C2648BD002FEFA3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 563QLP6S55;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bwt.Chef-BookTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Chef Book.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Chef Book";
+			};
+			name = Release;
+		};
+		637546882C2648BD002FEFA3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 563QLP6S55;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bwt.Chef-BookUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Chef Book";
+			};
+			name = Debug;
+		};
+		637546892C2648BD002FEFA3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 563QLP6S55;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bwt.Chef-BookUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Chef Book";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		637546552C2648BB002FEFA3 /* Build configuration list for PBXProject "Chef Book" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6375467F2C2648BD002FEFA3 /* Debug */,
+				637546802C2648BD002FEFA3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		637546812C2648BD002FEFA3 /* Build configuration list for PBXNativeTarget "Chef Book" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				637546822C2648BD002FEFA3 /* Debug */,
+				637546832C2648BD002FEFA3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		637546842C2648BD002FEFA3 /* Build configuration list for PBXNativeTarget "Chef BookTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				637546852C2648BD002FEFA3 /* Debug */,
+				637546862C2648BD002FEFA3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		637546872C2648BD002FEFA3 /* Build configuration list for PBXNativeTarget "Chef BookUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				637546882C2648BD002FEFA3 /* Debug */,
+				637546892C2648BD002FEFA3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 637546522C2648BB002FEFA3 /* Project object */;
+}

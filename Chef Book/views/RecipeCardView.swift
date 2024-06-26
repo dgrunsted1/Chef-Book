@@ -21,6 +21,7 @@ struct RecipeCardView: View {
                     .clipped()
             } placeholder: {
                 ProgressView()
+                    .frame(width: 50, height: 50)
             }
             
             VStack(alignment: .leading) {
@@ -59,7 +60,7 @@ struct RecipeCardView: View {
                 Image(systemName: "plus.app.fill")
                     .resizable()
                     .frame(width:30, height:30)
-                    .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
+                    .cornerRadius(10)
                     .foregroundColor(Color("MyPrimaryColor"))
             }
         }

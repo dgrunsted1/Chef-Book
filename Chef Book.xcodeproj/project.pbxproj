@@ -15,6 +15,14 @@
 		637546722C2648BD002FEFA3 /* Chef_BookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637546712C2648BD002FEFA3 /* Chef_BookTests.swift */; };
 		6375467C2C2648BD002FEFA3 /* Chef_BookUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6375467B2C2648BD002FEFA3 /* Chef_BookUITests.swift */; };
 		6375467E2C2648BD002FEFA3 /* Chef_BookUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6375467D2C2648BD002FEFA3 /* Chef_BookUITestsLaunchTests.swift */; };
+		6375468E2C264BAA002FEFA3 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6375468D2C264BAA002FEFA3 /* TodayView.swift */; };
+		637546902C264BCC002FEFA3 /* RecipesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6375468F2C264BCC002FEFA3 /* RecipesView.swift */; };
+		637546922C264BE8002FEFA3 /* CreateMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637546912C264BE8002FEFA3 /* CreateMenuView.swift */; };
+		637546942C264BFE002FEFA3 /* MyMenusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637546932C264BFE002FEFA3 /* MyMenusView.swift */; };
+		637546962C264C16002FEFA3 /* AddRecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637546952C264C16002FEFA3 /* AddRecipeView.swift */; };
+		637546992C267DA3002FEFA3 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637546982C267DA3002FEFA3 /* Recipe.swift */; };
+		6375469B2C268370002FEFA3 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6375469A2C268370002FEFA3 /* Ingredient.swift */; };
+		6375469D2C26902A002FEFA3 /* RecipeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6375469C2C26902A002FEFA3 /* RecipeCardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +55,14 @@
 		637546772C2648BD002FEFA3 /* Chef BookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Chef BookUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6375467B2C2648BD002FEFA3 /* Chef_BookUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chef_BookUITests.swift; sourceTree = "<group>"; };
 		6375467D2C2648BD002FEFA3 /* Chef_BookUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chef_BookUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		6375468D2C264BAA002FEFA3 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		6375468F2C264BCC002FEFA3 /* RecipesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesView.swift; sourceTree = "<group>"; };
+		637546912C264BE8002FEFA3 /* CreateMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMenuView.swift; sourceTree = "<group>"; };
+		637546932C264BFE002FEFA3 /* MyMenusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMenusView.swift; sourceTree = "<group>"; };
+		637546952C264C16002FEFA3 /* AddRecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipeView.swift; sourceTree = "<group>"; };
+		637546982C267DA3002FEFA3 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
+		6375469A2C268370002FEFA3 /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
+		6375469C2C26902A002FEFA3 /* RecipeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +113,8 @@
 		6375465C2C2648BB002FEFA3 /* Chef Book */ = {
 			isa = PBXGroup;
 			children = (
+				637546972C267D91002FEFA3 /* Models */,
+				6375468A2C264B2B002FEFA3 /* views */,
 				6375465D2C2648BB002FEFA3 /* Chef_BookApp.swift */,
 				6375465F2C2648BB002FEFA3 /* ContentView.swift */,
 				637546612C2648BB002FEFA3 /* Item.swift */,
@@ -130,6 +148,28 @@
 				6375467D2C2648BD002FEFA3 /* Chef_BookUITestsLaunchTests.swift */,
 			);
 			path = "Chef BookUITests";
+			sourceTree = "<group>";
+		};
+		6375468A2C264B2B002FEFA3 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				6375468D2C264BAA002FEFA3 /* TodayView.swift */,
+				6375468F2C264BCC002FEFA3 /* RecipesView.swift */,
+				637546912C264BE8002FEFA3 /* CreateMenuView.swift */,
+				637546932C264BFE002FEFA3 /* MyMenusView.swift */,
+				637546952C264C16002FEFA3 /* AddRecipeView.swift */,
+				6375469C2C26902A002FEFA3 /* RecipeCardView.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		637546972C267D91002FEFA3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				637546982C267DA3002FEFA3 /* Recipe.swift */,
+				6375469A2C268370002FEFA3 /* Ingredient.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,7 +303,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				637546602C2648BB002FEFA3 /* ContentView.swift in Sources */,
+				6375469D2C26902A002FEFA3 /* RecipeCardView.swift in Sources */,
+				637546922C264BE8002FEFA3 /* CreateMenuView.swift in Sources */,
+				6375469B2C268370002FEFA3 /* Ingredient.swift in Sources */,
+				637546962C264C16002FEFA3 /* AddRecipeView.swift in Sources */,
 				637546622C2648BB002FEFA3 /* Item.swift in Sources */,
+				637546942C264BFE002FEFA3 /* MyMenusView.swift in Sources */,
+				637546902C264BCC002FEFA3 /* RecipesView.swift in Sources */,
+				637546992C267DA3002FEFA3 /* Recipe.swift in Sources */,
+				6375468E2C264BAA002FEFA3 /* TodayView.swift in Sources */,
 				6375465E2C2648BB002FEFA3 /* Chef_BookApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -445,8 +493,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "bwt.Chef-Book";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -483,8 +533,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "bwt.Chef-Book";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

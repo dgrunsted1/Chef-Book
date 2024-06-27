@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecipesView: View {
-    @Binding var recipes: [Recipe]
+    @EnvironmentObject var network: Network
     @State private var search_val: String = ""
     @State private var sort_val: String = "most recent"
     @State private var selected_cat: String = "category"
@@ -26,7 +26,7 @@ struct RecipesView: View {
     
     var body: some View {
         VStack {
-            List($recipes) { $recipe in
+            List(network.recipes) { recipe in
                 RecipeCardView(recipe: recipe, edit: false)
             }
             .listStyle(PlainListStyle())
@@ -39,9 +39,9 @@ struct RecipesView: View {
                         )
                         .padding([.leading, .trailing])
                         .focused($search_field_is_focused)
-                        .onSubmit {
-                            //                            validate(name: $search_val)
-                        }
+//                        .onSubmit {
+//                            //                            validate(name: $search_val)
+//                        }
                         .autocorrectionDisabled()
                         .disableAutocorrection(true)
                         .overlay(
@@ -134,6 +134,9 @@ struct RecipesView: View {
                 .padding([.bottom], 10)
             }
         }
+        .onAppear {
+            network.getRecipes()
+        }
     }
         
         
@@ -141,5 +144,6 @@ struct RecipesView: View {
 
 
 #Preview {
-    RecipesView(recipes: .constant(Recipe.sampleData))
+    RecipesView()
+        .environmentObject(Network())
 }

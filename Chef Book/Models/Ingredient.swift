@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Ingredient {
+struct Ingredient: Decodable {
     var quantity: Double
     var unit: String
     var name: String

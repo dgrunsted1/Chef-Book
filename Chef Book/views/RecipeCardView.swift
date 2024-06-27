@@ -14,7 +14,7 @@ struct RecipeCardView: View {
     @ViewBuilder
     var body: some View {
         HStack {
-            AsyncImage(url: URL(string: recipe.images[0])) { image in
+            AsyncImage(url: URL(string: recipe.image)) { image in
                 image.resizable()
                     .frame(width: 50, height: 50)
                     .aspectRatio(contentMode: .fill)
@@ -72,10 +72,11 @@ struct RecipeCardView: View {
 }
 
 struct CardView_Previews: PreviewProvider {
-    static var recipe = Recipe.sampleData[0]
+//    var network = Network()
     static var previews: some View {
-        RecipeCardView(recipe: recipe, edit: false)
+        RecipeCardView(recipe: Recipe.sampleData[0], edit: false)
             .previewLayout(.fixed(width: 355, height: 75))
+//
     }
 }
 

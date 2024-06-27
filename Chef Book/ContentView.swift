@@ -10,8 +10,8 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-    @State private var recipes = Recipe.sampleData
+    @EnvironmentObject var network: Network
+    private var recipes: [Recipe] = []
 
     
     var body: some View {
@@ -28,30 +28,17 @@ struct ContentView: View {
                 AddRecipeView()
                     .tabItem { Label("Add", systemImage: "plus.circle") }
                 
-                RecipesView(recipes: $recipes)
+                RecipesView()
                     .tabItem { Label("Recipes", systemImage: "globe.americas") }
+                    .environmentObject(network)
             }
             .accentColor(Color("MyPrimaryColor"))
     }
-        
-        private func addItem() {
-            withAnimation {
-                let newItem = Item(timestamp: Date())
-                modelContext.insert(newItem)
-            }
-        }
-        
-        private func deleteItems(offsets: IndexSet) {
-            withAnimation {
-                for index in offsets {
-                    modelContext.delete(items[index])
-                }
-            }
-        }
-    }
+}
 
 
 #Preview {
     ContentView()
         .modelContainer(for: Item.self, inMemory: true)
+        .environmentObject(Network())
 }

@@ -10,7 +10,7 @@ import SwiftData
 
 @main
 struct Chef_BookApp: App {
-    
+    var network = Network()
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -28,6 +28,7 @@ struct Chef_BookApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(network)
         }
         .modelContainer(sharedModelContainer)
     }

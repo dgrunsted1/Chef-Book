@@ -9,16 +9,16 @@ import Foundation
 import SwiftData
 
 //@Model
-struct Recipe: Identifiable{
-    let id: UUID
+struct Recipe: Identifiable, Decodable {
+    let id: String
     var title: String
     var desc: String
     var link_to_original_web_page: String
     var author: String
     var time_in_seconds: Int
     var directions: [String]
-    var images: [String]
-    var servings: Int
+    var image: String
+    var servings: String
     var cuisine: String
     var country: String
     var notes: [String]
@@ -27,7 +27,7 @@ struct Recipe: Identifiable{
     var made: Bool
     var favorite: Bool
     
-    init(id: UUID = UUID(), title: String, description: String, link_to_original_web_page: String, author: String, time_in_seconds: Int, directions: [String], images: [String], servings: Int, cuisine: String, country: String, notes: [String], ingredients: [Ingredient], category: String, made: Bool, favorite: Bool) {
+    init(id: String, title: String, description: String, link_to_original_web_page: String, author: String, time_in_seconds: Int, directions: [String], image: String, servings: String, cuisine: String, country: String, notes: [String], ingredients: [Ingredient], category: String, made: Bool, favorite: Bool) {
         self.id = id
         self.title = title
         self.desc = description
@@ -35,7 +35,7 @@ struct Recipe: Identifiable{
         self.author = author
         self.time_in_seconds = time_in_seconds
         self.directions = directions
-        self.images = images
+        self.image = image
         self.servings = servings
         self.cuisine = cuisine
         self.country = country
@@ -57,7 +57,7 @@ extension Recipe {
 extension Recipe {
     static let sampleData: [Recipe] =
     [
-        Recipe(title: "Lemon  Chicken Piccata 1",
+        Recipe(id: "12", title: "Lemon  Chicken Piccata 1",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -70,8 +70,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],
@@ -91,7 +91,7 @@ extension Recipe {
                category: "Pasta",
                made: true,
                favorite: false),
-        Recipe(title: "Lemon  Chicken Piccata 2",
+        Recipe(id: "11", title: "Lemon  Chicken Piccata 2",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -104,8 +104,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],
@@ -125,7 +125,7 @@ extension Recipe {
                category: "Pasta",
                made: true,
                favorite: false),
-        Recipe(title: "Lemon  Chicken Piccata 3",
+        Recipe(id: "10", title: "Lemon  Chicken Piccata 3",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -138,8 +138,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],
@@ -159,7 +159,7 @@ extension Recipe {
                category: "Pasta",
                made: true,
                favorite: false),
-        Recipe(title: "Lemon  Chicken Piccata 1",
+        Recipe(id: "9", title: "Lemon  Chicken Piccata 1",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -172,8 +172,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],
@@ -193,7 +193,7 @@ extension Recipe {
                category: "Pasta",
                made: true,
                favorite: false),
-        Recipe(title: "Lemon  Chicken Piccata 2",
+        Recipe(id: "8", title: "Lemon  Chicken Piccata 2",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -206,8 +206,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],
@@ -227,7 +227,7 @@ extension Recipe {
                category: "Pasta",
                made: true,
                favorite: false),
-        Recipe(title: "Lemon  Chicken Piccata 3",
+        Recipe(id: "7", title: "Lemon  Chicken Piccata 3",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -240,8 +240,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],
@@ -261,7 +261,7 @@ extension Recipe {
                category: "Pasta",
                made: true,
                favorite: false),
-        Recipe(title: "Lemon  Chicken Piccata 1",
+        Recipe(id: "6", title: "Lemon  Chicken Piccata 1",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -274,8 +274,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],
@@ -295,7 +295,7 @@ extension Recipe {
                category: "Pasta",
                made: true,
                favorite: false),
-        Recipe(title: "Lemon  Chicken Piccata 2",
+        Recipe(id: "5", title: "Lemon  Chicken Piccata 2",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -308,8 +308,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],
@@ -329,7 +329,7 @@ extension Recipe {
                category: "Pasta",
                made: true,
                favorite: false),
-        Recipe(title: "Lemon  Chicken Piccata 3",
+        Recipe(id: "4", title: "Lemon  Chicken Piccata 3",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -342,8 +342,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],
@@ -363,7 +363,7 @@ extension Recipe {
                category: "Pasta",
                made: true,
                favorite: false),
-        Recipe(title: "Lemon  Chicken Piccata 1",
+        Recipe(id: "3", title: "Lemon  Chicken Piccata 1",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -376,8 +376,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],
@@ -397,7 +397,7 @@ extension Recipe {
                category: "Pasta",
                made: true,
                favorite: false),
-        Recipe(title: "Lemon  Chicken Piccata 2",
+        Recipe(id: "2", title: "Lemon  Chicken Piccata 2",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -410,8 +410,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],
@@ -431,7 +431,7 @@ extension Recipe {
                category: "Pasta",
                made: true,
                favorite: false),
-        Recipe(title: "Lemon  Chicken Piccata 3",
+        Recipe(id: "1", title: "Lemon  Chicken Piccata 3",
                description: "",
                link_to_original_web_page: "https://damndelicious.net/2016/02/26/easy-lemon-chicken-piccata/",
                author: "",
@@ -444,8 +444,8 @@ extension Recipe {
                             "Stir in chicken broth, wine and lemon juice. Cook, stirring occasionally, until slightly reduced, about 5 minutes.",
                             "Gradually whisk in heavy cream until slightly thickened, about 3-4 minutes",
                             "season with salt and pepper, to taste. Stir in capers."],
-               images: ["https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg"],
-               servings: 4,
+               image: "https://s23209.pcdn.co/wp-content/uploads/2016/02/Easy-Lemon-Chicken-Piccata220602_DD_Easy-Lem-Chx-Piccata_397-1365x2048.jpg",
+               servings: "4",
                cuisine: "Mediteranean",
                country: "France",
                notes: [],

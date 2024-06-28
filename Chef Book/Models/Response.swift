@@ -72,3 +72,31 @@ struct CatData: Decodable {
     var collectionName: String
     var id: String
 }
+
+struct IngredientResponse: Decodable {
+    var page: Int
+    var perPage: Int
+    var totalItems: Int
+    var items: [IngredientRecipeData]
+}
+
+struct ExpandIngr: Decodable {
+    var recipe: [RecipeData]
+}
+
+struct IngredientRecipeData: Decodable {
+    let collectionId: String
+    let collectionName: String
+    let created: String
+    let id: String
+    var ingredient: String
+    var quantity: Double
+    var recipe: [String]
+    var symbol: String
+    var unit: String
+    var unitPlural: String
+    var updated: String
+    var expand: ExpandIngr
+}
+
+

@@ -35,9 +35,9 @@ struct RecipesView: View {
                         )
                         .padding([.leading, .trailing])
                         .focused($search_field_is_focused)
-//                        .onSubmit {
-//                            //                            validate(name: $search_val)
-//                        }
+                        .onChange (of: search_val) {
+                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
+                        }
                         .autocorrectionDisabled()
                         .disableAutocorrection(true)
                         .overlay(
@@ -60,7 +60,7 @@ struct RecipesView: View {
                                     .stroke(Color("MyPrimaryColor"), lineWidth: 2)
                             )
                         .onChange(of: sort_val, initial: true) {
-                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
                                 }
                         
                     }
@@ -73,7 +73,7 @@ struct RecipesView: View {
                             }
                         }
                         .onChange(of: selected_cat, initial: true) {
-                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
                                 }
                     } label: {
                         Text(selected_cat)
@@ -92,7 +92,7 @@ struct RecipesView: View {
                             }
                         }
                         .onChange(of: selected_cuisine, initial: true) {
-                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
                                 }
                     } label: {
                         Text(selected_cuisine)
@@ -111,7 +111,7 @@ struct RecipesView: View {
                             }
                         }
                         .onChange(of: selected_country, initial: true) {
-                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
                                 }
                     } label: {
                         Text(selected_country)
@@ -130,7 +130,7 @@ struct RecipesView: View {
                             }
                         }
                         .onChange(of: selected_country, initial: true) {
-                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
                                 }
                     } label: {
                         Text(selected_author)
@@ -148,7 +148,7 @@ struct RecipesView: View {
             }
         }
         .onAppear {
-            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
             network.getCategories()
             network.getCuisines()
             network.getCountries()

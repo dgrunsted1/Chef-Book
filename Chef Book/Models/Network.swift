@@ -9,9 +9,15 @@ import SwiftUI
 
 class Network: ObservableObject {
     @Published var recipes: [Recipe] = []
+    @Published var categories: [String] = []
+    @Published var cuisines: [String] = []
+    @Published var countries: [String] = []
+    @Published var authors: [String] = []
+
     
-    func getRecipes() {
-        guard let url = URL(string: "https://db.ivebeenwastingtime.com/api/collections/recipes/records?page=1&perPage=30&filter=made%3Dtrue&expand=ingr_list&sort=-created") else { fatalError("Missing URL") }
+    func getRecipes(category: String?, cuisine: String?, country: String?, author: String?, sort: String, made: Bool) {
+        let filter = build_filter(category: category, cuisine: cuisine, country: country, author: author, sort: sort, made: made)
+        guard let url = URL(string: "https://db.ivebeenwastingtime.com/api/collections/recipes/records?page=1&perPage=150\(filter)&expand=ingr_list") else { fatalError("Missing URL") }
 
         let urlRequest = URLRequest(url: url)
 
@@ -44,5 +50,203 @@ class Network: ObservableObject {
         }
 
         dataTask.resume()
+    }
+    
+    func getCategories() {
+        guard let url = URL(string: "https://db.ivebeenwastingtime.com/api/collections/categories/records?page=1&perPage=200&sort=%2Bid") else { fatalError("Missing URL") }
+
+        let urlRequest = URLRequest(url: url)
+
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                return
+            }
+
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                
+                DispatchQueue.main.async {
+                    do {
+                        let decoded_categories = try JSONDecoder().decode(CatResponse.self, from: data)
+                        self.categories = decoded_categories.items.map { curr in
+                            return curr.id
+                        }
+                        self.categories.insert("category", at: 0)
+                    } catch let error {
+                        print("Error decoding: ", error)
+                    }
+                }
+            }
+        }
+
+        dataTask.resume()
+    }
+    
+    func getCuisines() {
+        guard let url = URL(string: "https://db.ivebeenwastingtime.com/api/collections/cuisines/records?page=1&perPage=200&sort=%2Bid") else { fatalError("Missing URL") }
+
+        let urlRequest = URLRequest(url: url)
+
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                return
+            }
+
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                
+                DispatchQueue.main.async {
+                    do {
+                        let decoded_categories = try JSONDecoder().decode(CatResponse.self, from: data)
+                        self.cuisines = decoded_categories.items.map { curr in
+                            return curr.id
+                        }
+                        self.cuisines.insert("cuisine", at: 0)
+                    } catch let error {
+                        print("Error decoding: ", error)
+                    }
+                }
+            }
+        }
+
+        dataTask.resume()
+    }
+    
+    func getCountries() {
+        guard let url = URL(string: "https://db.ivebeenwastingtime.com/api/collections/countries/records?page=1&perPage=200&sort=%2Bid") else { fatalError("Missing URL") }
+
+        let urlRequest = URLRequest(url: url)
+
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                return
+            }
+
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                
+                DispatchQueue.main.async {
+                    do {
+                        let decoded_categories = try JSONDecoder().decode(CatResponse.self, from: data)
+                        self.countries = decoded_categories.items.map { curr in
+                            return curr.id
+                        }
+                        self.countries.insert("country", at: 0)
+                    } catch let error {
+                        print("Error decoding: ", error)
+                    }
+                }
+            }
+        }
+
+        dataTask.resume()
+    }
+    
+    func getAuthors() {
+        guard let url = URL(string: "https://db.ivebeenwastingtime.com/api/collections/authors/records?page=1&perPage=200&sort=%2Bid") else { fatalError("Missing URL") }
+
+        let urlRequest = URLRequest(url: url)
+
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                return
+            }
+
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                
+                DispatchQueue.main.async {
+                    do {
+                        let decoded_categories = try JSONDecoder().decode(CatResponse.self, from: data)
+                        self.authors = decoded_categories.items.map { curr in
+                            return curr.id
+                        }
+                        self.authors.insert("author", at: 0)
+                    } catch let error {
+                        print("Error decoding: ", error)
+                    }
+                }
+            }
+        }
+
+        dataTask.resume()
+    }
+    
+    private func build_filter(category: String?, cuisine: String?, country: String?, author: String?, sort: String, made: Bool) -> String{
+        var output = ""
+        if category != "category" {
+            if output == ""{
+                output += "&filter="
+            } else {
+                output += "%26%26%20"
+            }
+            output += "category%3D%22\(category ?? "")%22"
+        }
+        if cuisine != "cuisine" {
+            if output == ""{
+                output += "&filter="
+            } else {
+                output += "%26%26%20"
+            }
+            output += "cuisine%3D%22\(cuisine ?? "")%22"
+        }
+        if country != "country" {
+            if output == ""{
+                output += "&filter="
+            } else {
+                output += "%26%26%20"
+            }
+            output += "country%3D%22\(country ?? "")%22"
+        }
+        if author != "author" {
+            if output == "" {
+                output += "&filter="
+            } else {
+                output += "%26%26%20"
+            }
+            output += "author%3D%22\(author ?? "")&22"
+        }
+        
+        if made {
+            if output == "" {
+                output += "&filter="
+            } else {
+                output += "%26%26%20"
+            }
+            output += "made%3D\(made)"
+        }
+        
+        
+        switch sort {
+            case "least ingredients":
+                output = "&sort=+ingr_num"
+            case "most ingredients":
+                output += "&sort=-ingr_num"
+        case "least servings":
+                output += "&sort=+servings"
+            case "most servings":
+                output += "&sort=-servings"
+            case "least time":
+                output += "&sort=+time_new"
+            case "most time":
+                output += "&sort=-time_new"
+            case "least recent":
+                output += "&sort=+created"
+        default:
+            output += "&sort=-created"
+        }
+        return output
     }
 }

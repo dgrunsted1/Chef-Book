@@ -59,3 +59,16 @@ struct IngredientData: Decodable {
     var unitPlural: String
     var updated: String
 }
+
+struct CatResponse: Decodable {
+    var page: Int
+    var perPage: Int
+    var totalItems: Int
+    var items: [CatData]
+}
+
+struct CatData: Decodable {
+    var collectionId: String
+    var collectionName: String
+    var id: String
+}

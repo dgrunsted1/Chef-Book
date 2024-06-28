@@ -17,10 +17,6 @@ struct RecipesView: View {
     @State private var selected_author: String = "author"
     @FocusState private var search_field_is_focused: Bool
     private let sort_options: [String] = ["least ingredients", "most ingredients", "least servings", "most servings", "least time", "most time", "least recent", "most recent"]
-    private let cat_options: [String] = ["category", "main", "side", "dessert", "appetizer", "soup", "bread"]
-    private let cuisine_options: [String] = ["cuisine", "north american", "south american", "central american", "east asian", "southeast asian", "south asian", "middle eastern", "north african", "south african", "mediteranian", "european"]
-    private let country_options: [String] = ["country", "United States", "Mexico", "Brazil", "China", "France", "Greece", "Indie", "Isreal"]
-    private let author_options: [String] = ["author", "David Grunsted", "J. Kenji Lopez Alt", "Carla Lalli Music", "Molly Baz", "Claire Saffitz"]
     
 
     
@@ -45,9 +41,10 @@ struct RecipesView: View {
                         .autocorrectionDisabled()
                         .disableAutocorrection(true)
                         .overlay(
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: 7)
                                     .stroke(Color("MyPrimaryColor"), lineWidth: 2)
                             )
+                        Text("\(network.recipes.count) recipes")
                         Picker("sort", selection: $sort_val) {
                             ForEach(sort_options, id: \.self) {
                                 Text($0)
@@ -59,22 +56,29 @@ struct RecipesView: View {
                         .background(Color("MyPrimaryColor"))
                         .cornerRadius(10)
                         .overlay(
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: 7)
                                     .stroke(Color("MyPrimaryColor"), lineWidth: 2)
                             )
+                        .onChange(of: sort_val, initial: true) {
+                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+                                }
+                        
                     }
                     .padding([.leading, .trailing], 10)
                 HStack{
                     Menu {
                         Picker("category", selection: $selected_cat) {
-                            ForEach(cat_options, id: \.self) {
+                            ForEach(network.categories, id: \.self) {
                                 Text($0)
                             }
                         }
+                        .onChange(of: selected_cat, initial: true) {
+                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+                                }
                     } label: {
                         Text(selected_cat)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: 7)
                                     .stroke(Color("MyPrimaryColor"), lineWidth: 2)
                                     .padding([.leading, .trailing], -5)
                             )
@@ -83,14 +87,17 @@ struct RecipesView: View {
                     Spacer()
                     Menu {
                         Picker("cuisine", selection: $selected_cuisine) {
-                            ForEach(cuisine_options, id: \.self) {
+                            ForEach(network.cuisines, id: \.self) {
                                 Text($0)
                             }
                         }
+                        .onChange(of: selected_cuisine, initial: true) {
+                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+                                }
                     } label: {
                         Text(selected_cuisine)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: 7)
                                     .stroke(Color("MyPrimaryColor"), lineWidth: 2)
                                     .padding([.leading, .trailing], -5)
                             )
@@ -99,14 +106,17 @@ struct RecipesView: View {
                     Spacer()
                     Menu {
                         Picker("country", selection: $selected_country) {
-                            ForEach(country_options, id: \.self) {
+                            ForEach(network.countries, id: \.self) {
                                 Text($0)
                             }
                         }
+                        .onChange(of: selected_country, initial: true) {
+                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+                                }
                     } label: {
                         Text(selected_country)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: 7)
                                     .stroke(Color("MyPrimaryColor"), lineWidth: 2)
                                     .padding([.leading, .trailing], -5)
                             )
@@ -115,14 +125,17 @@ struct RecipesView: View {
                     Spacer()
                     Menu {
                         Picker("author", selection: $selected_author) {
-                            ForEach(author_options, id: \.self) {
+                            ForEach(network.authors, id: \.self) {
                                 Text($0)
                             }
                         }
+                        .onChange(of: selected_country, initial: true) {
+                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+                                }
                     } label: {
                         Text(selected_author)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: 7)
                                     .stroke(Color("MyPrimaryColor"), lineWidth: 2)
                                     .padding([.leading, .trailing], -5)
                             )
@@ -135,7 +148,11 @@ struct RecipesView: View {
             }
         }
         .onAppear {
-            network.getRecipes()
+            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true)
+            network.getCategories()
+            network.getCuisines()
+            network.getCountries()
+            network.getAuthors()
         }
     }
         

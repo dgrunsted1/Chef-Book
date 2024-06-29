@@ -56,7 +56,6 @@ class Network: ObservableObject {
     }
     
     func getIngredientRecipes(category: String, cuisine: String, country: String, author: String, sort: String, made: Bool, search: String) {
-//    https://db.ivebeenwastingtime.com/api/collections/ingredients/records?page=1&perPage=30&expand=recipe%2C%20recipe.ingr_list&filter=ingredient~%22pizza%22%20%26%26%20recipe%3Alength%20%3E%200&sort=-created
         let filter = build_ingredient_filter(category: category, cuisine: cuisine, country: country, author: author, sort: sort, made: made, search: search)
         print(filter)
         guard let url = URL(string: "https://db.ivebeenwastingtime.com/api/collections/ingredients/records?page=1&perPage=30&expand=recipe%2C%20recipe.ingr_list\(filter)") else { fatalError("Missing URL") }
@@ -77,10 +76,10 @@ class Network: ObservableObject {
                 DispatchQueue.main.async {
                     do {
                         let decoded_recipes = try JSONDecoder().decode(IngredientResponse.self, from: data)
-                        var temp_recipes: [[Recipe]] = decoded_recipes.items.map { ingredientData in
+                        let temp_recipes: [[Recipe]] = decoded_recipes.items.map { ingredientData in
                             return ingredientData.expand.recipe.map { recipeData in
                                 
-                                var ingr_list = recipeData.expand.ingr_list.map { currIngr in
+                                let ingr_list = recipeData.expand.ingr_list.map { currIngr in
                                     return Ingredient(quantity: currIngr.quantity, unit: currIngr.unit, name: currIngr.ingredient)
                                 }
                                 let time_in_seconds = recipeData.time_new*60

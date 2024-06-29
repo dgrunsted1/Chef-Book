@@ -25,7 +25,7 @@ struct RecipesView: View {
             List(network.recipes) { recipe in
                 RecipeCardView(recipe: recipe, edit: false)
             }
-            .listStyle(PlainListStyle())
+            .listStyle(.inset)
             
             VStack {
                     HStack {

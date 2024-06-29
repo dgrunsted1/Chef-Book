@@ -14,14 +14,19 @@ struct RecipeCardView: View {
     @ViewBuilder
     var body: some View {
         HStack {
-            AsyncImage(url: URL(string: recipe.image)) { image in
-                image.resizable()
-                    .frame(width: 50, height: 50)
-                    .aspectRatio(contentMode: .fill)
-                    .clipped()
-            } placeholder: {
-                ProgressView()
-                    .frame(width: 50, height: 50)
+            if recipe.image != "" {
+                AsyncImage(url: URL(string: recipe.image)) { image in
+                    image.resizable()
+                        .scaledToFill()
+                        .frame(width: 75, height: 80)
+//                        .aspectRatio(contentMode: .fill)
+                        .clipped()
+                } placeholder: {
+                    ProgressView()
+                        .frame(width: 75)
+                }
+            } else {
+                Spacer()
             }
             
             VStack(alignment: .leading) {
@@ -41,6 +46,8 @@ struct RecipeCardView: View {
                 .font(.caption)
                 .padding(.horizontal)
             }
+            .frame(height: 75)
+            .padding(.vertical, 5)
             if edit {
                 VStack{
                     HStack {
@@ -62,11 +69,14 @@ struct RecipeCardView: View {
                     .frame(width:30, height:30)
                     .cornerRadius(10)
                     .foregroundColor(Color("MyPrimaryColor"))
+                    .padding([.trailing], 10)
             }
+                
         }
-        .padding(10)
+//        .padding()
         .background(Color("Base200Color"))
         .cornerRadius(10.0)
+        .frame(height: 80)
     }
 
 }
@@ -75,7 +85,7 @@ struct CardView_Previews: PreviewProvider {
 //    var network = Network()
     static var previews: some View {
         RecipeCardView(recipe: Recipe.sampleData[0], edit: false)
-            .previewLayout(.fixed(width: 355, height: 75))
+            .previewLayout(.fixed(width: 355, height: 100))
 //
     }
 }

@@ -301,9 +301,9 @@ class Network: ObservableObject {
             case "most ingredients":
                 output += "&sort=-ingr_num"
             case "least servings":
-                output += "&sort=+servings"
+                output += "&sort=+servings_new"
             case "most servings":
-                output += "&sort=-servings"
+                output += "&sort=-servings_new"
             case "least time":
                 output += "&sort=+time_new"
             case "most time":
@@ -376,9 +376,9 @@ private func build_ingredient_filter(category: String, cuisine: String, country:
         case "most ingredients":
             output += "&sort=-recipe.ingr_num"
         case "least servings":
-            output += "&sort=+recipe.servings"
+            output += "&sort=+recipe.servings_new"
         case "most servings":
-            output += "&sort=-recipe.servings"
+            output += "&sort=-recipe.servings_new"
         case "least time":
             output += "&sort=+recipe.time_new"
         case "most time":

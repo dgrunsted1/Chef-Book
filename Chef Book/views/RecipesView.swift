@@ -22,10 +22,13 @@ struct RecipesView: View {
     
     var body: some View {
         VStack {
-            List(network.recipes) { recipe in
-                RecipeCardView(recipe: recipe, edit: false)
+            ScrollView {
+                ForEach(network.recipes) { recipe in
+                    RecipeCardView(recipe: recipe, edit: false)
+                        .padding(.horizontal, 5)
+                }
+                .listStyle(.inset)
             }
-            .listStyle(.inset)
             
             VStack {
                     HStack {
@@ -39,7 +42,6 @@ struct RecipesView: View {
                             network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
                         }
                         .autocorrectionDisabled()
-                        .disableAutocorrection(true)
                         .overlay(
                                 RoundedRectangle(cornerRadius: 7)
                                     .stroke(Color("MyPrimaryColor"), lineWidth: 2)

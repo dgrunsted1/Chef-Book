@@ -19,7 +19,6 @@ struct RecipeCardView: View {
                     image.resizable()
                         .scaledToFill()
                         .frame(width: 75, height: 80)
-//                        .aspectRatio(contentMode: .fill)
                         .clipped()
                 } placeholder: {
                     ProgressView()
@@ -46,7 +45,7 @@ struct RecipeCardView: View {
                 .font(.caption)
                 .padding(.horizontal)
             }
-            .frame(height: 75)
+            .frame(height: 70)
             .padding(.vertical, 5)
             if edit {
                 VStack{
@@ -73,7 +72,6 @@ struct RecipeCardView: View {
             }
                 
         }
-//        .padding()
         .background(Color("Base200Color"))
         .cornerRadius(10.0)
         .frame(height: 80)

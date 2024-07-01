@@ -15,6 +15,7 @@ struct ContentView: View {
 
     
     var body: some View {
+        NavigationStack {
             TabView {
                 TodayView()
                     .tabItem { Label("today", systemImage: "house") }
@@ -33,6 +34,7 @@ struct ContentView: View {
                     .environmentObject(network)
             }
             .accentColor(Color("MyPrimaryColor"))
+        }
     }
 }
 

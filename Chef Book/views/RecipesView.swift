@@ -21,16 +21,19 @@ struct RecipesView: View {
 
     
     var body: some View {
-        VStack {
-            ScrollView {
-                ForEach(network.recipes) { recipe in
-                    RecipeCardView(recipe: recipe, edit: false)
-                        .padding(.horizontal, 5)
-                }
-                .listStyle(.inset)
-            }
-            
             VStack {
+                ScrollView {
+                    ForEach(network.recipes) { recipe in
+                        NavigationLink(destination: CookView(recipe: recipe)) {
+                            RecipeCardView(recipe: recipe, edit: false)
+                                .padding(.horizontal, 5)
+                        }
+                        .accentColor(Color("TextColor"))
+                    }
+                    .listStyle(.inset)
+                }
+                
+                VStack {
                     HStack {
                         TextField(
                             "search",
@@ -43,9 +46,9 @@ struct RecipesView: View {
                         }
                         .autocorrectionDisabled()
                         .overlay(
-                                RoundedRectangle(cornerRadius: 7)
-                                    .stroke(Color("MyPrimaryColor"), lineWidth: 2)
-                            )
+                            RoundedRectangle(cornerRadius: 7)
+                                .stroke(Color("MyPrimaryColor"), lineWidth: 2)
+                        )
                         Text("\(network.recipes.count) recipes")
                         Picker("sort", selection: $sort_val) {
                             ForEach(sort_options, id: \.self) {
@@ -58,104 +61,104 @@ struct RecipesView: View {
                         .background(Color("MyPrimaryColor"))
                         .cornerRadius(10)
                         .overlay(
-                                RoundedRectangle(cornerRadius: 7)
-                                    .stroke(Color("MyPrimaryColor"), lineWidth: 2)
-                            )
+                            RoundedRectangle(cornerRadius: 7)
+                                .stroke(Color("MyPrimaryColor"), lineWidth: 2)
+                        )
                         .onChange(of: sort_val, initial: true) {
                             network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
-                                }
+                        }
                         
                     }
                     .padding([.leading, .trailing], 10)
-                HStack{
-                    Menu {
-                        Picker("category", selection: $selected_cat) {
-                            ForEach(network.categories, id: \.self) {
-                                Text($0)
-                            }
-                        }
-                        .onChange(of: selected_cat, initial: true) {
-                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
+                    HStack{
+                        Menu {
+                            Picker("category", selection: $selected_cat) {
+                                ForEach(network.categories, id: \.self) {
+                                    Text($0)
                                 }
-                    } label: {
-                        Text(selected_cat)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 7)
-                                    .stroke(Color("MyPrimaryColor"), lineWidth: 2)
-                                    .padding([.leading, .trailing], -5)
-                            )
-                            .accentColor(Color("TextColor"))
-                    }
-                    Spacer()
-                    Menu {
-                        Picker("cuisine", selection: $selected_cuisine) {
-                            ForEach(network.cuisines, id: \.self) {
-                                Text($0)
                             }
-                        }
-                        .onChange(of: selected_cuisine, initial: true) {
-                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
-                                }
-                    } label: {
-                        Text(selected_cuisine)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 7)
-                                    .stroke(Color("MyPrimaryColor"), lineWidth: 2)
-                                    .padding([.leading, .trailing], -5)
-                            )
-                            .accentColor(Color("TextColor"))
-                    }
-                    Spacer()
-                    Menu {
-                        Picker("country", selection: $selected_country) {
-                            ForEach(network.countries, id: \.self) {
-                                Text($0)
+                            .onChange(of: selected_cat, initial: true) {
+                                network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
                             }
+                        } label: {
+                            Text(selected_cat)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 7)
+                                        .stroke(Color("MyPrimaryColor"), lineWidth: 2)
+                                        .padding([.leading, .trailing], -5)
+                                )
+                                .accentColor(Color("TextColor"))
                         }
-                        .onChange(of: selected_country, initial: true) {
-                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
+                        Spacer()
+                        Menu {
+                            Picker("cuisine", selection: $selected_cuisine) {
+                                ForEach(network.cuisines, id: \.self) {
+                                    Text($0)
                                 }
-                    } label: {
-                        Text(selected_country)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 7)
-                                    .stroke(Color("MyPrimaryColor"), lineWidth: 2)
-                                    .padding([.leading, .trailing], -5)
-                            )
-                            .accentColor(Color("TextColor"))
-                    }
-                    Spacer()
-                    Menu {
-                        Picker("author", selection: $selected_author) {
-                            ForEach(network.authors, id: \.self) {
-                                Text($0)
                             }
+                            .onChange(of: selected_cuisine, initial: true) {
+                                network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
+                            }
+                        } label: {
+                            Text(selected_cuisine)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 7)
+                                        .stroke(Color("MyPrimaryColor"), lineWidth: 2)
+                                        .padding([.leading, .trailing], -5)
+                                )
+                                .accentColor(Color("TextColor"))
                         }
-                        .onChange(of: selected_country, initial: true) {
-                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
+                        Spacer()
+                        Menu {
+                            Picker("country", selection: $selected_country) {
+                                ForEach(network.countries, id: \.self) {
+                                    Text($0)
                                 }
-                    } label: {
-                        Text(selected_author)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 7)
-                                    .stroke(Color("MyPrimaryColor"), lineWidth: 2)
-                                    .padding([.leading, .trailing], -5)
-                            )
-                            .accentColor(Color("TextColor"))
-
+                            }
+                            .onChange(of: selected_country, initial: true) {
+                                network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
+                            }
+                        } label: {
+                            Text(selected_country)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 7)
+                                        .stroke(Color("MyPrimaryColor"), lineWidth: 2)
+                                        .padding([.leading, .trailing], -5)
+                                )
+                                .accentColor(Color("TextColor"))
+                        }
+                        Spacer()
+                        Menu {
+                            Picker("author", selection: $selected_author) {
+                                ForEach(network.authors, id: \.self) {
+                                    Text($0)
+                                }
+                            }
+                            .onChange(of: selected_country, initial: true) {
+                                network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
+                            }
+                        } label: {
+                            Text(selected_author)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 7)
+                                        .stroke(Color("MyPrimaryColor"), lineWidth: 2)
+                                        .padding([.leading, .trailing], -5)
+                                )
+                                .accentColor(Color("TextColor"))
+                            
+                        }
                     }
+                    .padding([.leading, .trailing], 20)
+                    .padding([.bottom], 10)
                 }
-                .padding([.leading, .trailing], 20)
-                .padding([.bottom], 10)
             }
-        }
-        .onAppear {
-            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
-            network.getCategories()
-            network.getCuisines()
-            network.getCountries()
-            network.getAuthors()
-        }
+            .onAppear {
+                network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
+                network.getCategories()
+                network.getCuisines()
+                network.getCountries()
+                network.getAuthors()
+            }
     }
         
         

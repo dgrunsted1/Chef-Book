@@ -38,7 +38,7 @@ class Network: ObservableObject {
                         self.recipes = decoded_recipes.items.map { recipeData in
                             let time_in_seconds = recipeData.time_new*60
                             let ingredients = recipeData.expand.ingr_list.map { ingr in
-                                return Ingredient(quantity: ingr.quantity, unit: ingr.unit, name: ingr.ingredient)
+                                return Ingredient(id: ingr.id, quantity: ingr.quantity, unit: ingr.unit, name: ingr.ingredient)
                             }
                             return Recipe(id: recipeData.id, title: recipeData.title, description: recipeData.description, link_to_original_web_page: recipeData.url, author: recipeData.author, time_in_seconds: time_in_seconds, directions: recipeData.directions, image: recipeData.image, servings: recipeData.servings, cuisine: recipeData.cuisine, country: recipeData.country, notes: recipeData.notes, ingredients: ingredients, category: recipeData.category, made: recipeData.made, favorite: recipeData.favorite)
                         }
@@ -80,7 +80,7 @@ class Network: ObservableObject {
                             return ingredientData.expand.recipe.map { recipeData in
                                 
                                 let ingr_list = recipeData.expand.ingr_list.map { currIngr in
-                                    return Ingredient(quantity: currIngr.quantity, unit: currIngr.unit, name: currIngr.ingredient)
+                                    return Ingredient(id: currIngr.id, quantity: currIngr.quantity, unit: currIngr.unit, name: currIngr.ingredient)
                                 }
                                 let time_in_seconds = recipeData.time_new*60
                                 return Recipe(id: recipeData.id, title: recipeData.title, description: recipeData.description, link_to_original_web_page: recipeData.url, author: recipeData.author, time_in_seconds: time_in_seconds, directions: recipeData.directions, image: recipeData.image, servings: recipeData.servings, cuisine: recipeData.cuisine, country: recipeData.country, notes: recipeData.notes, ingredients: ingr_list, category: recipeData.category, made: recipeData.made, favorite: recipeData.favorite)

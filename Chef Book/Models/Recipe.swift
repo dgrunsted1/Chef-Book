@@ -74,7 +74,7 @@ extension Recipe {
                servings: "4",
                cuisine: "Mediteranean",
                country: "France",
-               notes: [],
+               notes: ["remove chicken before it falls apart and chop up to add back at the end", "cook down sauce before adding the potatoes"],
                ingredients: [Ingredient(id: "1", quantity: 1, unit: "pound", name: "Spaghetti"),
                              Ingredient(id: "1", quantity: 1, unit: "pound", name: "boneless skinless chicken breasts, cut crosswise in half"),
                              Ingredient(id: "1", quantity: 0, unit: "", name: "Kosher salt and freshly ground black pepper, to taste"),

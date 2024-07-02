@@ -51,9 +51,11 @@ struct CookView: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Link("original", destination: URL(string: recipe.link_to_original_web_page)!)
-                        .accentColor(Color("TextColor"))
-                    Spacer()
+                    if recipe.link_to_original_web_page != "" {
+                        Link("original", destination: URL(string: recipe.link_to_original_web_page)!)
+                            .accentColor(Color("TextColor"))
+                        Spacer()
+                    }
                     Toggle("", isOn: $is_made)
                         .toggleStyle(.switch)
                         .labelsHidden()
@@ -80,14 +82,27 @@ struct CookView: View {
                     Text("\(String(format: "%.2g", ingr.quantity)) \(ingr.unit) \(ingr.name)")
                 }
                 .listStyle(.plain)
-                .frame(height: 360)
+                .frame(height: 320)
                 Spacer()
                 Text("directions")
                 List(recipe.directions, id: \.self) { dir in
                     Text(dir)
                 }
                 .listStyle(.plain)
-                .frame(height: 360)
+                .frame(height: 320)
+                
+                Spacer()
+                Button("new note") {
+                    
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(Color("MyPrimaryColor"))
+                .foregroundColor(.black)
+                
+                Spacer()
+                ForEach(recipe.notes, id: \.self) { note in
+                    Text(note)
+                }
             }
             .padding(.horizontal)
         }

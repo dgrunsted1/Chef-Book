@@ -11,6 +11,7 @@ struct Response: Decodable {
     var page: Int
     var perPage: Int
     var totalItems: Int
+    var totalPages: Int
     var items: [RecipeData]
 }
 
@@ -44,6 +45,16 @@ struct RecipeData: Decodable {
 
 struct Expand: Decodable {
     var ingr_list: [IngredientData]
+    var notes: [NotesData]!
+}
+
+struct NotesData: Decodable {
+    var collectionId: String
+    var collectionName: String
+    var content: String
+    var created: String
+    var id: String
+    var updated: String
 }
 
 struct IngredientData: Decodable {

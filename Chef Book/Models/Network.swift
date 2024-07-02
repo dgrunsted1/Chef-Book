@@ -17,7 +17,7 @@ class Network: ObservableObject {
     
     func getRecipes(category: String, cuisine: String, country: String, author: String, sort: String, made: Bool, search: String) {
         let filter = build_filter(category: category, cuisine: cuisine, country: country, author: author, sort: sort, made: made, search: search)
-        guard let url = URL(string: "https://db.ivebeenwastingtime.com/api/collections/recipes/records?page=1&perPage=150\(filter)&expand=ingr_list") else { fatalError("Missing URL") }
+        guard let url = URL(string: "https://db.ivebeenwastingtime.com/api/collections/recipes/records?page=1&perPage=150\(filter)&expand=notes%2C%20ingr_list") else { fatalError("Missing URL") }
 
         let urlRequest = URLRequest(url: url)
 
@@ -31,7 +31,6 @@ class Network: ObservableObject {
             
             if response.statusCode == 200 {
                 guard let data = data else { return }
-                
                 DispatchQueue.main.async {
                     do {
                         let decoded_recipes = try JSONDecoder().decode(Response.self, from: data)
@@ -40,7 +39,13 @@ class Network: ObservableObject {
                             let ingredients = recipeData.expand.ingr_list.map { ingr in
                                 return Ingredient(id: ingr.id, quantity: ingr.quantity, unit: ingr.unit, name: ingr.ingredient)
                             }
-                            return Recipe(id: recipeData.id, title: recipeData.title, description: recipeData.description, link_to_original_web_page: recipeData.url, author: recipeData.author, time_in_seconds: time_in_seconds, directions: recipeData.directions, image: recipeData.image, servings: recipeData.servings, cuisine: recipeData.cuisine, country: recipeData.country, notes: recipeData.notes, ingredients: ingredients, category: recipeData.category, made: recipeData.made, favorite: recipeData.favorite)
+                            var notes: [String] = []
+                            if recipeData.expand.notes != nil {
+                                notes = recipeData.expand.notes.map { note in
+                                    return note.content
+                                }
+                            }
+                            return Recipe(id: recipeData.id, title: recipeData.title, description: recipeData.description, link_to_original_web_page: recipeData.url, author: recipeData.author, time_in_seconds: time_in_seconds, directions: recipeData.directions, image: recipeData.image, servings: recipeData.servings, cuisine: recipeData.cuisine, country: recipeData.country, notes: notes, ingredients: ingredients, category: recipeData.category, made: recipeData.made, favorite: recipeData.favorite)
                         }
                     } catch let error {
                         print("Error decoding: ", error)

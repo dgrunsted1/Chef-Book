@@ -77,14 +77,20 @@ struct CookView: View {
                 }
                 Spacer()
                 
-                Text("ingredients")
+                HStack {
+                    Text("ingredients")
+                    Spacer()
+                }
                 List(recipe.ingredients, id: \.self) { ingr in
                     Text("\(String(format: "%.2g", ingr.quantity)) \(ingr.unit) \(ingr.name)")
                 }
                 .listStyle(.plain)
                 .frame(height: 320)
                 Spacer()
-                Text("directions")
+                HStack {
+                    Text("directions")
+                    Spacer()
+                }
                 List(recipe.directions, id: \.self) { dir in
                     Text(dir)
                 }
@@ -92,12 +98,15 @@ struct CookView: View {
                 .frame(height: 320)
                 
                 Spacer()
-                Button("new note") {
-                    
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(Color("MyPrimaryColor"))
+                HStack {
+                    Spacer()
+                    Button("new note") {
+                        
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color("MyPrimaryColor"))
                 .foregroundColor(.black)
+                }
                 
                 Spacer()
                 ForEach(recipe.notes, id: \.self) { note in

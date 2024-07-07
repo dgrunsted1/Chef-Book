@@ -13,7 +13,7 @@ class Network: ObservableObject {
     @Published var cuisines: [String] = []
     @Published var countries: [String] = []
     @Published var authors: [String] = []
-
+    @Published var user: User;
     
     func getRecipes(category: String, cuisine: String, country: String, author: String, sort: String, made: Bool, search: String) {
         let filter = build_filter(category: category, cuisine: cuisine, country: country, author: author, sort: sort, made: made, search: search)
@@ -320,79 +320,108 @@ class Network: ObservableObject {
         }
         return output
     }
-}
+    
+    private func build_ingredient_filter(category: String, cuisine: String, country: String, author: String, sort: String, made: Bool, search: String) -> String{
+        var output = ""
+        if category != "category" {
+            if output == ""{
+                output += "&filter="
+            } else {
+                output += "%26%26%20"
+            }
+            output += "recipe.category%3D%22\(category.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")%22"
+        }
+        if cuisine != "cuisine" {
+            if output == ""{
+                output += "&filter="
+            } else {
+                output += "%26%26%20"
+            }
+            output += "recipe.cuisine%3D%22\(cuisine.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")%22"
+        }
+        if country != "country" {
+            if output == ""{
+                output += "&filter="
+            } else {
+                output += "%26%26%20"
+            }
+            output += "recipe.country%3D%22\(country.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")%22"
+        }
+        if author != "author" {
+            if output == "" {
+                output += "&filter="
+            } else {
+                output += "%26%26%20"
+            }
+            output += "recipe.author%3D%22\(author.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")%22"
+        }
+        if search != "" {
+            if output == "" {
+                output += "&filter="
+            } else {
+                output += "%26%26%20"
+            }
+            output += "ingredient~%22\(search.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")%22"
+        }
+        
+        if made {
+            if output == "" {
+                output += "&filter="
+            } else {
+                output += "%26%26%20"
+            }
+            output += "recipe.made%3D\(made)"
+        }
+        
+        
+        switch sort {
+            case "least ingredients":
+                output = "&sort=+recipe.ingr_num"
+            case "most ingredients":
+                output += "&sort=-recipe.ingr_num"
+            case "least servings":
+                output += "&sort=+recipe.servings_new"
+            case "most servings":
+                output += "&sort=-recipe.servings_new"
+            case "least time":
+                output += "&sort=+recipe.time_new"
+            case "most time":
+                output += "&sort=-recipe.time_new"
+            case "least recent":
+                output += "&sort=+recipe.created"
+        default:
+            output += "&sort=-recipe.created"
+        }
+        return output
+    }
 
-private func build_ingredient_filter(category: String, cuisine: String, country: String, author: String, sort: String, made: Bool, search: String) -> String{
-    var output = ""
-    if category != "category" {
-        if output == ""{
-            output += "&filter="
-        } else {
-            output += "%26%26%20"
+    
+    func sign_in(email: String, password: String){
+        let requestBody = "email=\(email)&password=\(password)".data(using: .utf8)
+        makePostRequest(to: "https://db.ivebeenwastingtime.com/api/collections/users/auth-with-password", with: requestBody) { data, response, error in
+            if let error = error {
+                print("Error: \(error)")
+            } else if let data = data {
+                print("Response data: \(String(data: data, encoding: .utf8) ?? "N/A")")
+            }
         }
-        output += "recipe.category%3D%22\(category.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")%22"
-    }
-    if cuisine != "cuisine" {
-        if output == ""{
-            output += "&filter="
-        } else {
-            output += "%26%26%20"
-        }
-        output += "recipe.cuisine%3D%22\(cuisine.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")%22"
-    }
-    if country != "country" {
-        if output == ""{
-            output += "&filter="
-        } else {
-            output += "%26%26%20"
-        }
-        output += "recipe.country%3D%22\(country.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")%22"
-    }
-    if author != "author" {
-        if output == "" {
-            output += "&filter="
-        } else {
-            output += "%26%26%20"
-        }
-        output += "recipe.author%3D%22\(author.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")%22"
-    }
-    if search != "" {
-        if output == "" {
-            output += "&filter="
-        } else {
-            output += "%26%26%20"
-        }
-        output += "ingredient~%22\(search.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")%22"
     }
     
-    if made {
-        if output == "" {
-            output += "&filter="
-        } else {
-            output += "%26%26%20"
+    func makePostRequest(to endpoint: String, with body: Data?, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
+        guard let url = URL(string: endpoint) else {
+            completion(nil, nil, NSError(domain: "Invalid URL", code: 0, userInfo: nil))
+            return
         }
-        output += "recipe.made%3D\(made)"
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = body
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            completion(data, response, error)
+        }
+        
+        task.resume()
     }
-    
-    
-    switch sort {
-        case "least ingredients":
-            output = "&sort=+recipe.ingr_num"
-        case "most ingredients":
-            output += "&sort=-recipe.ingr_num"
-        case "least servings":
-            output += "&sort=+recipe.servings_new"
-        case "most servings":
-            output += "&sort=-recipe.servings_new"
-        case "least time":
-            output += "&sort=+recipe.time_new"
-        case "most time":
-            output += "&sort=-recipe.time_new"
-        case "least recent":
-            output += "&sort=+recipe.created"
-    default:
-        output += "&sort=-recipe.created"
-    }
-    return output
 }
 

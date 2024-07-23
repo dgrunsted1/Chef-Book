@@ -8,11 +8,19 @@
 import SwiftUI
 
 struct AddRecipeView: View {
+    @EnvironmentObject var network: Network
+
     var body: some View {
-        Text("Add a recipe")
+        if (network.user != nil){
+            Text("Add a recipe and signed in")
+        }else {
+            LoginView()
+                .environmentObject(network)
+        }
     }
 }
 
 #Preview {
     AddRecipeView()
+        .environmentObject(Network())
 }

@@ -28,6 +28,8 @@
 		63E628862C365B6C008A75A0 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E628852C365B6C008A75A0 /* LoginView.swift */; };
 		63E628882C365B8E008A75A0 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E628872C365B8E008A75A0 /* RegisterView.swift */; };
 		BA1F43CE2C3248EE00C3665F /* CookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1F43CD2C3248EE00C3665F /* CookView.swift */; };
+		BA8F05642C3B86CC001977EF /* TodayCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8F05632C3B86CC001977EF /* TodayCardView.swift */; };
+		BA8F05662C3C4DCD001977EF /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8F05652C3C4DCD001977EF /* Menu.swift */; };
 		BAF17AAE2C378355002DAB14 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF17AAD2C378355002DAB14 /* User.swift */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +76,8 @@
 		63E628852C365B6C008A75A0 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		63E628872C365B8E008A75A0 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		BA1F43CD2C3248EE00C3665F /* CookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookView.swift; sourceTree = "<group>"; };
+		BA8F05632C3B86CC001977EF /* TodayCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCardView.swift; sourceTree = "<group>"; };
+		BA8F05652C3C4DCD001977EF /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		BAF17AAD2C378355002DAB14 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -174,6 +178,7 @@
 				BA1F43CD2C3248EE00C3665F /* CookView.swift */,
 				63E628852C365B6C008A75A0 /* LoginView.swift */,
 				63E628872C365B8E008A75A0 /* RegisterView.swift */,
+				BA8F05632C3B86CC001977EF /* TodayCardView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -186,6 +191,7 @@
 				638BC1B22C2BBC9F00D8F2F7 /* Network.swift */,
 				638BC1B42C2D04E500D8F2F7 /* Response.swift */,
 				BAF17AAD2C378355002DAB14 /* User.swift */,
+				BA8F05652C3C4DCD001977EF /* Menu.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -326,10 +332,12 @@
 				63E628862C365B6C008A75A0 /* LoginView.swift in Sources */,
 				637546922C264BE8002FEFA3 /* CreateMenuView.swift in Sources */,
 				6375469B2C268370002FEFA3 /* Ingredient.swift in Sources */,
+				BA8F05642C3B86CC001977EF /* TodayCardView.swift in Sources */,
 				637546962C264C16002FEFA3 /* AddRecipeView.swift in Sources */,
 				BAF17AAE2C378355002DAB14 /* User.swift in Sources */,
 				638BC1B52C2D04E500D8F2F7 /* Response.swift in Sources */,
 				637546622C2648BB002FEFA3 /* Item.swift in Sources */,
+				BA8F05662C3C4DCD001977EF /* Menu.swift in Sources */,
 				637546942C264BFE002FEFA3 /* MyMenusView.swift in Sources */,
 				637546902C264BCC002FEFA3 /* RecipesView.swift in Sources */,
 				BA1F43CE2C3248EE00C3665F /* CookView.swift in Sources */,

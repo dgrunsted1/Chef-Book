@@ -17,5 +17,6 @@ struct User: Decodable {
     var email: String
     var verified: Bool
     var emailVisibility: Bool
-    var someCustomField: String
+    var avatar: String
+    var name: String
 }

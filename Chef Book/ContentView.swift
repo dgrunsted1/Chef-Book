@@ -17,20 +17,25 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             TabView {
-                TodayView()
-                    .tabItem { Label("today", systemImage: "house") }
+                RecipesView()
+                    .tabItem { Label("Recipes", systemImage: "globe.americas") }
+                    .environmentObject(network)
                 
                 CreateMenuView()
                     .tabItem { Label("Create", systemImage: "flame") }
+                    .environmentObject(network)
                 
                 MyMenusView()
                     .tabItem { Label("My Menus", systemImage: "drop") }
+                    .environmentObject(network)
+                
                 
                 AddRecipeView()
                     .tabItem { Label("Add", systemImage: "plus.circle") }
+                    .environmentObject(network)
                 
-                RecipesView()
-                    .tabItem { Label("Recipes", systemImage: "globe.americas") }
+                TodayView()
+                    .tabItem { Label("today", systemImage: "house") }
                     .environmentObject(network)
             }
             .accentColor(Color("MyPrimaryColor"))

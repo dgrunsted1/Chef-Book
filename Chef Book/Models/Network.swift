@@ -13,7 +13,8 @@ class Network: ObservableObject {
     @Published var cuisines: [String] = []
     @Published var countries: [String] = []
     @Published var authors: [String] = []
-    @Published var user: User;
+    @Published var user: UserResponse?;
+    @Published var today: MyMenu?;
     
     func getRecipes(category: String, cuisine: String, country: String, author: String, sort: String, made: Bool, search: String) {
         let filter = build_filter(category: category, cuisine: cuisine, country: country, author: author, sort: sort, made: made, search: search)
@@ -396,13 +397,20 @@ class Network: ObservableObject {
     }
 
     
-    func sign_in(email: String, password: String){
-        let requestBody = "email=\(email)&password=\(password)".data(using: .utf8)
+    func sign_in(username: String, password: String){
+        let requestBody = "identity=\(username)&password=\(password)".data(using: .utf8)
         makePostRequest(to: "https://db.ivebeenwastingtime.com/api/collections/users/auth-with-password", with: requestBody) { data, response, error in
             if let error = error {
                 print("Error: \(error)")
             } else if let data = data {
                 print("Response data: \(String(data: data, encoding: .utf8) ?? "N/A")")
+                DispatchQueue.main.async {
+                    do {
+                        self.user = try JSONDecoder().decode(UserResponse.self, from: data)
+                    } catch let error {
+                        print("Error decoding: ", error)
+                    }
+                }
             }
         }
     }
@@ -422,6 +430,55 @@ class Network: ObservableObject {
         }
         
         task.resume()
+    }
+    
+    func get_todays_menu(){
+        guard let url = URL(string: "https://db.ivebeenwastingtime.com/api/collections/menus/records?page=1&perPage=1&filter=user%3D%22\(self.user!.record.id)%22%20%26%26%20today%3DTrue&expand=recipes%2Crecipes.notes%2Crecipes.ingr_list%2C%20grocery_list") else { fatalError("Missing URL") }
+        let urlRequest = URLRequest(url: url)
+
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                return
+            }
+
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                DispatchQueue.main.async {
+                    do {
+                        let decoded_menu = try JSONDecoder().decode(TodaysResponse.self, from: data)
+                        let temp_recipes = decoded_menu.items[0].expand.recipes.map { recipeData in
+                            let time_in_seconds = recipeData.time_new*60
+                            let ingredients = recipeData.expand.ingr_list.map { ingr in
+                                return Ingredient(id: ingr.id, quantity: ingr.quantity, unit: ingr.unit, name: ingr.ingredient)
+                            }
+                            var notes: [String] = []
+                            if recipeData.expand.notes != nil {
+                                notes = recipeData.expand.notes.map { note in
+                                    return note.content
+                                }
+                            }
+                            return Recipe(id: recipeData.id, title: recipeData.title, description: recipeData.description, link_to_original_web_page: recipeData.url, author: recipeData.author, time_in_seconds: time_in_seconds, directions: recipeData.directions, image: recipeData.image, servings: recipeData.servings, cuisine: recipeData.cuisine, country: recipeData.country, notes: notes, ingredients: ingredients, category: recipeData.category, made: recipeData.made, favorite: recipeData.favorite)
+                        }
+                        
+                        let temp_groceries = decoded_menu.items[0].expand.grocery_list.list.map{ groc_item in
+                            return GroceryItem(id: groc_item.id, checked: groc_item.checked, ingredient: Ingredient(id: groc_item.id, quantity: groc_item.quantity.value, unit: groc_item.unit, name: groc_item.ingredient))
+                        }
+                        
+                        self.today = MyMenu(created: decoded_menu.items[0].created, desc: decoded_menu.items[0].description, grocery_list: temp_groceries, id: decoded_menu.items[0].id, made: decoded_menu.items[0].made, notes: decoded_menu.items[0].notes, recipes: temp_recipes, servings: decoded_menu.items[0].servings, sub_recipes: decoded_menu.items[0].sub_recipes, title: decoded_menu.items[0].title, today: decoded_menu.items[0].today, updated: decoded_menu.items[0].updated)
+                        
+//                        self.today = decoded_menu.items[0]
+                    } catch let error {
+                        print("Error decoding: ", error)
+                    }
+                }
+            }
+        }
+
+        dataTask.resume()
+        
     }
 }
 

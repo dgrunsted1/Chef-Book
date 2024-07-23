@@ -8,11 +8,19 @@
 import SwiftUI
 
 struct CreateMenuView: View {
+    @EnvironmentObject var network: Network
+
     var body: some View {
-        Text("Create Menu")
+        if (network.user != nil){
+            Text("reate Menu and signed in")
+        }else {
+            LoginView()
+                .environmentObject(network)
+        }
     }
 }
 
 #Preview {
     CreateMenuView()
+        .environmentObject(Network())
 }

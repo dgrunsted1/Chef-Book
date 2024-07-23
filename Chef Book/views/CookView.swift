@@ -10,8 +10,8 @@ import SwiftUI
 struct CookView: View {
     var recipe: Recipe
     let formatter = NumberFormatter()
-    @State var is_made: Bool = false
     var body: some View {
+        @State var is_made = recipe.made
         ScrollView {
             VStack {
                 if recipe.image != "" {

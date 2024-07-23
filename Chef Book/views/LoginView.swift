@@ -8,20 +8,21 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State var email = ""
+    @EnvironmentObject var network: Network
+    @State var username = ""
     @State var password = ""
     var body: some View {
         VStack {
             Spacer()
             Form {
-                TextField("email", text: $email)
+                TextField("username", text: $username)
                     .frame(width: 300)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 SecureField("password", text: $password)
                     .frame(width: 300)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 Button(action: {
-                    //attempt login here
+                    network.sign_in(username: username, password: password)
                 }, label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)
@@ -41,4 +42,5 @@ struct LoginView: View {
 
 #Preview {
     LoginView()
+        .environmentObject(Network())
 }

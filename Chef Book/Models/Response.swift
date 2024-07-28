@@ -165,17 +165,10 @@ struct GroceryList: Decodable, Identifiable {
 
 struct GroceryItemResponse: Decodable {
     var checked: Bool
-    var collectionId: String
-    var collectionName: String
-    var created: String
     var id: String
     var ingredient: String
     var quantity: QuantityValue
-    var recipe: [String]
-    var symbol: String
     var unit: String
-    var unitPlural: String
-    var updated: String
 }
 
 struct QuantityValue: Decodable {

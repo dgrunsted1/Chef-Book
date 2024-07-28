@@ -18,8 +18,9 @@ struct TodayView: View {
                     TabView {
                         ScrollView {
                             ForEach(network.today!.recipes) { recipe in
+                                @State var made = network.today!.made[recipe.id];
                                 NavigationLink(destination: CookView(recipe: recipe)) {
-                                    TodayCardView(recipe: recipe)
+                                    TodayCardView(recipe: recipe, made: Binding(get: { made ?? false }, set: { newValue in made = newValue }))
                                         .padding(.horizontal, 5)
                                 }
                                 .accentColor(Color("TextColor"))
@@ -42,6 +43,7 @@ struct TodayView: View {
                                             .toggleStyle(.switch)
                                             .labelsHidden()
                                     }
+                                    .padding(.trailing, 5)
                                     
                                 }
                                 .listStyle(.inset)

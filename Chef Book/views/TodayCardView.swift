@@ -8,17 +8,24 @@
 import SwiftUI
 
 struct TodayCardView: View {
+    @EnvironmentObject var network: Network
     var recipe: Recipe
-    @Binding var made: Bool
-    
-    @ViewBuilder
+    @State var is_made: Bool
+    @State var is_favorite: Bool
+
+    init(recipe: Recipe, made: Bool) {
+        self.recipe = recipe
+        _is_made = State(initialValue: made)
+        _is_favorite = State(initialValue: recipe.favorite)
+    }
+
     var body: some View {
         VStack {
             if recipe.image != "" {
                 AsyncImage(url: URL(string: recipe.image)) { image in
                     image.resizable()
                         .scaledToFill()
-                        .frame(width: .infinity, height: 80)
+                        .frame(height: 80)
                         .clipped()
                 } placeholder: {
                     ProgressView()
@@ -32,10 +39,20 @@ struct TodayCardView: View {
                     .font(.headline)
                     .accessibilityAddTraits(.isHeader)
                 Spacer()
-                Toggle("", isOn: $made)
+                Toggle("", isOn: $is_made)
                     .toggleStyle(.switch)
                     .labelsHidden()
-                Image(systemName: "heart")
+                    .onChange(of: is_made) {
+                        network.toggle_made(recipeId: recipe.id, value: is_made) { _ in }
+                    }
+
+                Button {
+                    is_favorite.toggle()
+                    network.toggle_favorite(recipeId: recipe.id, value: is_favorite) { _ in }
+                } label: {
+                    Image(systemName: "heart.fill")
+                        .foregroundColor(is_favorite ? Color("MyPrimaryColor") : Color("NeutralColor"))
+                }
             }
             .padding([.bottom,.horizontal], 5)
         }
@@ -47,7 +64,7 @@ struct TodayCardView: View {
 }
 
 #Preview {
-    @State var made = true
-    TodayCardView(recipe: Recipe.sampleData[0], made: $made)
+    TodayCardView(recipe: Recipe.sampleData[0], made: true)
         .previewLayout(.fixed(width: 355, height: 100))
+        .environmentObject(Network())
 }

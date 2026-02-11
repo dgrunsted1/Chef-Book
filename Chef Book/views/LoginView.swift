@@ -18,6 +18,8 @@ struct LoginView: View {
                 TextField("username", text: $username)
                     .frame(width: 300)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
                 SecureField("password", text: $password)
                     .frame(width: 300)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -34,13 +36,19 @@ struct LoginView: View {
                 })
             }
             VStack {
-                
+                NavigationLink(destination: RegisterView().environmentObject(network)) {
+                    Text("Don't have an account? Register")
+                        .foregroundColor(Color("MyPrimaryColor"))
+                }
+                .padding()
             }
         }
     }
 }
 
 #Preview {
-    LoginView()
-        .environmentObject(Network())
+    NavigationStack {
+        LoginView()
+            .environmentObject(Network())
+    }
 }

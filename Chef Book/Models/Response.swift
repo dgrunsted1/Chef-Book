@@ -45,7 +45,7 @@ struct RecipeData: Decodable, Identifiable {
 
 struct Expand: Decodable {
     var ingr_list: [IngredientData]
-    var notes: [NotesData]!
+    var notes: [NotesData]?
 }
 
 struct NotesData: Decodable {
@@ -110,7 +110,7 @@ struct IngredientRecipeData: Decodable {
     var expand: ExpandIngr
 }
 
-struct UserResponse: Decodable {
+struct UserResponse: Codable {
     var record: User
     var token: String
 }

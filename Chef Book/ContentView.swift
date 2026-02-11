@@ -13,32 +13,41 @@ struct ContentView: View {
     @EnvironmentObject var network: Network
     private var recipes: [Recipe] = []
 
-    
     var body: some View {
         NavigationStack {
             TabView {
                 RecipesView()
                     .tabItem { Label("Recipes", systemImage: "globe.americas") }
                     .environmentObject(network)
-                
+
                 CreateMenuView()
                     .tabItem { Label("Create", systemImage: "flame") }
                     .environmentObject(network)
-                
+
                 MyMenusView()
                     .tabItem { Label("My Menus", systemImage: "drop") }
                     .environmentObject(network)
-                
-                
+
                 AddRecipeView()
                     .tabItem { Label("Add", systemImage: "plus.circle") }
                     .environmentObject(network)
-                
+
                 TodayView()
                     .tabItem { Label("today", systemImage: "house") }
                     .environmentObject(network)
             }
             .accentColor(Color("MyPrimaryColor"))
+            .toolbar {
+                if network.user != nil {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            network.sign_out()
+                        }) {
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                        }
+                    }
+                }
+            }
         }
     }
 }

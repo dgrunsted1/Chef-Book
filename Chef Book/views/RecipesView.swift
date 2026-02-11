@@ -22,15 +22,34 @@ struct RecipesView: View {
     
     var body: some View {
             VStack {
-                ScrollView {
-                    ForEach(network.recipes) { recipe in
-                        NavigationLink(destination: CookView(recipe: recipe)) {
-                            RecipeCardView(recipe: recipe, edit: false)
-                                .padding(.horizontal, 5)
-                        }
-                        .accentColor(Color("TextColor"))
+                if network.recipes.isEmpty && !network.isLoading {
+                    Spacer()
+                    VStack(spacing: 8) {
+                        Image(systemName: "fork.knife")
+                            .font(.largeTitle)
+                            .foregroundColor(.gray)
+                        Text("No recipes found")
+                            .foregroundColor(.gray)
                     }
-                    .listStyle(.inset)
+                    Spacer()
+                } else {
+                    ScrollView {
+                        if network.isLoading {
+                            ProgressView()
+                                .padding()
+                        }
+                        ForEach(network.recipes) { recipe in
+                            NavigationLink(destination: CookView(recipe: recipe).environmentObject(network)) {
+                                RecipeCardView(recipe: recipe, edit: false)
+                                    .padding(.horizontal, 5)
+                            }
+                            .accentColor(Color("TextColor"))
+                        }
+                        .listStyle(.inset)
+                    }
+                    .refreshable {
+                        network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
+                    }
                 }
                 
                 VStack {
@@ -134,7 +153,7 @@ struct RecipesView: View {
                                     Text($0)
                                 }
                             }
-                            .onChange(of: selected_country, initial: true) {
+                            .onChange(of: selected_author, initial: true) {
                                 network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
                             }
                         } label: {

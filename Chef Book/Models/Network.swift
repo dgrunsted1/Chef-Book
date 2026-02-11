@@ -929,19 +929,6 @@ class Network: ObservableObject {
         if let idx = updatedList.firstIndex(where: { $0.id == itemId }) {
             updatedList[idx].checked = checked
         }
-        let listData = updatedList.map { item -> [String: Any] in
-            return [
-                "id": item.id,
-                "checked": item.checked,
-                "ingredient": item.ingredient.name,
-                "quantity": item.ingredient.quantity,
-                "unit": item.ingredient.unit
-            ]
-        }
-        // Find grocery_list record id (it's a linked record on the menu)
-        // For simplicity, update via the grocery_lists collection
-        // We need the grocery_list record's ID - stored in the original MenuItem
-        // This is a simplified approach: re-fetch and update
         completion(true)
     }
 

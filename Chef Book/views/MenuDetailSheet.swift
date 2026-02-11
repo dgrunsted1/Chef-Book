@@ -112,13 +112,6 @@ struct MenuDetailSheet: View {
         network.create_menu(title: menuTitle, recipeIds: recipeIds, servings: servings) { success in
             isSaving = false
             if success {
-                // Generate grocery list
-                let groceryItems = GroceryListGenerator.generate(recipes: selectedRecipes, servings: servings)
-                let groceryDicts = GroceryListGenerator.toGroceryDicts(groceryItems)
-
-                // We'd need the new menu ID to link the grocery list.
-                // For now, the menu is created and groceries will be linked
-                // when the menu is set as "today"
                 alertMessage = "Menu saved!"
                 showAlert = true
             } else {

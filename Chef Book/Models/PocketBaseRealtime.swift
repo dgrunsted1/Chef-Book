@@ -10,7 +10,7 @@ class PocketBaseRealtime: NSObject, URLSessionDataDelegate {
     private var urlSession: URLSession?
     private var dataTask: URLSessionDataTask?
     private var clientId: String?
-    private var subscriptions: [String: (([String: Any]) -> Void)] = []
+    private var subscriptions: [String: (([String: Any]) -> Void)] = [:]
     private var token: String?
     private var buffer = Data()
 

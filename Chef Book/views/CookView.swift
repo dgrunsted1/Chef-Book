@@ -9,14 +9,15 @@ import SwiftUI
 
 struct CookView: View {
     @EnvironmentObject var network: Network
-    var recipe: Recipe
+    @State var recipe: Recipe
     @State var is_made: Bool
     @State var is_favorite: Bool
     @State var newNoteText: String = ""
     @State var showNewNote: Bool = false
+    @State var isLoadingDetail: Bool = false
 
     init(recipe: Recipe) {
-        self.recipe = recipe
+        _recipe = State(initialValue: recipe)
         _is_made = State(initialValue: recipe.made)
         _is_favorite = State(initialValue: recipe.favorite)
     }
@@ -161,6 +162,24 @@ struct CookView: View {
                 }
             }
             .padding(.horizontal)
+        }
+        .overlay {
+            if isLoadingDetail {
+                ProgressView()
+            }
+        }
+        .onAppear {
+            if !recipe.isDetailLoaded {
+                isLoadingDetail = true
+                network.getRecipeDetail(urlId: recipe.url_id) { detail in
+                    isLoadingDetail = false
+                    if let detail = detail {
+                        recipe = detail
+                        is_made = detail.made
+                        is_favorite = detail.favorite
+                    }
+                }
+            }
         }
     }
 }

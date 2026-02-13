@@ -19,7 +19,6 @@ struct LoginView: View {
                     .frame(width: 300)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
                 SecureField("password", text: $password)
                     .frame(width: 300)
                     .textFieldStyle(RoundedBorderTextFieldStyle())

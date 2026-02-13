@@ -16,6 +16,7 @@ struct Recipe: Identifiable, Decodable {
     var link_to_original_web_page: String
     var author: String
     var time_in_seconds: Int
+    var time_display: String
     var directions: [String]
     var image: String
     var servings: String
@@ -26,14 +27,20 @@ struct Recipe: Identifiable, Decodable {
     var category: String
     var made: Bool
     var favorite: Bool
-    
-    init(id: String, title: String, description: String, link_to_original_web_page: String, author: String, time_in_seconds: Int, directions: [String], image: String, servings: String, cuisine: String, country: String, notes: [String], ingredients: [Ingredient], category: String, made: Bool, favorite: Bool) {
+    var url_id: String
+    var ingredientCount: Int
+    var directionCount: Int
+    var user: String
+    var isDetailLoaded: Bool
+
+    init(id: String, title: String, description: String, link_to_original_web_page: String, author: String, time_in_seconds: Int, time_display: String = "", directions: [String], image: String, servings: String, cuisine: String, country: String, notes: [String], ingredients: [Ingredient], category: String, made: Bool, favorite: Bool, url_id: String = "", ingredientCount: Int? = nil, directionCount: Int? = nil, user: String = "", isDetailLoaded: Bool = true) {
         self.id = id
         self.title = title
         self.desc = description
         self.link_to_original_web_page = link_to_original_web_page
         self.author = author
         self.time_in_seconds = time_in_seconds
+        self.time_display = time_display
         self.directions = directions
         self.image = image
         self.servings = servings
@@ -44,6 +51,11 @@ struct Recipe: Identifiable, Decodable {
         self.category = category
         self.made = made
         self.favorite = favorite
+        self.url_id = url_id
+        self.ingredientCount = ingredientCount ?? ingredients.count
+        self.directionCount = directionCount ?? directions.count
+        self.user = user
+        self.isDetailLoaded = isDetailLoaded
     }
 }
 

@@ -39,7 +39,7 @@ struct ContentView: View {
             .accentColor(Color("MyPrimaryColor"))
             .toolbar {
                 if network.user != nil {
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItem(placement: .automatic) {
                         Button(action: {
                             network.sign_out()
                         }) {

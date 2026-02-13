@@ -71,6 +71,38 @@ struct IngredientData: Decodable {
     var updated: String
 }
 
+struct SearchResponse: Decodable {
+    var recipes: [SearchRecipeData]
+    var categories: [IdItem]
+    var cuisines: [IdItem]
+    var countries: [IdItem]
+    var authors: [IdItem]
+    var page: Int
+    var perPage: Int
+    var totalItems: Int
+    var totalPages: Int
+}
+
+struct SearchRecipeData: Decodable {
+    var id: String
+    var title: String
+    var author: String
+    var time: String
+    var image: String
+    var url_id: String
+    var category: String
+    var cuisine: String
+    var country: String
+    var directions: String
+    var ingr_list: String
+    var servings: String
+    var user: String
+}
+
+struct IdItem: Decodable {
+    var id: String
+}
+
 struct CatResponse: Decodable {
     var page: Int
     var perPage: Int

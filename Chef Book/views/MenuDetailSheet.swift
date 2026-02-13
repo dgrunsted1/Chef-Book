@@ -59,7 +59,6 @@ struct MenuDetailSheet: View {
                                 ))
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .frame(width: 50)
-                                .keyboardType(.numberPad)
                             }
                         }
                         .padding(.vertical, 4)
@@ -68,14 +67,13 @@ struct MenuDetailSheet: View {
                 .padding()
             }
             .navigationTitle("New Menu")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         isPresented = false
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .confirmationAction) {
                     Button(action: saveMenu) {
                         if isSaving {
                             ProgressView()

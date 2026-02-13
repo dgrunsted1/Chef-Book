@@ -35,12 +35,12 @@ struct RecipeCardView: View {
                 Spacer()
                 HStack {
 
-                    Text("\(recipe.ingredients.count) ingredients")
-                        .accessibilityLabel("\(recipe.ingredients.count) ingredients")
+                    Text("\(recipe.ingredientCount) ingredients")
+                        .accessibilityLabel("\(recipe.ingredientCount) ingredients")
                     Spacer()
                     Text("\(recipe.servings) servings")
                     Spacer()
-                    Text("\(recipe.time_in_seconds/60)m")
+                    Text(recipe.time_display.isEmpty ? "\(recipe.time_in_seconds/60)m" : recipe.time_display)
                 }
                 .font(.caption)
                 .padding(.horizontal)

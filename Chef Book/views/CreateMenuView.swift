@@ -114,7 +114,7 @@ struct CreateMenuView: View {
             }
             .onAppear {
                 if network.recipes.isEmpty {
-                    network.getRecipes(category: "category", cuisine: "cuisine", country: "country", author: "author", sort: "most recent", made: true, search: "")
+                    network.getRecipes()
                 }
             }
             .sheet(isPresented: $showMenuSheet) {

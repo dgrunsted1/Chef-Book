@@ -72,8 +72,6 @@ struct AddRecipeView: View {
             TextField("Paste recipe URL...", text: $importUrl)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
-
             Button(action: importFromUrl) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 10)
@@ -145,21 +143,17 @@ struct AddRecipeView: View {
                 HStack {
                     TextField("Time (min)", text: $timeMinutes)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .keyboardType(.numberPad)
                     TextField("Servings", text: $servings)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .keyboardType(.numberPad)
                 }
 
                 TextField("Source URL", text: $sourceUrl)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
 
                 TextField("Image URL", text: $imageUrl)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
             }
 
             // Image preview
@@ -243,7 +237,6 @@ struct AddRecipeView: View {
                     TextField("Qty", text: $ingredients[index].quantity)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 50)
-                        .keyboardType(.decimalPad)
                     TextField("Unit", text: $ingredients[index].unit)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 70)

@@ -10,179 +10,148 @@ import SwiftUI
 struct RecipesView: View {
     @EnvironmentObject var network: Network
     @State private var search_val: String = ""
-    @State private var sort_val: String = "most recent"
-    @State private var selected_cat: String = "category"
-    @State private var selected_cuisine: String = "cuisine"
-    @State private var selected_country: String = "country"
-    @State private var selected_author: String = "author"
+    @State private var sort_val: String = "Most Recent"
+    @State private var selectedCats: [String] = []
+    @State private var selectedCuisines: [String] = []
+    @State private var selectedCountries: [String] = []
+    @State private var selectedAuthors: [String] = []
     @FocusState private var search_field_is_focused: Bool
-    private let sort_options: [String] = ["least ingredients", "most ingredients", "least servings", "most servings", "least time", "most time", "least recent", "most recent"]
-    
+    private let sort_options: [String] = ["Least Ingredients", "Most Ingredients", "Least Servings", "Most Servings", "Least Time", "Most Time", "Least Recent", "Most Recent"]
 
-    
+    private func fetchRecipes() {
+        network.getRecipes(categories: selectedCats, cuisines: selectedCuisines, countries: selectedCountries, authors: selectedAuthors, sort: sort_val, search: search_val)
+    }
+
+    private func toggle(_ value: String, in array: inout [String]) {
+        if let idx = array.firstIndex(of: value) {
+            array.remove(at: idx)
+        } else {
+            array.append(value)
+        }
+        fetchRecipes()
+    }
+
     var body: some View {
-            VStack {
-                if network.recipes.isEmpty && !network.isLoading {
-                    Spacer()
-                    VStack(spacing: 8) {
-                        Image(systemName: "fork.knife")
-                            .font(.largeTitle)
-                            .foregroundColor(.gray)
-                        Text("No recipes found")
-                            .foregroundColor(.gray)
-                    }
-                    Spacer()
-                } else {
-                    ScrollView {
-                        if network.isLoading {
-                            ProgressView()
-                                .padding()
-                        }
-                        ForEach(network.recipes) { recipe in
-                            NavigationLink(destination: CookView(recipe: recipe).environmentObject(network)) {
-                                RecipeCardView(recipe: recipe, edit: false)
-                                    .padding(.horizontal, 5)
-                            }
-                            .accentColor(Color("TextColor"))
-                        }
-                        .listStyle(.inset)
-                    }
-                    .refreshable {
-                        network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
-                    }
+        VStack(spacing: 0) {
+            if network.recipes.isEmpty && !network.isLoading {
+                Spacer()
+                VStack(spacing: 8) {
+                    Image(systemName: "fork.knife")
+                        .font(.largeTitle)
+                        .foregroundColor(.gray)
+                    Text("No recipes found")
+                        .foregroundColor(.gray)
                 }
-                
-                VStack {
-                    HStack {
-                        TextField(
-                            "search",
-                            text: $search_val
-                        )
+                Spacer()
+            } else {
+                ScrollView {
+                    if network.isLoading {
+                        ProgressView()
+                            .padding()
+                    }
+                    ForEach(network.recipes) { recipe in
+                        NavigationLink(destination: CookView(recipe: recipe).environmentObject(network)) {
+                            RecipeCardView(recipe: recipe, edit: false)
+                                .padding(.horizontal, 5)
+                        }
+                        .accentColor(Color("TextColor"))
+                    }
+                    .listStyle(.inset)
+                }
+                .refreshable {
+                    fetchRecipes()
+                }
+            }
+
+            VStack(spacing: 6) {
+                // Filter carousel
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 4) {
+                        ForEach(network.categories.sorted(), id: \.self) { cat in
+                            FilterChip(label: cat, isSelected: selectedCats.contains(cat)) {
+                                toggle(cat, in: &selectedCats)
+                            }
+                        }
+                        ForEach(network.cuisines.sorted(), id: \.self) { cuisine in
+                            FilterChip(label: cuisine, isSelected: selectedCuisines.contains(cuisine)) {
+                                toggle(cuisine, in: &selectedCuisines)
+                            }
+                        }
+                        ForEach(network.authors.sorted(), id: \.self) { author in
+                            FilterChip(label: author, isSelected: selectedAuthors.contains(author)) {
+                                toggle(author, in: &selectedAuthors)
+                            }
+                        }
+                        ForEach(network.countries.sorted(), id: \.self) { country in
+                            FilterChip(label: country, isSelected: selectedCountries.contains(country)) {
+                                toggle(country, in: &selectedCountries)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 10)
+                }
+                .frame(minHeight: 32)
+
+                // Search + sort + count
+                HStack {
+                    TextField("search", text: $search_val)
                         .padding([.leading, .trailing])
                         .focused($search_field_is_focused)
-                        .onChange (of: search_val) {
-                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
+                        .onChange(of: search_val) {
+                            fetchRecipes()
                         }
                         .autocorrectionDisabled()
                         .overlay(
                             RoundedRectangle(cornerRadius: 7)
                                 .stroke(Color("MyPrimaryColor"), lineWidth: 2)
                         )
-                        Text("\(network.recipes.count) recipes")
-                        Picker("sort", selection: $sort_val) {
-                            ForEach(sort_options, id: \.self) {
-                                Text($0)
-                            }
-                        }
-                        .frame(height: 25)
-                        .pickerStyle(.menu)
-                        .accentColor(.black)
-                        .background(Color("MyPrimaryColor"))
-                        .cornerRadius(10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 7)
-                                .stroke(Color("MyPrimaryColor"), lineWidth: 2)
-                        )
-                        .onChange(of: sort_val, initial: true) {
-                            network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
-                        }
-                        
-                    }
-                    .padding([.leading, .trailing], 10)
-                    HStack{
-                        Menu {
-                            Picker("category", selection: $selected_cat) {
-                                ForEach(network.categories, id: \.self) {
-                                    Text($0)
-                                }
-                            }
-                            .onChange(of: selected_cat, initial: true) {
-                                network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
-                            }
-                        } label: {
-                            Text(selected_cat)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 7)
-                                        .stroke(Color("MyPrimaryColor"), lineWidth: 2)
-                                        .padding([.leading, .trailing], -5)
-                                )
-                                .accentColor(Color("TextColor"))
-                        }
-                        Spacer()
-                        Menu {
-                            Picker("cuisine", selection: $selected_cuisine) {
-                                ForEach(network.cuisines, id: \.self) {
-                                    Text($0)
-                                }
-                            }
-                            .onChange(of: selected_cuisine, initial: true) {
-                                network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
-                            }
-                        } label: {
-                            Text(selected_cuisine)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 7)
-                                        .stroke(Color("MyPrimaryColor"), lineWidth: 2)
-                                        .padding([.leading, .trailing], -5)
-                                )
-                                .accentColor(Color("TextColor"))
-                        }
-                        Spacer()
-                        Menu {
-                            Picker("country", selection: $selected_country) {
-                                ForEach(network.countries, id: \.self) {
-                                    Text($0)
-                                }
-                            }
-                            .onChange(of: selected_country, initial: true) {
-                                network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
-                            }
-                        } label: {
-                            Text(selected_country)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 7)
-                                        .stroke(Color("MyPrimaryColor"), lineWidth: 2)
-                                        .padding([.leading, .trailing], -5)
-                                )
-                                .accentColor(Color("TextColor"))
-                        }
-                        Spacer()
-                        Menu {
-                            Picker("author", selection: $selected_author) {
-                                ForEach(network.authors, id: \.self) {
-                                    Text($0)
-                                }
-                            }
-                            .onChange(of: selected_author, initial: true) {
-                                network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
-                            }
-                        } label: {
-                            Text(selected_author)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 7)
-                                        .stroke(Color("MyPrimaryColor"), lineWidth: 2)
-                                        .padding([.leading, .trailing], -5)
-                                )
-                                .accentColor(Color("TextColor"))
-                            
+                    Text("\(network.recipes.count) recipes")
+                        .font(.caption)
+                    Picker("sort", selection: $sort_val) {
+                        ForEach(sort_options, id: \.self) {
+                            Text($0)
                         }
                     }
-                    .padding([.leading, .trailing], 20)
-                    .padding([.bottom], 10)
+                    .frame(height: 25)
+                    .pickerStyle(.menu)
+                    .accentColor(.black)
+                    .background(Color("MyPrimaryColor"))
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 7)
+                            .stroke(Color("MyPrimaryColor"), lineWidth: 2)
+                    )
+                    .onChange(of: sort_val) {
+                        fetchRecipes()
+                    }
                 }
+                .padding(.horizontal, 10)
+                .padding(.bottom, 10)
             }
-            .onAppear {
-                network.getRecipes(category: selected_cat, cuisine: selected_cuisine, country: selected_country, author: selected_author, sort: sort_val, made: true, search: search_val)
-                network.getCategories()
-                network.getCuisines()
-                network.getCountries()
-                network.getAuthors()
-            }
+        }
+        .onAppear {
+            fetchRecipes()
+        }
     }
-        
-        
 }
 
+struct FilterChip: View {
+    let label: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(label)
+                .font(.caption)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(isSelected ? Color("MyPrimaryColor") : Color("Base200Color"))
+                .foregroundColor(isSelected ? .black : Color("TextColor"))
+                .cornerRadius(12)
+        }
+    }
+}
 
 #Preview {
     RecipesView()

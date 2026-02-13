@@ -60,7 +60,7 @@ struct MyMenusView: View {
                                 NavigationLink(destination: MenuDetailView(menu: menu).environmentObject(network)) {
                                     MenuCardView(menu: menu)
                                 }
-                                .accentColor(Color("TextColor"))
+                                .buttonStyle(.plain)
                                 .contextMenu {
                                     if !menu.today {
                                         Button {

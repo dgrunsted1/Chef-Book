@@ -37,6 +37,7 @@ struct ContentView: View {
                     .environmentObject(network)
             }
             .accentColor(Color("MyPrimaryColor"))
+            .background(Color("BaseColor"))
             .toolbar {
                 if network.user != nil {
                     ToolbarItem(placement: .automatic) {

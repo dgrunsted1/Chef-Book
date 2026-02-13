@@ -54,9 +54,8 @@ struct RecipesView: View {
                             RecipeCardView(recipe: recipe, edit: false)
                                 .padding(.horizontal, 5)
                         }
-                        .accentColor(Color("TextColor"))
+                        .buttonStyle(.plain)
                     }
-                    .listStyle(.inset)
                 }
                 .refreshable {
                     fetchRecipes()
@@ -64,25 +63,23 @@ struct RecipesView: View {
             }
 
             VStack(spacing: 6) {
+                Spacer().frame(height: 4)
                 // Filter accordion headers
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 4) {
-                        FilterHeaderButton(title: "Category", count: selectedCats.count, isExpanded: expandedFilter == "Category") {
-                            expandedFilter = expandedFilter == "Category" ? nil : "Category"
-                        }
-                        FilterHeaderButton(title: "Cuisine", count: selectedCuisines.count, isExpanded: expandedFilter == "Cuisine") {
-                            expandedFilter = expandedFilter == "Cuisine" ? nil : "Cuisine"
-                        }
-                        FilterHeaderButton(title: "Author", count: selectedAuthors.count, isExpanded: expandedFilter == "Author") {
-                            expandedFilter = expandedFilter == "Author" ? nil : "Author"
-                        }
-                        FilterHeaderButton(title: "Country", count: selectedCountries.count, isExpanded: expandedFilter == "Country") {
-                            expandedFilter = expandedFilter == "Country" ? nil : "Country"
-                        }
+                HStack(spacing: 6) {
+                    FilterHeaderButton(title: "Category", icon: "square.grid.2x2", count: selectedCats.count, isExpanded: expandedFilter == "Category") {
+                        expandedFilter = expandedFilter == "Category" ? nil : "Category"
                     }
-                    .padding(.horizontal, 10)
+                    FilterHeaderButton(title: "Cuisine", icon: "globe", count: selectedCuisines.count, isExpanded: expandedFilter == "Cuisine") {
+                        expandedFilter = expandedFilter == "Cuisine" ? nil : "Cuisine"
+                    }
+                    FilterHeaderButton(title: "Author", icon: "person", count: selectedAuthors.count, isExpanded: expandedFilter == "Author") {
+                        expandedFilter = expandedFilter == "Author" ? nil : "Author"
+                    }
+                    FilterHeaderButton(title: "Country", icon: "flag", count: selectedCountries.count, isExpanded: expandedFilter == "Country") {
+                        expandedFilter = expandedFilter == "Country" ? nil : "Country"
+                    }
                 }
-                .frame(minHeight: 32)
+                .padding(.horizontal, 10)
 
                 // Expanded filter chips
                 if let expanded = expandedFilter {
@@ -198,6 +195,7 @@ struct RecipesView: View {
 
 struct FilterHeaderButton: View {
     let title: String
+    let icon: String
     let count: Int
     let isExpanded: Bool
     let action: () -> Void
@@ -209,27 +207,30 @@ struct FilterHeaderButton: View {
             }
         }) {
             HStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 10))
                 Text(title)
-                    .font(.caption.weight(.semibold))
+                    .font(.system(size: 11, weight: .medium))
                     .lineLimit(1)
                 if count > 0 {
                     Text("\(count)")
-                        .font(.caption2.weight(.bold))
-                        .frame(width: 16, height: 16)
-                        .background(Color("MyPrimaryColor"))
-                        .foregroundColor(.black)
+                        .font(.system(size: 9, weight: .bold))
+                        .frame(width: 14, height: 14)
+                        .background(isExpanded ? .black.opacity(0.15) : Color("MyPrimaryColor"))
+                        .foregroundColor(isExpanded ? Color("TextColor") : .black)
                         .clipShape(Circle())
                 }
                 Image(systemName: "chevron.down")
-                    .font(.caption2)
+                    .font(.system(size: 8))
                     .rotationEffect(.degrees(isExpanded ? 180 : 0))
             }
-            .padding(.horizontal, 10)
+            .frame(maxWidth: .infinity)
             .padding(.vertical, 6)
             .background(isExpanded ? Color("MyPrimaryColor") : Color("Base200Color"))
             .foregroundColor(isExpanded ? .black : Color("TextColor"))
-            .cornerRadius(14)
+            .cornerRadius(10)
         }
+        .buttonStyle(.plain)
     }
 }
 
@@ -250,6 +251,7 @@ struct FilterChip: View {
                 .foregroundColor(isSelected ? .black : Color("TextColor"))
                 .cornerRadius(12)
         }
+        .buttonStyle(.plain)
     }
 }
 

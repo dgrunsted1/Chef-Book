@@ -109,7 +109,7 @@ struct MenuDetailView: View {
                         .padding(.horizontal)
                         .padding(.vertical, 4)
                     }
-                    .accentColor(Color("TextColor"))
+                    .buttonStyle(.plain)
                 }
             }
             .padding(.top, 8)

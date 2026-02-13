@@ -27,9 +27,8 @@ struct TodayView: View {
                                         .environmentObject(network)
                                         .padding(.horizontal, 5)
                                 }
-                                .accentColor(Color("TextColor"))
+                                .buttonStyle(.plain)
                             }
-                            .listStyle(.inset)
                         }
                         .refreshable {
                             network.get_todays_menu()
@@ -50,7 +49,6 @@ struct TodayView: View {
                                     ForEach(today.grocery_list) { curr in
                                         GroceryItemRow(item: curr)
                                     }
-                                    .listStyle(.inset)
                                 }
                             }
                         }

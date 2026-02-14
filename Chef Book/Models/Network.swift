@@ -53,7 +53,16 @@ class Network: ObservableObject {
 
         realtime?.subscribe(to: "grocery_lists") { [weak self] data in
             guard let action = data["action"] as? String else { return }
-            if action == "update" {
+            if action == "update" || action == "create" || action == "delete" {
+                DispatchQueue.main.async {
+                    self?.get_todays_menu()
+                }
+            }
+        }
+
+        realtime?.subscribe(to: "grocery_items") { [weak self] data in
+            guard let action = data["action"] as? String else { return }
+            if action == "update" || action == "create" || action == "delete" {
                 DispatchQueue.main.async {
                     self?.get_todays_menu()
                 }
@@ -369,7 +378,7 @@ class Network: ObservableObject {
                             return GroceryItem(id: groc_item.id, checked: groc_item.checked, ingredient: Ingredient(id: groc_item.id, quantity: groc_item.qty, unit: groc_item.unit, name: groc_item.name))
                         }
 
-                        self.today = MyMenu(created: menuItem.created, desc: menuItem.description, grocery_list: temp_groceries, id: menuItem.id, made: menuItem.made, notes: menuItem.notes, recipes: temp_recipes, servings: menuItem.servings, sub_recipes: menuItem.sub_recipes ?? [:], title: menuItem.title, today: menuItem.today, updated: menuItem.updated)
+                        self.today = MyMenu(created: menuItem.created, desc: menuItem.description, grocery_list: temp_groceries, grocery_list_id: menuItem.expand.grocery_list?.id ?? menuItem.grocery_list, id: menuItem.id, made: menuItem.made, notes: menuItem.notes, recipes: temp_recipes, servings: menuItem.servings, sub_recipes: menuItem.sub_recipes ?? [:], title: menuItem.title, today: menuItem.today, updated: menuItem.updated)
                     } catch let error {
                         print("Error decoding: ", error)
                     }
@@ -558,7 +567,7 @@ class Network: ObservableObject {
                         let temp_groceries = (menuItem.expand.grocery_list?.expandedItems ?? []).map { groc_item in
                             GroceryItem(id: groc_item.id, checked: groc_item.checked, ingredient: Ingredient(id: groc_item.id, quantity: groc_item.qty, unit: groc_item.unit, name: groc_item.name))
                         }
-                        return MyMenu(created: menuItem.created, desc: menuItem.description, grocery_list: temp_groceries, id: menuItem.id, made: menuItem.made, notes: menuItem.notes, recipes: temp_recipes, servings: menuItem.servings, sub_recipes: menuItem.sub_recipes ?? [:], title: menuItem.title, today: menuItem.today, updated: menuItem.updated)
+                        return MyMenu(created: menuItem.created, desc: menuItem.description, grocery_list: temp_groceries, grocery_list_id: menuItem.expand.grocery_list?.id ?? menuItem.grocery_list, id: menuItem.id, made: menuItem.made, notes: menuItem.notes, recipes: temp_recipes, servings: menuItem.servings, sub_recipes: menuItem.sub_recipes ?? [:], title: menuItem.title, today: menuItem.today, updated: menuItem.updated)
                     }
                 } catch {
                     print("Error decoding menus: ", error)
@@ -678,18 +687,191 @@ class Network: ObservableObject {
         }
     }
 
-    func update_grocery_item(menuId: String, itemId: String, checked: Bool, completion: @escaping (Bool) -> Void) {
-        // Grocery items are embedded in the grocery_list record's `list` array,
-        // so we need to fetch the grocery list, update the item, and PATCH back
-        guard let menu = menus.first(where: { $0.id == menuId }) ?? (today?.id == menuId ? today : nil) else {
+    func toggle_grocery_item(itemId: String, checked: Bool, completion: @escaping (Bool) -> Void) {
+        let body: [String: Any] = ["checked": checked]
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
             completion(false)
             return
         }
-        var updatedList = menu.grocery_list
-        if let idx = updatedList.firstIndex(where: { $0.id == itemId }) {
-            updatedList[idx].checked = checked
+        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/grocery_items/records/\(itemId)", method: "PATCH", body: jsonData, contentType: "application/json") { [weak self] data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            DispatchQueue.main.async {
+                // Update local state optimistically
+                if let idx = self?.today?.grocery_list.firstIndex(where: { $0.id == itemId }) {
+                    self?.today?.grocery_list[idx].checked = checked
+                }
+                completion(true)
+            }
         }
-        completion(true)
+    }
+
+    func add_grocery_item(groceryListId: String, name: String, qty: Double, unit: String, completion: @escaping (Bool) -> Void) {
+        let body: [String: Any] = ["name": name, "qty": qty, "unit": unit, "checked": false, "active": true]
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
+            completion(false)
+            return
+        }
+        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/grocery_items/records", method: "POST", body: jsonData, contentType: "application/json") { [weak self] data, response, error in
+            guard let data = data,
+                  let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode),
+                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let newItemId = json["id"] as? String else {
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            // Link to grocery list
+            guard let linkData = try? JSONSerialization.data(withJSONObject: ["items+": newItemId]) else {
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            self?.makeAuthenticatedRequest(to: "\(self?.baseURL ?? "")/api/collections/grocery_lists/records/\(groceryListId)", method: "PATCH", body: linkData, contentType: "application/json") { [weak self] _, resp, _ in
+                guard let httpResp = resp as? HTTPURLResponse,
+                      (200...299).contains(httpResp.statusCode) else {
+                    DispatchQueue.main.async { completion(false) }
+                    return
+                }
+                DispatchQueue.main.async {
+                    self?.get_todays_menu()
+                    completion(true)
+                }
+            }
+        }
+    }
+
+    func edit_grocery_item(itemId: String, name: String, qty: Double, unit: String, completion: @escaping (Bool) -> Void) {
+        let body: [String: Any] = ["name": name, "qty": qty, "unit": unit]
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
+            completion(false)
+            return
+        }
+        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/grocery_items/records/\(itemId)", method: "PATCH", body: jsonData, contentType: "application/json") { [weak self] data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            DispatchQueue.main.async {
+                self?.get_todays_menu()
+                completion(true)
+            }
+        }
+    }
+
+    func delete_grocery_item(itemId: String, groceryListId: String, completion: @escaping (Bool) -> Void) {
+        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/grocery_items/records/\(itemId)", method: "DELETE") { [weak self] data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            // Unlink from grocery list
+            guard let unlinkData = try? JSONSerialization.data(withJSONObject: ["items-": itemId]) else {
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            self?.makeAuthenticatedRequest(to: "\(self?.baseURL ?? "")/api/collections/grocery_lists/records/\(groceryListId)", method: "PATCH", body: unlinkData, contentType: "application/json") { [weak self] _, resp, _ in
+                DispatchQueue.main.async {
+                    self?.get_todays_menu()
+                    completion(true)
+                }
+            }
+        }
+    }
+
+    func reset_grocery_list(menuId: String, completion: @escaping (Bool) -> Void) {
+        guard let menu = (today?.id == menuId ? today : menus.first(where: { $0.id == menuId })) else {
+            completion(false)
+            return
+        }
+
+        let oldGroceryListId = menu.grocery_list_id
+
+        // Collect ingredients from all recipes in the menu
+        var items: [[String: Any]] = []
+        for recipe in menu.recipes {
+            for ingredient in recipe.ingredients {
+                items.append([
+                    "name": ingredient.name,
+                    "qty": ingredient.quantity,
+                    "unit": ingredient.unit,
+                    "checked": false,
+                    "active": true
+                ])
+            }
+        }
+
+        // Delete old grocery items first
+        let oldItemIds = menu.grocery_list.map { $0.id }
+        let deleteGroup = DispatchGroup()
+        for itemId in oldItemIds {
+            deleteGroup.enter()
+            makeAuthenticatedRequest(to: "\(baseURL)/api/collections/grocery_items/records/\(itemId)", method: "DELETE") { _, _, _ in
+                deleteGroup.leave()
+            }
+        }
+
+        deleteGroup.notify(queue: .global()) { [weak self] in
+            guard let self = self else { return }
+
+            // Delete old grocery list if it exists
+            if !oldGroceryListId.isEmpty {
+                self.makeAuthenticatedRequest(to: "\(self.baseURL)/api/collections/grocery_lists/records/\(oldGroceryListId)", method: "DELETE") { _, _, _ in }
+            }
+
+            // Create new grocery items
+            var newItemIds: [String] = []
+            let createGroup = DispatchGroup()
+            for item in items {
+                createGroup.enter()
+                guard let jsonData = try? JSONSerialization.data(withJSONObject: item) else {
+                    createGroup.leave()
+                    continue
+                }
+                self.makeAuthenticatedRequest(to: "\(self.baseURL)/api/collections/grocery_items/records", method: "POST", body: jsonData, contentType: "application/json") { data, response, error in
+                    if let data = data,
+                       let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                       let id = json["id"] as? String {
+                        newItemIds.append(id)
+                    }
+                    createGroup.leave()
+                }
+            }
+
+            createGroup.notify(queue: .global()) {
+                // Create new grocery list with all items
+                let listBody: [String: Any] = [
+                    "menu": menuId,
+                    "items": newItemIds,
+                    "active": true
+                ]
+                guard let listData = try? JSONSerialization.data(withJSONObject: listBody) else {
+                    DispatchQueue.main.async { completion(false) }
+                    return
+                }
+                self.makeAuthenticatedRequest(to: "\(self.baseURL)/api/collections/grocery_lists/records", method: "POST", body: listData, contentType: "application/json") { data, response, error in
+                    guard let data = data,
+                          let httpResponse = response as? HTTPURLResponse,
+                          (200...299).contains(httpResponse.statusCode),
+                          let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                          let newListId = json["id"] as? String else {
+                        DispatchQueue.main.async { completion(false) }
+                        return
+                    }
+                    // Link new grocery list to menu
+                    self.update_menu(id: menuId, fields: ["grocery_list": newListId]) { success in
+                        DispatchQueue.main.async {
+                            self.get_todays_menu()
+                            completion(success)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // MARK: - Notes Methods

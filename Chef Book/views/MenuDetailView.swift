@@ -125,7 +125,8 @@ struct MenuDetailView: View {
                         .padding(.top, 40)
                 } else {
                     ForEach(menu.grocery_list) { item in
-                        GroceryItemRow(item: item)
+                        GroceryItemRow(item: item, groceryListId: menu.grocery_list_id)
+                            .environmentObject(network)
                             .padding(.horizontal)
                     }
                 }

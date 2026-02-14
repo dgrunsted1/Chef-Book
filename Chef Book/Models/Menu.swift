@@ -13,6 +13,7 @@ struct MyMenu: Identifiable {
     var created: String
     var desc: String
     var grocery_list: [GroceryItem]
+    var grocery_list_id: String
     var id: String
     var made: [String: Bool]
     var notes: String

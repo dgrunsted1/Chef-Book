@@ -26,12 +26,33 @@ class Network: ObservableObject {
         restoreSession()
     }
 
+    private static func debugLog(_ msg: String) {
+        NSLog("%@", msg)
+        let logFile = FileManager.default.temporaryDirectory.appendingPathComponent("chefbook_debug.txt")
+        let line = "\(Date()): \(msg)\n"
+        if let data = line.data(using: .utf8) {
+            if FileManager.default.fileExists(atPath: logFile.path) {
+                if let handle = try? FileHandle(forWritingTo: logFile) {
+                    handle.seekToEndOfFile()
+                    handle.write(data)
+                    handle.closeFile()
+                }
+            } else {
+                try? data.write(to: logFile)
+            }
+        }
+    }
+
     private func restoreSession() {
         if let userData = UserDefaults.standard.data(forKey: "user_response"),
            let savedUser = try? JSONDecoder().decode(UserResponse.self, from: userData) {
             self.user = savedUser
             self.authToken = savedUser.token
+            Network.debugLog("[restoreSession] Restored user: \(savedUser.record.username) (id: \(savedUser.record.id))")
             connectRealtime()
+            get_todays_menu()
+        } else {
+            Network.debugLog("[restoreSession] No saved session found")
         }
     }
 
@@ -335,25 +356,33 @@ class Network: ObservableObject {
     }
     
     func get_todays_menu() {
-        guard let userId = self.user?.record.id else { return }
-        guard let url = URL(string: "\(baseURL)/api/collections/menus/records?page=1&perPage=1&filter=user%3D%22\(userId)%22%20%26%26%20today%3DTrue&expand=recipes%2Crecipes.notes%2Crecipes.ingr_list%2C%20grocery_list") else { return }
+        guard let userId = self.user?.record.id else {
+            Network.debugLog("[get_todays_menu] No user id, skipping")
+            return
+        }
+        let endpoint = "\(baseURL)/api/collections/menus/records?page=1&perPage=1&filter=user%3D%22\(userId)%22%20%26%26%20today%3DTrue&expand=recipes%2Crecipes.notes%2Crecipes.ingr_list%2Cgrocery_list%2Cgrocery_list.items"
+        Network.debugLog("[get_todays_menu] Requesting: \(endpoint)")
         isLoading = true
-        let urlRequest = URLRequest(url: url)
 
-        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+        makeAuthenticatedRequest(to: endpoint) { (data, response, error) in
             DispatchQueue.main.async { self.isLoading = false }
             if let error = error {
-                print("Request error: ", error)
+                Network.debugLog("[get_todays_menu] Request error: \(error.localizedDescription)")
                 return
             }
 
             guard let response = response as? HTTPURLResponse else { return }
+            Network.debugLog("[get_todays_menu] Status: \(response.statusCode)")
 
             if response.statusCode == 200 {
                 guard let data = data else { return }
+                if let raw = String(data: data, encoding: .utf8) {
+                    Network.debugLog("[get_todays_menu] Response: \(String(raw.prefix(500)))")
+                }
                 DispatchQueue.main.async {
                     do {
                         let decoded_menu = try JSONDecoder().decode(TodaysResponse.self, from: data)
+                        Network.debugLog("[get_todays_menu] Decoded items count: \(decoded_menu.items.count)")
                         guard !decoded_menu.items.isEmpty else {
                             self.today = nil
                             return
@@ -363,19 +392,17 @@ class Network: ObservableObject {
                             self.mapRecipeData(recipeData)
                         }
 
-                        let temp_groceries = menuItem.expand.grocery_list.list.map { groc_item in
-                            return GroceryItem(id: groc_item.id, checked: groc_item.checked, ingredient: Ingredient(id: groc_item.id, quantity: groc_item.quantity.value, unit: groc_item.unit, name: groc_item.ingredient))
+                        let temp_groceries = (menuItem.expand.grocery_list?.expandedItems ?? []).map { groc_item in
+                            return GroceryItem(id: groc_item.id, checked: groc_item.checked, ingredient: Ingredient(id: groc_item.id, quantity: groc_item.qty, unit: groc_item.unit, name: groc_item.name))
                         }
 
-                        self.today = MyMenu(created: menuItem.created, desc: menuItem.description, grocery_list: temp_groceries, id: menuItem.id, made: menuItem.made, notes: menuItem.notes, recipes: temp_recipes, servings: menuItem.servings, sub_recipes: menuItem.sub_recipes, title: menuItem.title, today: menuItem.today, updated: menuItem.updated)
+                        self.today = MyMenu(created: menuItem.created, desc: menuItem.description, grocery_list: temp_groceries, id: menuItem.id, made: menuItem.made, notes: menuItem.notes, recipes: temp_recipes, servings: menuItem.servings, sub_recipes: menuItem.sub_recipes ?? [:], title: menuItem.title, today: menuItem.today, updated: menuItem.updated)
                     } catch let error {
-                        print("Error decoding: ", error)
+                        Network.debugLog("[get_todays_menu] Decode error: \(error)")
                     }
                 }
             }
         }
-
-        dataTask.resume()
     }
 
     // MARK: - Helper
@@ -555,10 +582,10 @@ class Network: ObservableObject {
                     let decoded = try JSONDecoder().decode(TodaysResponse.self, from: data)
                     self.menus = decoded.items.map { menuItem in
                         let temp_recipes = menuItem.expand.recipes.map { self.mapRecipeData($0) }
-                        let temp_groceries = menuItem.expand.grocery_list.list.map { groc_item in
-                            GroceryItem(id: groc_item.id, checked: groc_item.checked, ingredient: Ingredient(id: groc_item.id, quantity: groc_item.quantity.value, unit: groc_item.unit, name: groc_item.ingredient))
+                        let temp_groceries = (menuItem.expand.grocery_list?.expandedItems ?? []).map { groc_item in
+                            GroceryItem(id: groc_item.id, checked: groc_item.checked, ingredient: Ingredient(id: groc_item.id, quantity: groc_item.qty, unit: groc_item.unit, name: groc_item.name))
                         }
-                        return MyMenu(created: menuItem.created, desc: menuItem.description, grocery_list: temp_groceries, id: menuItem.id, made: menuItem.made, notes: menuItem.notes, recipes: temp_recipes, servings: menuItem.servings, sub_recipes: menuItem.sub_recipes, title: menuItem.title, today: menuItem.today, updated: menuItem.updated)
+                        return MyMenu(created: menuItem.created, desc: menuItem.description, grocery_list: temp_groceries, id: menuItem.id, made: menuItem.made, notes: menuItem.notes, recipes: temp_recipes, servings: menuItem.servings, sub_recipes: menuItem.sub_recipes ?? [:], title: menuItem.title, today: menuItem.today, updated: menuItem.updated)
                     }
                 } catch {
                     print("Error decoding menus: ", error)

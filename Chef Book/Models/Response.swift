@@ -167,7 +167,7 @@ struct MenuItem: Decodable {
     var notes: String
     var recipes: [String]
     var servings: [String: String]
-    var sub_recipes: [String:[SubRecipe]]
+    var sub_recipes: [String:[SubRecipe]]?
     var title: String
     var today: Bool
     var updated: String
@@ -181,7 +181,7 @@ struct SubRecipe: Decodable {
 
 struct TodayExpand: Decodable {
     var recipes: [RecipeData]
-    var grocery_list: GroceryList
+    var grocery_list: GroceryList?
 }
 
 struct GroceryList: Decodable, Identifiable {
@@ -190,16 +190,25 @@ struct GroceryList: Decodable, Identifiable {
     var collectionName: String
     var created: String
     var id: String
-    var list: [GroceryItemResponse]
+    var items: [String]?
+    var expand: GroceryListExpand?
     var menu: String
     var updated: String
+
+    var expandedItems: [GroceryItemResponse] {
+        expand?.items ?? []
+    }
+}
+
+struct GroceryListExpand: Decodable {
+    var items: [GroceryItemResponse]?
 }
 
 struct GroceryItemResponse: Decodable {
     var checked: Bool
     var id: String
-    var ingredient: String
-    var quantity: QuantityValue
+    var name: String
+    var qty: Double
     var unit: String
 }
 

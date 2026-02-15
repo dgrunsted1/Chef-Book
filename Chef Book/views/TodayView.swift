@@ -35,7 +35,12 @@ struct TodayView: View {
                     if selectedTab == 0 {
                         List {
                             ForEach(today.recipes) { recipe in
-                                NavigationLink(destination: CookView(recipe: recipe).environmentObject(network)) {
+                                ZStack(alignment: .leading) {
+                                    NavigationLink(destination: CookView(recipe: recipe).environmentObject(network)) {
+                                        EmptyView()
+                                    }
+                                    .opacity(0)
+
                                     TodayCardView(recipe: recipe, made: today.made[recipe.id] ?? false)
                                         .environmentObject(network)
                                 }

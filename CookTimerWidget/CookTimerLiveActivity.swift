@@ -41,12 +41,14 @@ struct CookTimerLiveActivity: Widget {
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Step \(context.attributes.stepNumber) - \(context.attributes.timerLabel)")
-                        .font(.headline)
+                    Text(context.attributes.recipeName)
+                        .font(.subheadline)
+                        .bold()
                         .foregroundColor(context.state.isComplete ? .green : .primary)
+                        .lineLimit(1)
 
                     Text(context.attributes.stepSnippet)
-                        .font(.caption)
+                        .font(.caption2)
                         .foregroundColor(.secondary)
                         .lineLimit(2)
                 }
@@ -58,10 +60,7 @@ struct CookTimerLiveActivity: Widget {
                         .font(.headline)
                         .foregroundColor(.green)
                 } else {
-                    Text(timeString(context.state.remainingSeconds))
-                        .font(.system(.title2, design: .monospaced))
-                        .bold()
-                        .monospacedDigit()
+                    RecipeImageView(url: context.attributes.recipeImageURL, size: 44)
                 }
             }
             .padding()
@@ -71,13 +70,7 @@ struct CookTimerLiveActivity: Widget {
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    VStack(alignment: .leading) {
-                        Text("Step \(context.attributes.stepNumber)")
-                            .font(.headline)
-                        Text(context.attributes.timerLabel)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
+                    RecipeImageView(url: context.attributes.recipeImageURL, size: 36)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     Text(timeString(context.state.remainingSeconds))
@@ -87,14 +80,19 @@ struct CookTimerLiveActivity: Widget {
                         .foregroundColor(context.state.isComplete ? .green : .orange)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text(context.attributes.stepSnippet)
-                        .font(.caption)
-                        .lineLimit(2)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(context.attributes.recipeName)
+                            .font(.caption)
+                            .bold()
+                            .lineLimit(1)
+                        Text("Step \(context.attributes.stepNumber) - \(context.attributes.stepSnippet)")
+                            .font(.caption2)
+                            .lineLimit(1)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
             } compactLeading: {
-                Text("S\(context.attributes.stepNumber)")
-                    .font(.caption)
-                    .bold()
+                RecipeImageView(url: context.attributes.recipeImageURL, size: 24)
             } compactTrailing: {
                 Text(timeString(context.state.remainingSeconds))
                     .font(.system(.caption, design: .monospaced))
@@ -102,9 +100,7 @@ struct CookTimerLiveActivity: Widget {
                     .monospacedDigit()
                     .foregroundColor(context.state.isComplete ? .green : .orange)
             } minimal: {
-                Text(timeString(context.state.remainingSeconds))
-                    .font(.system(.caption2, design: .monospaced))
-                    .monospacedDigit()
+                RecipeImageView(url: context.attributes.recipeImageURL, size: 22)
             }
         }
     }
@@ -118,5 +114,38 @@ struct CookTimerLiveActivity: Widget {
         let mins = seconds / 60
         let secs = seconds % 60
         return String(format: "%d:%02d", mins, secs)
+    }
+}
+
+// MARK: - Recipe Image View
+
+private struct RecipeImageView: View {
+    let url: String
+    let size: CGFloat
+
+    var body: some View {
+        if !url.isEmpty, let imageURL = URL(string: url) {
+            AsyncImage(url: imageURL) { phase in
+                switch phase {
+                case .success(let image):
+                    image.resizable()
+                        .scaledToFill()
+                        .frame(width: size, height: size)
+                        .clipShape(RoundedRectangle(cornerRadius: size * 0.2))
+                default:
+                    fallbackIcon
+                }
+            }
+        } else {
+            fallbackIcon
+        }
+    }
+
+    private var fallbackIcon: some View {
+        Image("AppIconImage")
+            .resizable()
+            .scaledToFill()
+            .frame(width: size, height: size)
+            .clipShape(RoundedRectangle(cornerRadius: size * 0.2))
     }
 }

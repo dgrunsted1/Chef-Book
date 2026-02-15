@@ -67,7 +67,9 @@ struct CookView: View {
                             CookDirectionsPane(
                                 directions: recipe.directions,
                                 blurred: $blurredDirections,
-                                timers: $timers
+                                timers: $timers,
+                                recipeName: recipe.title,
+                                recipeImageURL: recipe.image
                             )
                             .frame(width: geo.size.width * 3 / 5 - 8)
                         }
@@ -86,7 +88,9 @@ struct CookView: View {
                             CookDirectionsPane(
                                 directions: recipe.directions,
                                 blurred: $blurredDirections,
-                                timers: $timers
+                                timers: $timers,
+                                recipeName: recipe.title,
+                                recipeImageURL: recipe.image
                             )
                             .frame(height: geo.size.height * 0.6)
                         }
@@ -360,6 +364,8 @@ private struct CookDirectionsPane: View {
     let directions: [String]
     @Binding var blurred: Set<Int>
     @Binding var timers: [Int: CookTimer]
+    let recipeName: String
+    let recipeImageURL: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -391,7 +397,9 @@ private struct CookDirectionsPane: View {
                                         totalSeconds: parsed.totalSeconds,
                                         displayLabel: parsed.displayLabel,
                                         stepNumber: index + 1,
-                                        stepSnippet: snippet
+                                        stepSnippet: snippet,
+                                        recipeName: recipeName,
+                                        recipeImageURL: recipeImageURL
                                     )
                                     timers[index] = t
                                     t.start()

@@ -9,6 +9,7 @@ import Foundation
 import AudioToolbox
 import UserNotifications
 #if os(iOS)
+import UIKit
 import ActivityKit
 #endif
 
@@ -67,10 +68,15 @@ class CookTimer {
     let displayLabel: String
     let stepNumber: Int
     let stepSnippet: String
+    let recipeName: String
+    let recipeImageURL: String
     private(set) var remainingSeconds: Int
     private(set) var isRunning: Bool = false
     private(set) var isComplete: Bool = false
     private var timer: Timer?
+    private var targetDate: Date?
+    private var backgroundObserver: Any?
+    private var foregroundObserver: Any?
 
     #if os(iOS)
     private var activity: Activity<CookTimerAttributes>?
@@ -95,36 +101,32 @@ class CookTimer {
         return String(format: "%d:%02d", mins, secs)
     }
 
-    init(totalSeconds: Int, displayLabel: String, stepNumber: Int, stepSnippet: String) {
+    init(totalSeconds: Int, displayLabel: String, stepNumber: Int, stepSnippet: String, recipeName: String, recipeImageURL: String) {
         self.totalSeconds = totalSeconds
         self.displayLabel = displayLabel
         self.stepNumber = stepNumber
         self.stepSnippet = stepSnippet
+        self.recipeName = recipeName
+        self.recipeImageURL = recipeImageURL
         self.remainingSeconds = totalSeconds
+        setupBackgroundObservers()
     }
 
     func start() {
         guard !isRunning, remainingSeconds > 0 else { return }
         isRunning = true
         isComplete = false
+        targetDate = Date().addingTimeInterval(TimeInterval(remainingSeconds))
         scheduleNotification()
         startLiveActivity()
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            guard let self else { return }
-            if self.remainingSeconds > 0 {
-                self.remainingSeconds -= 1
-                self.updateLiveActivity()
-                if self.remainingSeconds == 0 {
-                    self.complete()
-                }
-            }
-        }
+        startTicking()
     }
 
     func pause() {
         isRunning = false
         timer?.invalidate()
         timer = nil
+        targetDate = nil
         cancelNotification()
         updateLiveActivity()
     }
@@ -134,6 +136,38 @@ class CookTimer {
         remainingSeconds = totalSeconds
         isComplete = false
         endLiveActivity()
+    }
+
+    private func startTicking() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.tick()
+        }
+    }
+
+    private func tick() {
+        guard isRunning, let targetDate else { return }
+        let remaining = Int(ceil(targetDate.timeIntervalSinceNow))
+        if remaining <= 0 {
+            remainingSeconds = 0
+            complete()
+        } else {
+            remainingSeconds = remaining
+            updateLiveActivity()
+        }
+    }
+
+    private func setupBackgroundObservers() {
+        #if os(iOS)
+        foregroundObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.willEnterForegroundNotification,
+            object: nil, queue: .main
+        ) { [weak self] _ in
+            guard let self, self.isRunning else { return }
+            self.tick()
+            self.startTicking()
+        }
+        #endif
     }
 
     private func complete() {
@@ -191,7 +225,9 @@ class CookTimer {
             stepNumber: stepNumber,
             stepSnippet: stepSnippet,
             timerLabel: displayLabel,
-            totalSeconds: totalSeconds
+            totalSeconds: totalSeconds,
+            recipeName: recipeName,
+            recipeImageURL: recipeImageURL
         )
         let state = CookTimerAttributes.ContentState(
             remainingSeconds: remainingSeconds,
@@ -239,6 +275,8 @@ class CookTimer {
 
     deinit {
         timer?.invalidate()
+        if let foregroundObserver { NotificationCenter.default.removeObserver(foregroundObserver) }
+        if let backgroundObserver { NotificationCenter.default.removeObserver(backgroundObserver) }
         cancelNotification()
         #if os(iOS)
         if let activity {

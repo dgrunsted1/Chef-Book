@@ -33,16 +33,18 @@ struct TodayView: View {
                     .padding(.horizontal)
 
                     if selectedTab == 0 {
-                        ScrollView {
+                        List {
                             ForEach(today.recipes) { recipe in
                                 NavigationLink(destination: CookView(recipe: recipe).environmentObject(network)) {
                                     TodayCardView(recipe: recipe, made: today.made[recipe.id] ?? false)
                                         .environmentObject(network)
-                                        .padding(.horizontal, 5)
                                 }
-                                .buttonStyle(.plain)
                             }
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 4, leading: 5, bottom: 4, trailing: 5))
+                            .listRowBackground(Color.clear)
                         }
+                        .listStyle(.plain)
                         .refreshable {
                             network.get_todays_menu()
                         }

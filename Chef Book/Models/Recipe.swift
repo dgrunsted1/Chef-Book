@@ -9,7 +9,9 @@ import Foundation
 import SwiftData
 
 //@Model
-struct Recipe: Identifiable, Decodable {
+struct Recipe: Identifiable, Decodable, Hashable {
+    static func == (lhs: Recipe, rhs: Recipe) -> Bool { lhs.id == rhs.id }
+    func hash(into hasher: inout Hasher) { hasher.combine(id) }
     let id: String
     var title: String
     var desc: String

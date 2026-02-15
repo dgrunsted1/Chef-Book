@@ -19,5 +19,7 @@ struct CookTimerAttributes: ActivityAttributes {
     var stepSnippet: String
     var timerLabel: String
     var totalSeconds: Int
+    var recipeName: String
+    var recipeImageURL: String
 }
 #endif

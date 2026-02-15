@@ -136,6 +136,10 @@ struct CookView: View {
         .onDisappear {
             timers.values.forEach { $0.pause() }
         }
+        .ignoresSafeArea(.container, edges: .top)
+        #if os(iOS)
+        .toolbarBackground(.hidden, for: .navigationBar)
+        #endif
     }
 }
 
@@ -167,12 +171,16 @@ private struct CookHeaderView: View {
                 }
             }
 
-            // Gradient overlay
-            LinearGradient(
-                colors: [.clear, Color("BaseColor").opacity(0.7), Color("BaseColor")],
-                startPoint: .top,
-                endPoint: .bottom
-            )
+            // Gradient overlay — only covers bottom third
+            VStack(spacing: 0) {
+                Color.clear
+                LinearGradient(
+                    colors: [.clear, Color("BaseColor").opacity(0.8), Color("BaseColor")],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: 140)
+            }
             .frame(height: 280)
 
             // Text overlay

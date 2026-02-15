@@ -20,7 +20,7 @@ struct TodayCardView: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             if recipe.image != "" {
                 AsyncImage(url: URL(string: recipe.image)) { image in
                     image.resizable()
@@ -34,31 +34,53 @@ struct TodayCardView: View {
             } else {
                 Spacer()
             }
-            HStack {
-                Text(recipe.title)
-                    .font(.headline)
-                    .accessibilityAddTraits(.isHeader)
-                Spacer()
-                Toggle("", isOn: $is_made)
-                    .toggleStyle(.switch)
-                    .labelsHidden()
-                    .onChange(of: is_made) {
-                        network.toggle_made(recipeId: recipe.id, value: is_made) { _ in }
-                    }
+            VStack(spacing: 4) {
+                HStack {
+                    Text(recipe.title)
+                        .font(.headline)
+                        .accessibilityAddTraits(.isHeader)
+                        .lineLimit(1)
+                    Spacer()
+                    Toggle("", isOn: $is_made)
+                        .toggleStyle(.switch)
+                        .labelsHidden()
+                        .onChange(of: is_made) {
+                            network.toggle_made(recipeId: recipe.id, value: is_made) { _ in }
+                        }
 
-                Button {
-                    is_favorite.toggle()
-                    network.toggle_favorite(recipeId: recipe.id, value: is_favorite) { _ in }
-                } label: {
-                    Image(systemName: "heart.fill")
-                        .foregroundColor(is_favorite ? Color("MyPrimaryColor") : Color("NeutralColor"))
+                    Button {
+                        is_favorite.toggle()
+                        network.toggle_favorite(recipeId: recipe.id, value: is_favorite) { _ in }
+                    } label: {
+                        Image(systemName: "heart.fill")
+                            .foregroundColor(is_favorite ? Color("MyPrimaryColor") : Color("NeutralColor"))
+                    }
                 }
+
+                HStack {
+                    Text("\(recipe.ingredientCount) ingr")
+                    Spacer()
+                    Text("\(recipe.directionCount) steps")
+                    if !recipe.servings.isEmpty {
+                        Spacer()
+                        Text("\(recipe.servings) serv")
+                    }
+                    if recipe.time_in_seconds > 0 {
+                        Spacer()
+                        Text(Network.formatTime(recipe.time_in_seconds))
+                    } else if !recipe.time_display.isEmpty {
+                        Spacer()
+                        Text(recipe.time_display)
+                    }
+                }
+                .font(.caption)
+                .foregroundColor(Color("NeutralColor"))
             }
-            .padding([.bottom,.horizontal], 5)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
         }
         .background(Color("Base200Color"))
         .cornerRadius(10.0)
-        .frame(height: 120)
     }
 
 }

@@ -8,6 +8,11 @@
 import Foundation
 import SwiftData
 
+struct RecipeNote: Identifiable, Decodable, Hashable {
+    let id: String
+    var content: String
+}
+
 //@Model
 struct Recipe: Identifiable, Decodable, Hashable {
     static func == (lhs: Recipe, rhs: Recipe) -> Bool { lhs.id == rhs.id }
@@ -24,7 +29,7 @@ struct Recipe: Identifiable, Decodable, Hashable {
     var servings: String
     var cuisine: String
     var country: String
-    var notes: [String]
+    var notes: [RecipeNote]
     var ingredients: [Ingredient]
     var category: String
     var made: Bool
@@ -35,7 +40,7 @@ struct Recipe: Identifiable, Decodable, Hashable {
     var user: String
     var isDetailLoaded: Bool
 
-    init(id: String, title: String, description: String, link_to_original_web_page: String, author: String, time_in_seconds: Int, time_display: String = "", directions: [String], image: String, servings: String, cuisine: String, country: String, notes: [String], ingredients: [Ingredient], category: String, made: Bool, favorite: Bool, url_id: String = "", ingredientCount: Int? = nil, directionCount: Int? = nil, user: String = "", isDetailLoaded: Bool = true) {
+    init(id: String, title: String, description: String, link_to_original_web_page: String, author: String, time_in_seconds: Int, time_display: String = "", directions: [String], image: String, servings: String, cuisine: String, country: String, notes: [RecipeNote], ingredients: [Ingredient], category: String, made: Bool, favorite: Bool, url_id: String = "", ingredientCount: Int? = nil, directionCount: Int? = nil, user: String = "", isDetailLoaded: Bool = true) {
         self.id = id
         self.title = title
         self.desc = description
@@ -88,7 +93,7 @@ extension Recipe {
                servings: "4",
                cuisine: "Mediteranean",
                country: "France",
-               notes: ["remove chicken before it falls apart and chop up to add back at the end", "cook down sauce before adding the potatoes"],
+               notes: [RecipeNote(id: "sample1", content: "remove chicken before it falls apart and chop up to add back at the end"), RecipeNote(id: "sample2", content: "cook down sauce before adding the potatoes")],
                ingredients: [Ingredient(id: "1", quantity: 1, unit: "pound", name: "Spaghetti"),
                              Ingredient(id: "1", quantity: 1, unit: "pound", name: "boneless skinless chicken breasts, cut crosswise in half"),
                              Ingredient(id: "1", quantity: 0, unit: "", name: "Kosher salt and freshly ground black pepper, to taste"),

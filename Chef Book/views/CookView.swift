@@ -104,7 +104,7 @@ struct CookView: View {
                 }
 
                 CookNotesSection(
-                    recipe: recipe,
+                    recipe: $recipe,
                     newNoteText: $newNoteText,
                     showNewNote: $showNewNote,
                     network: network
@@ -113,6 +113,7 @@ struct CookView: View {
                 .padding(.top, 20)
             }
         }
+        .background(Color("BaseColor"))
         .overlay {
             if isLoadingDetail {
                 ProgressView()
@@ -122,13 +123,13 @@ struct CookView: View {
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
             if !recipe.isDetailLoaded {
                 isLoadingDetail = true
-                network.getRecipeDetail(urlId: recipe.url_id) { detail in
-                    isLoadingDetail = false
-                    if let detail = detail {
-                        recipe = detail
-                        is_made = detail.made
-                        is_favorite = detail.favorite
-                    }
+            }
+            network.getRecipeDetail(urlId: recipe.url_id) { detail in
+                isLoadingDetail = false
+                if let detail = detail {
+                    recipe = detail
+                    is_made = detail.made
+                    is_favorite = detail.favorite
                 }
             }
         }
@@ -569,10 +570,14 @@ private struct CookTimerView: View {
 // MARK: - CookNotesSection
 
 private struct CookNotesSection: View {
-    let recipe: Recipe
+    @Binding var recipe: Recipe
     @Binding var newNoteText: String
     @Binding var showNewNote: Bool
     let network: Network
+    @FocusState private var isNoteFocused: Bool
+    @State private var editingIndex: Int? = nil
+    @State private var editText: String = ""
+    @FocusState private var isEditFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -582,6 +587,9 @@ private struct CookNotesSection: View {
                 Spacer()
                 Button("Add Note") {
                     showNewNote.toggle()
+                    if showNewNote {
+                        isNoteFocused = true
+                    }
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(Color("MyPrimaryColor"))
@@ -592,30 +600,72 @@ private struct CookNotesSection: View {
                 HStack {
                     TextField("Add a note...", text: $newNoteText)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                    Button("Save") {
-                        guard !newNoteText.isEmpty else { return }
-                        network.create_note(content: newNoteText, recipeId: recipe.id) { success in
-                            if success {
-                                newNoteText = ""
-                                showNewNote = false
-                            }
-                        }
-                    }
+                        .focused($isNoteFocused)
+                        .onSubmit { saveNote() }
+                    Button("Save") { saveNote() }
                     .buttonStyle(.borderedProminent)
                     .tint(Color("MyPrimaryColor"))
                     .foregroundColor(.black)
                 }
             }
 
-            ForEach(recipe.notes, id: \.self) { note in
-                HStack {
-                    Text(note)
-                        .padding(.vertical, 2)
-                    Spacer()
+            ForEach(Array(recipe.notes.enumerated()), id: \.element.id) { index, note in
+                if editingIndex == index {
+                    HStack {
+                        TextField("Edit note...", text: $editText)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .focused($isEditFocused)
+                            .onSubmit { finishEditing(at: index) }
+                        Button {
+                            finishEditing(at: index)
+                        } label: {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(Color("MyPrimaryColor"))
+                        }
+                        Button {
+                            editingIndex = nil
+                        } label: {
+                            Image(systemName: "xmark")
+                                .foregroundColor(Color("NeutralColor"))
+                        }
+                    }
+                } else {
+                    HStack {
+                        Text(note.content)
+                            .padding(.vertical, 2)
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        editText = note.content
+                        editingIndex = index
+                        isEditFocused = true
+                    }
                 }
             }
         }
         .padding(.bottom, 20)
+    }
+
+    private func finishEditing(at index: Int) {
+        guard !editText.isEmpty else { return }
+        let noteId = recipe.notes[index].id
+        let newContent = editText
+        recipe.notes[index].content = newContent
+        editingIndex = nil
+        network.update_note(id: noteId, content: newContent) { _ in }
+    }
+
+    private func saveNote() {
+        guard !newNoteText.isEmpty else { return }
+        let noteText = newNoteText
+        network.create_note(content: noteText, recipeId: recipe.id) { noteId in
+            if let noteId {
+                recipe.notes.append(RecipeNote(id: noteId, content: noteText))
+                newNoteText = ""
+                showNewNote = false
+            }
+        }
     }
 }
 

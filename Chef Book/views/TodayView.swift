@@ -50,6 +50,7 @@ struct TodayView: View {
                             .listRowBackground(Color.clear)
                         }
                         .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
                         .refreshable {
                             network.get_todays_menu()
                         }
@@ -81,6 +82,7 @@ struct TodayView: View {
                     Spacer()
                 }
             }
+            .background(Color("BaseColor"))
             .onAppear {
                 network.get_todays_menu()
             }
@@ -163,6 +165,7 @@ struct GroceryListView: View {
                     }
                 }
                 .listStyle(.plain)
+                .scrollContentBackground(.hidden)
                 .refreshable {
                     network.get_todays_menu()
                 }

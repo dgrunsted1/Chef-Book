@@ -239,7 +239,7 @@ class Network: ObservableObject {
                     let ingredients = recipeData.expand.ingr_list.map { ingr in
                         Ingredient(id: ingr.id, quantity: ingr.quantity, unit: ingr.unit, name: ingr.ingredient)
                     }
-                    let notes = recipeData.expand.notes?.map { $0.content } ?? []
+                    let notes = recipeData.expand.notes?.map { RecipeNote(id: $0.id, content: $0.content) } ?? []
                     let recipe = Recipe(
                         id: recipeData.id,
                         title: recipeData.title,
@@ -394,7 +394,7 @@ class Network: ObservableObject {
         let ingredients = recipeData.expand.ingr_list.map { ingr in
             Ingredient(id: ingr.id, quantity: ingr.quantity, unit: ingr.unit, name: ingr.ingredient)
         }
-        let notes = recipeData.expand.notes?.map { $0.content } ?? []
+        let notes = recipeData.expand.notes?.map { RecipeNote(id: $0.id, content: $0.content) } ?? []
         return Recipe(id: recipeData.id, title: recipeData.title, description: recipeData.description, link_to_original_web_page: recipeData.url, author: recipeData.author, time_in_seconds: time_in_seconds, directions: recipeData.directions, image: recipeData.image, servings: recipeData.servings, cuisine: recipeData.cuisine, country: recipeData.country, notes: notes, ingredients: ingredients, category: recipeData.category, made: recipeData.made, favorite: recipeData.favorite)
     }
 
@@ -876,10 +876,10 @@ class Network: ObservableObject {
 
     // MARK: - Notes Methods
 
-    func create_note(content: String, recipeId: String, completion: @escaping (Bool) -> Void) {
+    func create_note(content: String, recipeId: String, completion: @escaping (String?) -> Void) {
         let body: [String: Any] = ["content": content]
         guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
-            completion(false)
+            completion(nil)
             return
         }
         makeAuthenticatedRequest(to: "\(baseURL)/api/collections/notes/records", method: "POST", body: jsonData, contentType: "application/json") { data, response, error in
@@ -888,12 +888,12 @@ class Network: ObservableObject {
                   (200...299).contains(httpResponse.statusCode),
                   let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                   let noteId = json["id"] as? String else {
-                DispatchQueue.main.async { completion(false) }
+                DispatchQueue.main.async { completion(nil) }
                 return
             }
             // Link note to recipe via notes+ (append)
             self.makeAuthenticatedRequest(to: "\(self.baseURL)/api/collections/recipes/records/\(recipeId)", method: "PATCH", body: try? JSONSerialization.data(withJSONObject: ["notes+": [noteId]]), contentType: "application/json") { _, _, _ in
-                DispatchQueue.main.async { completion(true) }
+                DispatchQueue.main.async { completion(noteId) }
             }
         }
     }

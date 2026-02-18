@@ -18,6 +18,7 @@ class Network: ObservableObject {
     @Published var today: MyMenu?
     @Published var menus: [MyMenu] = []
     @Published var isLoading: Bool = false
+    var recipeDetailCache: [String: Recipe] = [:]
 
     private let baseURL = "https://db.ivebeenwastingtime.com"
     private var realtime: PocketBaseRealtime?
@@ -171,8 +172,22 @@ class Network: ObservableObject {
             DispatchQueue.main.async {
                 do {
                     let decoded = try JSONDecoder().decode(SearchResponse.self, from: data)
+                    // Build lookup of existing detail-loaded recipes to preserve them
+                    let existingById = Dictionary(uniqueKeysWithValues: self.recipes.filter { $0.isDetailLoaded }.map { ($0.id, $0) })
+
                     self.recipes = decoded.recipes.map { r in
-                        Recipe(
+                        // If we already have a detail-loaded version, keep it but update summary fields
+                        if var existing = existingById[r.id] {
+                            existing.title = r.title
+                            existing.author = r.author
+                            existing.image = r.image
+                            existing.category = r.category
+                            existing.cuisine = r.cuisine
+                            existing.country = r.country
+                            existing.servings = r.servings
+                            return existing
+                        }
+                        return Recipe(
                             id: r.id,
                             title: r.title,
                             description: "",
@@ -261,6 +276,7 @@ class Network: ObservableObject {
                         url_id: recipeData.url_id,
                         user: recipeData.user
                     )
+                    self.recipeDetailCache[recipe.id] = recipe
                     completion(recipe)
                 } catch let error {
                     print("Error decoding recipe detail: ", error)
@@ -434,12 +450,19 @@ class Network: ObservableObject {
 
     func update_recipe(id: String, fields: [String: Any], completion: @escaping (Bool) -> Void) {
         guard let jsonData = try? JSONSerialization.data(withJSONObject: fields) else {
+            print("[update_recipe] Failed to serialize fields: \(fields)")
             completion(false)
             return
         }
         makeAuthenticatedRequest(to: "\(baseURL)/api/collections/recipes/records/\(id)", method: "PATCH", body: jsonData, contentType: "application/json") { data, response, error in
+            if let error = error {
+                print("[update_recipe] Network error: \(error.localizedDescription)")
+            }
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                let body = data.flatMap { String(data: $0, encoding: .utf8) } ?? "no body"
+                print("[update_recipe] Failed (\(statusCode)) for id=\(id) fields=\(fields.keys): \(body)")
                 DispatchQueue.main.async { completion(false) }
                 return
             }
@@ -472,6 +495,9 @@ class Network: ObservableObject {
                 if let idx = self.recipes.firstIndex(where: { $0.id == recipeId }) {
                     self.recipes[idx].favorite = value
                 }
+                if let idx = self.today?.recipes.firstIndex(where: { $0.id == recipeId }) {
+                    self.today?.recipes[idx].favorite = value
+                }
             }
             completion(success)
         }
@@ -483,9 +509,43 @@ class Network: ObservableObject {
                 if let idx = self.recipes.firstIndex(where: { $0.id == recipeId }) {
                     self.recipes[idx].made = value
                 }
+                if let idx = self.today?.recipes.firstIndex(where: { $0.id == recipeId }) {
+                    self.today?.recipes[idx].made = value
+                }
                 if value {
                     let logBody: [String: Any] = ["recipe": recipeId, "user": self.user?.record.id ?? ""]
                     guard let logData = try? JSONSerialization.data(withJSONObject: logBody) else { return }
+                    self.makeAuthenticatedRequest(to: "\(self.baseURL)/api/collections/recipe_log/records", method: "POST", body: logData, contentType: "application/json") { _, _, _ in }
+                }
+            }
+            completion(success)
+        }
+    }
+
+    func toggle_menu_made(recipeId: String, value: Bool, completion: @escaping (Bool) -> Void) {
+        guard let menuId = self.today?.id else {
+            completion(false)
+            return
+        }
+        // Update local state
+        self.today?.made[recipeId] = value
+
+        // PATCH the menus collection with updated made dictionary
+        let updatedMade = self.today?.made ?? [:]
+        update_menu(id: menuId, fields: ["made": updatedMade]) { success in
+            if success && value {
+                // When toggling ON: also set recipe.made = true globally
+                if let idx = self.recipes.firstIndex(where: { $0.id == recipeId }), !self.recipes[idx].made {
+                    self.recipes[idx].made = true
+                }
+                if let idx = self.today?.recipes.firstIndex(where: { $0.id == recipeId }), !(self.today?.recipes[idx].made ?? false) {
+                    self.today?.recipes[idx].made = true
+                }
+                self.update_recipe(id: recipeId, fields: ["made": true]) { _ in }
+
+                // Create recipe_log entry
+                let logBody: [String: Any] = ["recipe": recipeId, "user": self.user?.record.id ?? ""]
+                if let logData = try? JSONSerialization.data(withJSONObject: logBody) {
                     self.makeAuthenticatedRequest(to: "\(self.baseURL)/api/collections/recipe_log/records", method: "POST", body: logData, contentType: "application/json") { _, _, _ in }
                 }
             }
@@ -879,15 +939,22 @@ class Network: ObservableObject {
     func create_note(content: String, recipeId: String, completion: @escaping (String?) -> Void) {
         let body: [String: Any] = ["content": content]
         guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
+            print("[create_note] Failed to serialize body")
             completion(nil)
             return
         }
         makeAuthenticatedRequest(to: "\(baseURL)/api/collections/notes/records", method: "POST", body: jsonData, contentType: "application/json") { data, response, error in
+            if let error = error {
+                print("[create_note] Network error: \(error.localizedDescription)")
+            }
             guard let data = data,
                   let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode),
                   let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                   let noteId = json["id"] as? String else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                let body = data.flatMap { String(data: $0, encoding: .utf8) } ?? "no body"
+                print("[create_note] Failed (\(statusCode)): \(body)")
                 DispatchQueue.main.async { completion(nil) }
                 return
             }
@@ -901,12 +968,19 @@ class Network: ObservableObject {
     func update_note(id: String, content: String, completion: @escaping (Bool) -> Void) {
         let body: [String: Any] = ["content": content]
         guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
+            print("[update_note] Failed to serialize body")
             completion(false)
             return
         }
         makeAuthenticatedRequest(to: "\(baseURL)/api/collections/notes/records/\(id)", method: "PATCH", body: jsonData, contentType: "application/json") { data, response, error in
+            if let error = error {
+                print("[update_note] Network error: \(error.localizedDescription)")
+            }
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                let body = data.flatMap { String(data: $0, encoding: .utf8) } ?? "no body"
+                print("[update_note] Failed (\(statusCode)) for id=\(id): \(body)")
                 DispatchQueue.main.async { completion(false) }
                 return
             }
@@ -916,8 +990,83 @@ class Network: ObservableObject {
 
     func delete_note(id: String, completion: @escaping (Bool) -> Void) {
         makeAuthenticatedRequest(to: "\(baseURL)/api/collections/notes/records/\(id)", method: "DELETE") { data, response, error in
+            if let error = error {
+                print("[delete_note] Network error: \(error.localizedDescription)")
+            }
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                print("[delete_note] Failed (\(statusCode)) for id=\(id)")
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            DispatchQueue.main.async { completion(true) }
+        }
+    }
+
+    // MARK: - Ingredient CRUD
+
+    func update_ingredient(id: String, fields: [String: Any], completion: @escaping (Bool) -> Void) {
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: fields) else {
+            print("[update_ingredient] Failed to serialize fields: \(fields)")
+            completion(false)
+            return
+        }
+        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/ingr_list/records/\(id)", method: "PATCH", body: jsonData, contentType: "application/json") { data, response, error in
+            if let error = error {
+                print("[update_ingredient] Network error: \(error.localizedDescription)")
+            }
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                let body = data.flatMap { String(data: $0, encoding: .utf8) } ?? "no body"
+                print("[update_ingredient] Failed (\(statusCode)) for id=\(id): \(body)")
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            DispatchQueue.main.async { completion(true) }
+        }
+    }
+
+    func create_ingredient(recipeId: String, fields: [String: Any], completion: @escaping (String?) -> Void) {
+        var body = fields
+        body["recipe"] = [recipeId]
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
+            print("[create_ingredient] Failed to serialize fields: \(body)")
+            completion(nil)
+            return
+        }
+        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/ingr_list/records", method: "POST", body: jsonData, contentType: "application/json") { data, response, error in
+            if let error = error {
+                print("[create_ingredient] Network error: \(error.localizedDescription)")
+            }
+            guard let data = data,
+                  let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode),
+                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let ingrId = json["id"] as? String else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                let body = data.flatMap { String(data: $0, encoding: .utf8) } ?? "no body"
+                print("[create_ingredient] Failed (\(statusCode)): \(body)")
+                DispatchQueue.main.async { completion(nil) }
+                return
+            }
+            // Link ingredient to recipe via ingr_list+ (append)
+            self.makeAuthenticatedRequest(to: "\(self.baseURL)/api/collections/recipes/records/\(recipeId)", method: "PATCH", body: try? JSONSerialization.data(withJSONObject: ["ingr_list+": [ingrId]]), contentType: "application/json") { _, _, _ in
+                DispatchQueue.main.async { completion(ingrId) }
+            }
+        }
+    }
+
+    func delete_ingredient(id: String, recipeId: String, completion: @escaping (Bool) -> Void) {
+        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/ingr_list/records/\(id)", method: "DELETE") { data, response, error in
+            if let error = error {
+                print("[delete_ingredient] Network error: \(error.localizedDescription)")
+            }
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                print("[delete_ingredient] Failed (\(statusCode)) for id=\(id)")
                 DispatchQueue.main.async { completion(false) }
                 return
             }

@@ -10,13 +10,18 @@ import SwiftUI
 struct TodayCardView: View {
     @EnvironmentObject var network: Network
     var recipe: Recipe
-    @State var is_made: Bool
-    @State var is_favorite: Bool
 
-    init(recipe: Recipe, made: Bool) {
-        self.recipe = recipe
-        _is_made = State(initialValue: made)
-        _is_favorite = State(initialValue: recipe.favorite)
+    private var madeBinding: Binding<Bool> {
+        Binding(
+            get: { network.today?.made[recipe.id] ?? false },
+            set: { newValue in
+                network.toggle_menu_made(recipeId: recipe.id, value: newValue) { _ in }
+            }
+        )
+    }
+
+    private var isFavorite: Bool {
+        network.today?.recipes.first(where: { $0.id == recipe.id })?.favorite ?? recipe.favorite
     }
 
     var body: some View {
@@ -41,20 +46,17 @@ struct TodayCardView: View {
                         .accessibilityAddTraits(.isHeader)
                         .lineLimit(1)
                     Spacer()
-                    Toggle("", isOn: $is_made)
+                    Toggle("", isOn: madeBinding)
                         .toggleStyle(.switch)
                         .labelsHidden()
-                        .onChange(of: is_made) {
-                            network.toggle_made(recipeId: recipe.id, value: is_made) { _ in }
-                        }
 
                     Button {
-                        is_favorite.toggle()
-                        network.toggle_favorite(recipeId: recipe.id, value: is_favorite) { _ in }
+                        network.toggle_favorite(recipeId: recipe.id, value: !isFavorite) { _ in }
                     } label: {
                         Image(systemName: "heart.fill")
-                            .foregroundColor(is_favorite ? Color("MyPrimaryColor") : Color("NeutralColor"))
+                            .foregroundColor(isFavorite ? Color("MyPrimaryColor") : Color("NeutralColor"))
                     }
+                    .buttonStyle(.plain)
                 }
 
                 HStack {
@@ -86,7 +88,7 @@ struct TodayCardView: View {
 }
 
 #Preview {
-    TodayCardView(recipe: Recipe.sampleData[0], made: true)
+    TodayCardView(recipe: Recipe.sampleData[0])
         .previewLayout(.fixed(width: 355, height: 100))
         .environmentObject(Network())
 }

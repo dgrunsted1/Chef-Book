@@ -36,12 +36,12 @@ struct TodayView: View {
                         List {
                             ForEach(today.recipes) { recipe in
                                 ZStack(alignment: .leading) {
-                                    NavigationLink(destination: CookView(recipe: recipe).environmentObject(network)) {
+                                    NavigationLink(destination: CookView(recipe: recipe, menuMade: today.made[recipe.id] ?? false, menuServings: today.servings[recipe.id] ?? recipe.servings).environmentObject(network)) {
                                         EmptyView()
                                     }
                                     .opacity(0)
 
-                                    TodayCardView(recipe: recipe, made: today.made[recipe.id] ?? false)
+                                    TodayCardView(recipe: recipe)
                                         .environmentObject(network)
                                 }
                             }
@@ -114,6 +114,17 @@ struct GroceryListView: View {
         }
     }
 
+    private var recipeNamesForItem: [String: [String]] {
+        var map: [String: [String]] = [:]
+        for recipe in today.recipes {
+            for ingredient in recipe.ingredients {
+                let key = ingredient.name.lowercased()
+                map[key, default: []].append(recipe.title)
+            }
+        }
+        return map
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             // Toolbar
@@ -154,8 +165,9 @@ struct GroceryListView: View {
             } else {
                 List {
                     ForEach(sortedItems) { item in
-                        GroceryItemRow(item: item, groceryListId: today.grocery_list_id)
+                        GroceryItemRow(item: item, groceryListId: today.grocery_list_id, recipeNames: recipeNamesForItem[item.ingredient.name.lowercased()] ?? [])
                             .environmentObject(network)
+                            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                     }
                     .onDelete { indexSet in
                         for index in indexSet {
@@ -208,15 +220,17 @@ struct GroceryItemRow: View {
     @EnvironmentObject var network: Network
     let item: GroceryItem
     let groceryListId: String
+    let recipeNames: [String]
     @State private var checked: Bool
     @State private var isEditing = false
     @State private var editQty: String
     @State private var editUnit: String
     @State private var editName: String
 
-    init(item: GroceryItem, groceryListId: String) {
+    init(item: GroceryItem, groceryListId: String, recipeNames: [String] = []) {
         self.item = item
         self.groceryListId = groceryListId
+        self.recipeNames = recipeNames
         _checked = State(initialValue: item.checked)
         _editQty = State(initialValue: item.ingredient.quantity == 0 ? "" : String(format: "%g", item.ingredient.quantity))
         _editUnit = State(initialValue: item.ingredient.unit)
@@ -225,18 +239,6 @@ struct GroceryItemRow: View {
 
     var body: some View {
         HStack {
-            Button {
-                checked.toggle()
-                network.toggle_grocery_item(itemId: item.id, checked: checked) { success in
-                    if !success { checked.toggle() }
-                }
-            } label: {
-                Image(systemName: checked ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(checked ? .green : .gray)
-                    .font(.title3)
-            }
-            .buttonStyle(.plain)
-
             if isEditing {
                 HStack(spacing: 4) {
                     TextField("Qty", text: $editQty)
@@ -273,13 +275,31 @@ struct GroceryItemRow: View {
                 }
                 .buttonStyle(.plain)
             } else {
-                Text(item.ingredient.toString())
-                    .strikethrough(checked)
-                    .foregroundColor(checked ? .gray : Color("TextColor"))
-                    .onTapGesture {
-                        isEditing = true
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(item.ingredient.toString())
+                        .strikethrough(checked)
+                        .foregroundColor(checked ? .gray : Color("TextColor"))
+                    if !recipeNames.isEmpty {
+                        Text(recipeNames.joined(separator: ", "))
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
                     }
+                }
+                .onTapGesture {
+                    isEditing = true
+                }
                 Spacer()
+                Button {
+                    checked.toggle()
+                    network.toggle_grocery_item(itemId: item.id, checked: checked) { success in
+                        if !success { checked.toggle() }
+                    }
+                } label: {
+                    Image(systemName: checked ? "checkmark.circle.fill" : "circle")
+                        .foregroundColor(checked ? .green : .gray)
+                        .font(.system(size: 28))
+                }
+                .buttonStyle(.plain)
             }
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {

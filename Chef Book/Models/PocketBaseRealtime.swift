@@ -26,7 +26,10 @@ class PocketBaseRealtime: NSObject, URLSessionDataDelegate {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = TimeInterval(INT_MAX)
         config.timeoutIntervalForResource = TimeInterval(INT_MAX)
-        urlSession = URLSession(configuration: config, delegate: self, delegateQueue: .main)
+        let queue = OperationQueue()
+        queue.name = "com.chefbook.realtime"
+        queue.qualityOfService = .utility
+        urlSession = URLSession(configuration: config, delegate: self, delegateQueue: queue)
 
         guard let url = URL(string: "\(baseURL)/api/realtime") else { return }
         var request = URLRequest(url: url)

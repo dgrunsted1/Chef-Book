@@ -74,7 +74,7 @@ struct MenuDetailView: View {
         ScrollView {
             LazyVStack(spacing: 8) {
                 ForEach(menu.recipes) { recipe in
-                    NavigationLink(destination: CookView(recipe: recipe)) {
+                    NavigationLink(destination: CookView(recipe: recipe, menuMade: menu.made[recipe.id] ?? false, menuServings: menu.servings[recipe.id] ?? recipe.servings)) {
                         HStack {
                             if recipe.image != "" {
                                 AsyncImage(url: URL(string: recipe.image)) { image in

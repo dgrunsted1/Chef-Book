@@ -9,15 +9,255 @@ import SwiftUI
 import AudioToolbox
 import UserNotifications
 
+// MARK: - EditSheet
+
+private struct EditSheetField {
+    let label: String
+    let placeholder: String
+    var value: String
+    var isMultiline: Bool = false
+    var isNumberKeyboard: Bool = false
+}
+
+private struct EditSheet: View {
+    let title: String
+    @State var fields: [EditSheetField]
+    let onSave: ([String]) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+    @FocusState private var focusedField: Int?
+
+    var body: some View {
+        #if os(macOS)
+        macOSBody
+        #else
+        iOSBody
+        #endif
+    }
+
+    #if os(iOS)
+    private var iOSBody: some View {
+        NavigationStack {
+            Form {
+                ForEach(fields.indices, id: \.self) { i in
+                    Section(fields[i].label) {
+                        if fields[i].isMultiline {
+                            TextField(fields[i].placeholder, text: $fields[i].value, axis: .vertical)
+                                .lineLimit(5...15)
+                                .focused($focusedField, equals: i)
+                        } else {
+                            TextField(fields[i].placeholder, text: $fields[i].value)
+                                .keyboardType(fields[i].isNumberKeyboard ? .decimalPad : .default)
+                                .focused($focusedField, equals: i)
+                        }
+                    }
+                }
+            }
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        onSave(fields.map { $0.value })
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color("MyPrimaryColor"))
+                }
+            }
+            .onAppear { focusedField = 0 }
+        }
+    }
+    #endif
+
+    #if os(macOS)
+    private var macOSBody: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(title)
+                .font(.headline)
+                .padding(.bottom, 16)
+
+            ForEach(fields.indices, id: \.self) { i in
+                Text(fields[i].label)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .padding(.bottom, 4)
+
+                if fields[i].isMultiline {
+                    TextField(fields[i].placeholder, text: $fields[i].value, axis: .vertical)
+                        .textFieldStyle(.plain)
+                        .lineLimit(5...15)
+                        .padding(8)
+                        .background(Color("Base200Color").opacity(0.5))
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                        .focused($focusedField, equals: i)
+                } else {
+                    TextField(fields[i].placeholder, text: $fields[i].value)
+                        .textFieldStyle(.plain)
+                        .padding(8)
+                        .background(Color("Base200Color").opacity(0.5))
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                        .focused($focusedField, equals: i)
+                        .onSubmit { save() }
+                }
+
+                if i < fields.count - 1 {
+                    Spacer().frame(height: 12)
+                }
+            }
+
+            Spacer().frame(height: 20)
+
+            HStack {
+                Spacer()
+                Button("Cancel") { dismiss() }
+                    .keyboardShortcut(.cancelAction)
+                Button("Save") { save() }
+                    .keyboardShortcut(.defaultAction)
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color("MyPrimaryColor"))
+            }
+        }
+        .padding(24)
+        .frame(minWidth: 360)
+        .onAppear { focusedField = 0 }
+    }
+    #endif
+
+    private func save() {
+        onSave(fields.map { $0.value })
+        dismiss()
+    }
+}
+
+// MARK: - EditableField
+
+private struct EditableField: View {
+    let label: String
+    let systemImage: String?
+    let font: Font
+    let color: Color
+    let isBold: Bool
+    let sheetTitle: String
+    let onSave: (String) -> Void
+
+    @State private var showSheet = false
+
+    init(_ label: String, systemImage: String? = nil, font: Font = .body, color: Color = Color("TextColor"), isBold: Bool = false, sheetTitle: String = "Edit", onSave: @escaping (String) -> Void) {
+        self.label = label
+        self.systemImage = systemImage
+        self.font = font
+        self.color = color
+        self.isBold = isBold
+        self.sheetTitle = sheetTitle
+        self.onSave = onSave
+    }
+
+    var body: some View {
+        Group {
+            if let systemImage {
+                Label(label, systemImage: systemImage)
+                    .font(font)
+            } else {
+                Text(label)
+                    .font(font)
+                    .bold(isBold)
+            }
+        }
+        .foregroundColor(color)
+        .contentShape(Rectangle())
+        .onTapGesture { showSheet = true }
+        .sheet(isPresented: $showSheet) {
+            EditSheet(
+                title: sheetTitle,
+                fields: [EditSheetField(label: sheetTitle, placeholder: sheetTitle, value: label)],
+                onSave: { values in
+                    let trimmed = values[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !trimmed.isEmpty && trimmed != label {
+                        onSave(trimmed)
+                    }
+                }
+            )
+        }
+    }
+}
+
+// MARK: - EditableTagPill
+
+private struct EditableTagPill: View {
+    let text: String
+    let placeholder: String
+    let onSave: (String) -> Void
+
+    @State private var showSheet = false
+
+    var body: some View {
+        Text(text)
+            .font(.caption2)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(Color("MyPrimaryColor").opacity(0.2))
+            .foregroundColor(Color("TextColor"))
+            .clipShape(Capsule())
+            .contentShape(Rectangle())
+            .onTapGesture { showSheet = true }
+            .sheet(isPresented: $showSheet) {
+                EditSheet(
+                    title: "Edit \(placeholder)",
+                    fields: [EditSheetField(label: placeholder, placeholder: placeholder, value: text)],
+                    onSave: { values in
+                        let trimmed = values[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !trimmed.isEmpty && trimmed != text {
+                            onSave(trimmed)
+                        }
+                    }
+                )
+            }
+    }
+}
+
+// MARK: - ServingsField
+
+private struct ServingsField: View {
+    @Binding var menuServings: String
+    @State private var showSheet = false
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Label("\(menuServings) servings", systemImage: "person.2")
+                .font(.caption)
+                .foregroundColor(Color("TextColor").opacity(0.7))
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { showSheet = true }
+        .sheet(isPresented: $showSheet) {
+            EditSheet(
+                title: "Edit Servings",
+                fields: [EditSheetField(label: "Servings", placeholder: "Servings", value: menuServings, isNumberKeyboard: true)],
+                onSave: { values in
+                    let trimmed = values[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !trimmed.isEmpty {
+                        menuServings = trimmed
+                    }
+                }
+            )
+        }
+    }
+}
+
 // MARK: - CookView
 
 struct CookView: View {
     @EnvironmentObject var network: Network
     @State var recipe: Recipe
     @State var is_made: Bool
+    @State var is_menu_made: Bool
     @State var is_favorite: Bool
-    @State var newNoteText: String = ""
-    @State var showNewNote: Bool = false
+    @State var menuServings: String
+    let hasMenuContext: Bool
     @State var isLoadingDetail: Bool = false
     @State private var blurredIngredients: Set<Int> = []
     @State private var blurredDirections: Set<Int> = []
@@ -27,10 +267,20 @@ struct CookView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     #endif
 
-    init(recipe: Recipe) {
+    init(recipe: Recipe, menuMade: Bool = false, menuServings: String = "") {
         _recipe = State(initialValue: recipe)
         _is_made = State(initialValue: recipe.made)
+        _is_menu_made = State(initialValue: menuMade)
         _is_favorite = State(initialValue: recipe.favorite)
+        _menuServings = State(initialValue: menuServings)
+        self.hasMenuContext = !menuServings.isEmpty
+    }
+
+    private var servingMultiplier: Double {
+        guard let target = Double(menuServings),
+              let original = Double(recipe.servings),
+              original > 0 else { return 1.0 }
+        return target / original
     }
 
     private var useSplitLayout: Bool {
@@ -44,11 +294,12 @@ struct CookView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                CookHeaderView(recipe: recipe)
+                CookHeaderView(recipe: $recipe, menuServings: $menuServings, hasMenuContext: hasMenuContext, network: network)
 
                 CookActionBar(
                     recipe: recipe,
                     is_made: $is_made,
+                    is_menu_made: $is_menu_made,
                     is_favorite: $is_favorite,
                     network: network
                 )
@@ -57,21 +308,23 @@ struct CookView: View {
 
                 if useSplitLayout {
                     GeometryReader { geo in
+                        let availableWidth = geo.size.width - 32 - 16 // 32 for horizontal padding, 16 for spacing
                         HStack(alignment: .top, spacing: 16) {
                             CookIngredientsPane(
-                                ingredients: recipe.ingredients,
-                                blurred: $blurredIngredients
+                                recipe: $recipe,
+                                network: network,
+                                blurred: $blurredIngredients,
+                                servingMultiplier: servingMultiplier
                             )
-                            .frame(width: geo.size.width * 2 / 5 - 8)
+                            .frame(width: availableWidth * 2 / 5)
 
                             CookDirectionsPane(
-                                directions: recipe.directions,
+                                recipe: $recipe,
+                                network: network,
                                 blurred: $blurredDirections,
-                                timers: $timers,
-                                recipeName: recipe.title,
-                                recipeImageURL: recipe.image
+                                timers: $timers
                             )
-                            .frame(width: geo.size.width * 3 / 5 - 8)
+                            .frame(width: availableWidth * 3 / 5)
                         }
                         .padding(.horizontal)
                     }
@@ -80,17 +333,18 @@ struct CookView: View {
                     GeometryReader { geo in
                         VStack(spacing: 16) {
                             CookIngredientsPane(
-                                ingredients: recipe.ingredients,
-                                blurred: $blurredIngredients
+                                recipe: $recipe,
+                                network: network,
+                                blurred: $blurredIngredients,
+                                servingMultiplier: servingMultiplier
                             )
                             .frame(height: min(CGFloat(recipe.ingredients.count * 38 + 40), geo.size.height * 0.35))
 
                             CookDirectionsPane(
-                                directions: recipe.directions,
+                                recipe: $recipe,
+                                network: network,
                                 blurred: $blurredDirections,
-                                timers: $timers,
-                                recipeName: recipe.title,
-                                recipeImageURL: recipe.image
+                                timers: $timers
                             )
                             .frame(height: geo.size.height * 0.6)
                         }
@@ -105,8 +359,6 @@ struct CookView: View {
 
                 CookNotesSection(
                     recipe: $recipe,
-                    newNoteText: $newNoteText,
-                    showNewNote: $showNewNote,
                     network: network
                 )
                 .padding(.horizontal)
@@ -119,6 +371,19 @@ struct CookView: View {
                 ProgressView()
             }
         }
+        .refreshable {
+            await withCheckedContinuation { continuation in
+                network.getRecipeDetail(urlId: recipe.url_id) { detail in
+                    if let detail = detail {
+                        recipe = detail
+                        is_made = detail.made
+                        is_menu_made = network.today?.made[detail.id] ?? false
+                        is_favorite = detail.favorite
+                    }
+                    continuation.resume()
+                }
+            }
+        }
         .onAppear {
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
             if !recipe.isDetailLoaded {
@@ -129,12 +394,33 @@ struct CookView: View {
                 if let detail = detail {
                     recipe = detail
                     is_made = detail.made
+                    is_menu_made = network.today?.made[detail.id] ?? false
                     is_favorite = detail.favorite
                 }
             }
         }
         .onDisappear {
             timers.values.forEach { $0.pause() }
+            recipe.made = is_made
+            recipe.favorite = is_favorite
+            if let idx = network.recipes.firstIndex(where: { $0.id == recipe.id }) {
+                network.recipes[idx] = recipe
+            }
+            if let idx = network.today?.recipes.firstIndex(where: { $0.id == recipe.id }) {
+                network.today?.recipes[idx] = recipe
+            }
+            network.today?.made[recipe.id] = is_menu_made
+            // Persist menu servings if changed
+            if !menuServings.isEmpty, let today = network.today {
+                let originalMenuServings = today.servings[recipe.id] ?? recipe.servings
+                if menuServings != originalMenuServings {
+                    network.today?.servings[recipe.id] = menuServings
+                    if var updatedServings = network.today?.servings {
+                        updatedServings[recipe.id] = menuServings
+                        network.update_menu(id: today.id, fields: ["servings": updatedServings]) { _ in }
+                    }
+                }
+            }
         }
         .ignoresSafeArea(.container, edges: .top)
         #if os(iOS)
@@ -146,7 +432,10 @@ struct CookView: View {
 // MARK: - CookHeaderView
 
 private struct CookHeaderView: View {
-    let recipe: Recipe
+    @Binding var recipe: Recipe
+    @Binding var menuServings: String
+    let hasMenuContext: Bool
+    let network: Network
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
@@ -185,45 +474,71 @@ private struct CookHeaderView: View {
 
             // Text overlay
             VStack(alignment: .leading, spacing: 4) {
-                Text(recipe.title)
-                    .font(.title)
-                    .bold()
-                    .foregroundColor(Color("TextColor"))
+                EditableField(recipe.title, font: .title, isBold: true, sheetTitle: "Edit Title") { newValue in
+                    recipe.title = newValue
+                    network.update_recipe(id: recipe.id, fields: ["title": newValue]) { _ in }
+                }
 
                 if !recipe.desc.isEmpty {
-                    Text(recipe.desc)
-                        .font(.subheadline)
-                        .foregroundColor(Color("TextColor").opacity(0.8))
+                    EditableField(recipe.desc, font: .subheadline, color: Color("TextColor").opacity(0.8), sheetTitle: "Edit Description") { newValue in
+                        recipe.desc = newValue
+                        network.update_recipe(id: recipe.id, fields: ["description": newValue]) { _ in }
+                    }
                 }
 
                 HStack(spacing: 12) {
                     if !recipe.author.isEmpty {
-                        Label(recipe.author, systemImage: "person")
-                            .font(.caption)
+                        EditableField(recipe.author, systemImage: "person", font: .caption, color: Color("TextColor").opacity(0.7), sheetTitle: "Edit Author") { newValue in
+                            recipe.author = newValue
+                            network.update_recipe(id: recipe.id, fields: ["author": newValue]) { _ in }
+                        }
                     }
                     if recipe.time_in_seconds > 0 {
-                        Label(Network.formatTime(recipe.time_in_seconds), systemImage: "clock")
-                            .font(.caption)
+                        EditableField(Network.formatTime(recipe.time_in_seconds), systemImage: "clock", font: .caption, color: Color("TextColor").opacity(0.7), sheetTitle: "Edit Time (minutes)") { newValue in
+                            if let minutes = Int(newValue) {
+                                recipe.time_in_seconds = minutes * 60
+                                network.update_recipe(id: recipe.id, fields: ["time_new": minutes]) { _ in }
+                            }
+                        }
                     } else if !recipe.time_display.isEmpty {
-                        Label(recipe.time_display, systemImage: "clock")
-                            .font(.caption)
+                        EditableField(recipe.time_display, systemImage: "clock", font: .caption, color: Color("TextColor").opacity(0.7), sheetTitle: "Edit Time (minutes)") { newValue in
+                            if let minutes = Int(newValue) {
+                                recipe.time_in_seconds = minutes * 60
+                                network.update_recipe(id: recipe.id, fields: ["time_new": minutes]) { _ in }
+                            }
+                        }
                     }
                     if !recipe.servings.isEmpty {
-                        Label("\(recipe.servings) servings", systemImage: "person.2")
-                            .font(.caption)
+                        if hasMenuContext {
+                            ServingsField(menuServings: $menuServings)
+                        } else {
+                            EditableField("\(recipe.servings) servings", systemImage: "person.2", font: .caption, color: Color("TextColor").opacity(0.7), sheetTitle: "Edit Servings") { newValue in
+                                let cleaned = newValue.replacingOccurrences(of: " servings", with: "")
+                                recipe.servings = cleaned
+                                network.update_recipe(id: recipe.id, fields: ["servings": cleaned]) { _ in }
+                            }
+                        }
                     }
                 }
-                .foregroundColor(Color("TextColor").opacity(0.7))
 
                 HStack(spacing: 8) {
                     if !recipe.category.isEmpty {
-                        TagPill(text: recipe.category)
+                        EditableTagPill(text: recipe.category, placeholder: "Category") { newValue in
+                            recipe.category = newValue
+                            network.update_recipe(id: recipe.id, fields: ["category": newValue]) { _ in }
+                        }
                     }
                     if !recipe.cuisine.isEmpty {
-                        TagPill(text: recipe.cuisine)
+                        EditableTagPill(text: recipe.cuisine, placeholder: "Cuisine") { newValue in
+                            recipe.cuisine = newValue
+                            network.update_recipe(id: recipe.id, fields: ["cuisine": newValue]) { _ in }
+                        }
                     }
                     if !recipe.country.isEmpty {
-                        TagPill(text: recipe.country)
+                        EditableTagPill(text: recipe.country, placeholder: "Country") { newValue in
+                            recipe.country = newValue
+                            network.update_recipe(id: recipe.id, fields: ["country": newValue]) { _ in }
+                        }
                     }
                 }
                 .padding(.top, 2)
@@ -234,25 +549,12 @@ private struct CookHeaderView: View {
     }
 }
 
-private struct TagPill: View {
-    let text: String
-
-    var body: some View {
-        Text(text)
-            .font(.caption2)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 3)
-            .background(Color("MyPrimaryColor").opacity(0.2))
-            .foregroundColor(Color("TextColor"))
-            .clipShape(Capsule())
-    }
-}
-
 // MARK: - CookActionBar
 
 private struct CookActionBar: View {
     let recipe: Recipe
     @Binding var is_made: Bool
+    @Binding var is_menu_made: Bool
     @Binding var is_favorite: Bool
     let network: Network
 
@@ -274,16 +576,25 @@ private struct CookActionBar: View {
             Spacer()
 
             HStack(spacing: 12) {
-                Toggle("", isOn: $is_made)
+                Toggle("", isOn: $is_menu_made)
                     .toggleStyle(.switch)
                     .labelsHidden()
-                    .onChange(of: is_made) {
-                        network.toggle_made(recipeId: recipe.id, value: is_made) { _ in }
+                    .onChange(of: is_menu_made) {
+                        network.toggle_menu_made(recipeId: recipe.id, value: is_menu_made) { _ in }
+                        if is_menu_made {
+                            is_made = true
+                        }
                     }
 
-                Image(systemName: is_made ? "hand.thumbsup.fill" : "hand.thumbsup")
-                    .font(.title3)
-                    .foregroundColor(is_made ? Color("MyPrimaryColor") : Color("NeutralColor"))
+                Button {
+                    is_made.toggle()
+                    network.toggle_made(recipeId: recipe.id, value: is_made) { _ in }
+                } label: {
+                    Image(systemName: is_made ? "hand.thumbsup.fill" : "hand.thumbsup")
+                        .font(.title3)
+                        .foregroundColor(is_made ? Color("MyPrimaryColor") : Color("NeutralColor"))
+                }
+                .buttonStyle(.plain)
 
                 Button {
                     is_favorite.toggle()
@@ -293,50 +604,151 @@ private struct CookActionBar: View {
                         .font(.title3)
                         .foregroundColor(is_favorite ? Color("MyPrimaryColor") : Color("NeutralColor"))
                 }
+                .buttonStyle(.plain)
             }
         }
     }
 }
 
+// MARK: - IngredientEditState
+
+private struct IngredientEditState: Identifiable, Equatable {
+    let id = UUID()
+    let index: Int
+    let isNew: Bool
+    var qty: String
+    var unit: String
+    var name: String
+}
+
 // MARK: - CookIngredientsPane
 
 private struct CookIngredientsPane: View {
-    let ingredients: [Ingredient]
+    @Binding var recipe: Recipe
+    let network: Network
     @Binding var blurred: Set<Int>
+    let servingMultiplier: Double
+    @State private var sheetIngredient: IngredientEditState?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Ingredients")
-                .font(.headline)
-                .padding(.bottom, 8)
+            HStack {
+                Text("Ingredients")
+                    .font(.headline)
+                Spacer()
+                Button {
+                    let blank = Ingredient(id: "", quantity: 0, unit: "", name: "")
+                    recipe.ingredients.append(blank)
+                    let newIndex = recipe.ingredients.count - 1
+                    sheetIngredient = IngredientEditState(index: newIndex, isNew: true, qty: "", unit: "", name: "")
+                } label: {
+                    Image(systemName: "plus")
+                        .foregroundColor(Color("MyPrimaryColor"))
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.bottom, 8)
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    ForEach(Array(ingredients.enumerated()), id: \.offset) { index, ingredient in
-                        IngredientRowView(
-                            ingredient: ingredient,
-                            isBlurred: blurred.contains(index)
-                        ) {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                if blurred.contains(index) {
-                                    blurred.remove(index)
-                                } else {
-                                    blurred.insert(index)
-                                }
+            List {
+                ForEach(Array(recipe.ingredients.enumerated()), id: \.offset) { index, ingredient in
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            if blurred.contains(index) {
+                                blurred.remove(index)
+                            } else {
+                                blurred.insert(index)
                             }
                         }
+                    } label: {
+                        IngredientRowView(
+                            ingredient: ingredient,
+                            servingMultiplier: servingMultiplier,
+                            isBlurred: blurred.contains(index)
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        if recipe.ingredients.count > 1 {
+                            Button(role: .destructive) {
+                                let ingrId = recipe.ingredients[index].id
+                                recipe.ingredients.remove(at: index)
+                                blurred = Set(blurred.compactMap { $0 > index ? $0 - 1 : ($0 == index ? nil : $0) })
+                                network.delete_ingredient(id: ingrId, recipeId: recipe.id) { _ in }
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                        Button {
+                            sheetIngredient = IngredientEditState(
+                                index: index,
+                                isNew: false,
+                                qty: ingredient.quantity == 0 ? "" : String(format: "%g", ingredient.quantity),
+                                unit: ingredient.unit,
+                                name: ingredient.name
+                            )
+                        } label: {
+                            Label("Edit", systemImage: "pencil")
+                        }
+                        .tint(Color("MyPrimaryColor"))
+                    }
+                    .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 4))
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+                }
+            }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+        }
+        .sheet(item: $sheetIngredient) { state in
+            EditSheet(
+                title: state.isNew ? "Add Ingredient" : "Edit Ingredient",
+                fields: [
+                    EditSheetField(label: "Quantity", placeholder: "e.g. 2", value: state.qty, isNumberKeyboard: true),
+                    EditSheetField(label: "Unit", placeholder: "e.g. cups", value: state.unit),
+                    EditSheetField(label: "Ingredient", placeholder: "e.g. flour", value: state.name)
+                ],
+                onSave: { values in
+                    saveIngredient(at: state.index, isNew: state.isNew, qtyStr: values[0], unit: values[1], name: values[2])
+                }
+            )
+        }
+        .onChange(of: sheetIngredient) { oldVal, newVal in
+            // If sheet dismissed without saving and it was a new ingredient, remove placeholder
+            if oldVal != nil && newVal == nil {
+                if let old = oldVal, old.isNew {
+                    let idx = old.index
+                    if idx < recipe.ingredients.count && recipe.ingredients[idx].id.isEmpty && recipe.ingredients[idx].name.isEmpty {
+                        recipe.ingredients.remove(at: idx)
                     }
                 }
             }
-            .mask(
-                VStack(spacing: 0) {
-                    LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)
-                        .frame(height: 6)
-                    Color.black
-                    LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom)
-                        .frame(height: 6)
+        }
+    }
+
+    private func saveIngredient(at index: Int, isNew: Bool, qtyStr: String, unit: String, name: String) {
+        let qty = Double(qtyStr) ?? 0
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty else {
+            if isNew && index < recipe.ingredients.count {
+                recipe.ingredients.remove(at: index)
+            }
+            return
+        }
+        let trimmedUnit = unit.trimmingCharacters(in: .whitespacesAndNewlines)
+        recipe.ingredients[index].quantity = qty
+        recipe.ingredients[index].unit = trimmedUnit
+        recipe.ingredients[index].name = trimmedName
+        let fields: [String: Any] = ["quantity": qty, "unit": trimmedUnit, "ingredient": trimmedName]
+
+        if isNew {
+            network.create_ingredient(recipeId: recipe.id, fields: fields) { newId in
+                if let newId {
+                    recipe.ingredients[index] = Ingredient(id: newId, quantity: qty, unit: trimmedUnit, name: trimmedName)
                 }
-            )
+            }
+        } else {
+            let ingrId = recipe.ingredients[index].id
+            network.update_ingredient(id: ingrId, fields: fields) { _ in }
         }
     }
 }
@@ -345,8 +757,19 @@ private struct CookIngredientsPane: View {
 
 private struct IngredientRowView: View {
     let ingredient: Ingredient
+    let servingMultiplier: Double
     let isBlurred: Bool
-    let onTap: () -> Void
+
+    private var displayText: String {
+        if servingMultiplier == 1.0 || ingredient.quantity == 0 {
+            return ingredient.toString()
+        }
+        let scaled = ingredient.quantity * servingMultiplier
+        var text = String(format: "%g", scaled)
+        if !ingredient.unit.isEmpty { text += " \(ingredient.unit)" }
+        text += " \(ingredient.name)"
+        return text
+    }
 
     var body: some View {
         HStack {
@@ -355,50 +778,66 @@ private struct IngredientRowView: View {
                     .foregroundColor(.green)
                     .font(.caption)
             }
-            Text(ingredient.toString())
+            Text(displayText)
                 .strikethrough(isBlurred)
                 .opacity(isBlurred ? 0.3 : 1.0)
             Spacer()
         }
-        .padding(.vertical, 6)
-        .padding(.horizontal, 4)
-        .contentShape(Rectangle())
-        .onTapGesture(perform: onTap)
     }
+}
+
+// MARK: - DirectionEditState
+
+private struct DirectionEditState: Identifiable, Equatable {
+    let id = UUID()
+    let index: Int
+    let isNew: Bool
+    var text: String
 }
 
 // MARK: - CookDirectionsPane
 
 private struct CookDirectionsPane: View {
-    let directions: [String]
+    @Binding var recipe: Recipe
+    let network: Network
     @Binding var blurred: Set<Int>
     @Binding var timers: [Int: CookTimer]
-    let recipeName: String
-    let recipeImageURL: String
+    @State private var sheetDirection: DirectionEditState?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Directions")
-                .font(.headline)
-                .padding(.bottom, 8)
+            HStack {
+                Text("Directions")
+                    .font(.headline)
+                Spacer()
+                Button {
+                    recipe.directions.append("")
+                    let newIndex = recipe.directions.count - 1
+                    sheetDirection = DirectionEditState(index: newIndex, isNew: true, text: "")
+                } label: {
+                    Image(systemName: "plus")
+                        .foregroundColor(Color("MyPrimaryColor"))
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.bottom, 8)
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    ForEach(Array(directions.enumerated()), id: \.offset) { index, direction in
+            List {
+                ForEach(Array(recipe.directions.enumerated()), id: \.offset) { index, direction in
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            if blurred.contains(index) {
+                                blurred.remove(index)
+                            } else {
+                                blurred.insert(index)
+                            }
+                        }
+                    } label: {
                         DirectionRowView(
                             index: index,
                             direction: direction,
                             isBlurred: blurred.contains(index),
                             timer: timers[index],
-                            onTap: {
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    if blurred.contains(index) {
-                                        blurred.remove(index)
-                                    } else {
-                                        blurred.insert(index)
-                                    }
-                                }
-                            },
                             onTimerStart: { parsed in
                                 if timers[index] == nil {
                                     let snippet = String(direction.prefix(60))
@@ -407,8 +846,8 @@ private struct CookDirectionsPane: View {
                                         displayLabel: parsed.displayLabel,
                                         stepNumber: index + 1,
                                         stepSnippet: snippet,
-                                        recipeName: recipeName,
-                                        recipeImageURL: recipeImageURL
+                                        recipeName: recipe.title,
+                                        recipeImageURL: recipe.image
                                     )
                                     timers[index] = t
                                     t.start()
@@ -416,18 +855,75 @@ private struct CookDirectionsPane: View {
                             }
                         )
                     }
+                    .buttonStyle(.plain)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        if recipe.directions.count > 1 {
+                            Button(role: .destructive) {
+                                recipe.directions.remove(at: index)
+                                blurred = Set(blurred.compactMap { $0 > index ? $0 - 1 : ($0 == index ? nil : $0) })
+                                var newTimers: [Int: CookTimer] = [:]
+                                for (k, v) in timers {
+                                    if k < index { newTimers[k] = v }
+                                    else if k > index { newTimers[k - 1] = v }
+                                }
+                                timers = newTimers
+                                pushDirections()
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                        Button {
+                            sheetDirection = DirectionEditState(index: index, isNew: false, text: direction)
+                        } label: {
+                            Label("Edit", systemImage: "pencil")
+                        }
+                        .tint(Color("MyPrimaryColor"))
+                    }
+                    .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 4))
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
                 }
             }
-            .mask(
-                VStack(spacing: 0) {
-                    LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)
-                        .frame(height: 6)
-                    Color.black
-                    LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom)
-                        .frame(height: 6)
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+        }
+        .sheet(item: $sheetDirection) { state in
+            EditSheet(
+                title: state.isNew ? "Add Direction" : "Edit Direction",
+                fields: [
+                    EditSheetField(label: "Step \(state.index + 1)", placeholder: "Direction step...", value: state.text, isMultiline: true)
+                ],
+                onSave: { values in
+                    saveDirection(at: state.index, isNew: state.isNew, text: values[0])
                 }
             )
         }
+        .onChange(of: sheetDirection) { oldVal, newVal in
+            if oldVal != nil && newVal == nil {
+                if let old = oldVal, old.isNew {
+                    let idx = old.index
+                    if idx < recipe.directions.count && recipe.directions[idx].isEmpty {
+                        recipe.directions.remove(at: idx)
+                    }
+                }
+            }
+        }
+    }
+
+    private func saveDirection(at index: Int, isNew: Bool, text: String) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            if isNew && index < recipe.directions.count {
+                recipe.directions.remove(at: index)
+            }
+            return
+        }
+        recipe.directions[index] = trimmed
+        pushDirections()
+    }
+
+    private func pushDirections() {
+        network.update_recipe(id: recipe.id, fields: ["directions": recipe.directions]) { _ in }
     }
 }
 
@@ -438,7 +934,6 @@ private struct DirectionRowView: View {
     let direction: String
     let isBlurred: Bool
     let timer: CookTimer?
-    let onTap: () -> Void
     let onTimerStart: (ParsedTimer) -> Void
 
     private var parsedTimers: [ParsedTimer] {
@@ -461,8 +956,6 @@ private struct DirectionRowView: View {
                     .opacity(isBlurred ? 0.3 : 1.0)
                 Spacer()
             }
-            .contentShape(Rectangle())
-            .onTapGesture(perform: onTap)
 
             // Timer buttons
             if !parsedTimers.isEmpty {
@@ -480,6 +973,7 @@ private struct DirectionRowView: View {
                                     .foregroundColor(Color("MyPrimaryColor"))
                                     .clipShape(Capsule())
                             }
+                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -491,8 +985,6 @@ private struct DirectionRowView: View {
                     .padding(.top, 2)
             }
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 4)
     }
 }
 
@@ -560,6 +1052,7 @@ private struct CookTimerView: View {
                     Image(systemName: timer.isRunning ? "pause.fill" : "play.fill")
                         .foregroundColor(Color("MyPrimaryColor"))
                 }
+                .buttonStyle(.plain)
             }
 
             Button {
@@ -568,6 +1061,7 @@ private struct CookTimerView: View {
                 Image(systemName: "arrow.counterclockwise")
                     .foregroundColor(Color("NeutralColor"))
             }
+            .buttonStyle(.plain)
         }
         .padding(10)
         .background(Color("Base200Color").opacity(0.5))
@@ -575,17 +1069,20 @@ private struct CookTimerView: View {
     }
 }
 
+// MARK: - NoteEditState
+
+private struct NoteEditState: Identifiable {
+    let id = UUID()
+    let index: Int? // nil = new note
+    var text: String
+}
+
 // MARK: - CookNotesSection
 
 private struct CookNotesSection: View {
     @Binding var recipe: Recipe
-    @Binding var newNoteText: String
-    @Binding var showNewNote: Bool
     let network: Network
-    @FocusState private var isNoteFocused: Bool
-    @State private var editingIndex: Int? = nil
-    @State private var editText: String = ""
-    @FocusState private var isEditFocused: Bool
+    @State private var editingNote: NoteEditState?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -594,85 +1091,74 @@ private struct CookNotesSection: View {
                     .font(.headline)
                 Spacer()
                 Button("Add Note") {
-                    showNewNote.toggle()
-                    if showNewNote {
-                        isNoteFocused = true
-                    }
+                    editingNote = NoteEditState(index: nil, text: "")
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(Color("MyPrimaryColor"))
                 .foregroundColor(.black)
             }
 
-            if showNewNote {
-                HStack {
-                    TextField("Add a note...", text: $newNoteText)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .focused($isNoteFocused)
-                        .onSubmit { saveNote() }
-                    Button("Save") { saveNote() }
-                    .buttonStyle(.borderedProminent)
-                    .tint(Color("MyPrimaryColor"))
-                    .foregroundColor(.black)
-                }
-            }
-
-            ForEach(Array(recipe.notes.enumerated()), id: \.element.id) { index, note in
-                if editingIndex == index {
-                    HStack {
-                        TextField("Edit note...", text: $editText)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .focused($isEditFocused)
-                            .onSubmit { finishEditing(at: index) }
+            if !recipe.notes.isEmpty {
+                List {
+                    ForEach(Array(recipe.notes.enumerated()), id: \.element.id) { index, note in
                         Button {
-                            finishEditing(at: index)
+                            editingNote = NoteEditState(index: index, text: note.content)
                         } label: {
-                            Image(systemName: "checkmark")
-                                .foregroundColor(Color("MyPrimaryColor"))
+                            Text(note.content)
+                                .padding(.vertical, 2)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        Button {
-                            editingIndex = nil
-                        } label: {
-                            Image(systemName: "xmark")
-                                .foregroundColor(Color("NeutralColor"))
+                        .buttonStyle(.plain)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                let noteId = recipe.notes[index].id
+                                recipe.notes.remove(at: index)
+                                network.delete_note(id: noteId) { _ in }
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                            Button {
+                                editingNote = NoteEditState(index: index, text: note.content)
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+                            .tint(Color("MyPrimaryColor"))
                         }
-                    }
-                } else {
-                    HStack {
-                        Text(note.content)
-                            .padding(.vertical, 2)
-                        Spacer()
-                    }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        editText = note.content
-                        editingIndex = index
-                        isEditFocused = true
+                        .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 4))
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
                     }
                 }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .frame(minHeight: CGFloat(recipe.notes.count * 44))
             }
         }
         .padding(.bottom, 20)
-    }
-
-    private func finishEditing(at index: Int) {
-        guard !editText.isEmpty else { return }
-        let noteId = recipe.notes[index].id
-        let newContent = editText
-        recipe.notes[index].content = newContent
-        editingIndex = nil
-        network.update_note(id: noteId, content: newContent) { _ in }
-    }
-
-    private func saveNote() {
-        guard !newNoteText.isEmpty else { return }
-        let noteText = newNoteText
-        network.create_note(content: noteText, recipeId: recipe.id) { noteId in
-            if let noteId {
-                recipe.notes.append(RecipeNote(id: noteId, content: noteText))
-                newNoteText = ""
-                showNewNote = false
-            }
+        .sheet(item: $editingNote) { state in
+            EditSheet(
+                title: state.index == nil ? "Add Note" : "Edit Note",
+                fields: [
+                    EditSheetField(label: "Note", placeholder: "Write a note...", value: state.text, isMultiline: true)
+                ],
+                onSave: { values in
+                    let text = values[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                    guard !text.isEmpty else { return }
+                    if let index = state.index {
+                        // Edit existing note
+                        let noteId = recipe.notes[index].id
+                        recipe.notes[index].content = text
+                        network.update_note(id: noteId, content: text) { _ in }
+                    } else {
+                        // New note
+                        network.create_note(content: text, recipeId: recipe.id) { noteId in
+                            if let noteId {
+                                recipe.notes.append(RecipeNote(id: noteId, content: text))
+                            }
+                        }
+                    }
+                }
+            )
         }
     }
 }

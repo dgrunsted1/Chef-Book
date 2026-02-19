@@ -117,7 +117,10 @@ class CookTimer {
         isRunning = true
         isComplete = false
         targetDate = Date().addingTimeInterval(TimeInterval(remainingSeconds))
+        cancelNotification()
         scheduleNotification()
+        // End any stale activity before starting a new one
+        endLiveActivity()
         startLiveActivity()
         startTicking()
     }
@@ -132,9 +135,13 @@ class CookTimer {
     }
 
     func reset() {
-        pause()
+        isRunning = false
+        timer?.invalidate()
+        timer = nil
+        targetDate = nil
         remainingSeconds = totalSeconds
         isComplete = false
+        cancelNotification()
         endLiveActivity()
     }
 
@@ -200,13 +207,39 @@ class CookTimer {
             timeInterval: TimeInterval(remainingSeconds),
             repeats: false
         )
-        let request = UNNotificationRequest(
-            identifier: notificationId,
-            content: content,
-            trigger: trigger
-        )
 
-        UNUserNotificationCenter.current().add(request)
+        // Try to attach the recipe image
+        if !recipeImageURL.isEmpty, let url = URL(string: recipeImageURL) {
+            let task = URLSession.shared.dataTask(with: url) { [notificationId] data, response, _ in
+                if let data, !data.isEmpty {
+                    // Derive extension from URL path, MIME type, or default to jpg
+                    let ext: String
+                    let pathExt = url.pathExtension.lowercased()
+                    if ["jpg", "jpeg", "png", "gif", "webp"].contains(pathExt) {
+                        ext = pathExt
+                    } else if let mimeType = (response as? HTTPURLResponse)?.mimeType,
+                              let mimeSuffix = mimeType.split(separator: "/").last {
+                        ext = String(mimeSuffix)
+                    } else {
+                        ext = "jpg"
+                    }
+                    let tmpFile = FileManager.default.temporaryDirectory
+                        .appendingPathComponent(UUID().uuidString)
+                        .appendingPathExtension(ext)
+                    do {
+                        try data.write(to: tmpFile)
+                        let attachment = try UNNotificationAttachment(identifier: "image", url: tmpFile)
+                        content.attachments = [attachment]
+                    } catch {}
+                }
+                let request = UNNotificationRequest(identifier: notificationId, content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request)
+            }
+            task.resume()
+        } else {
+            let request = UNNotificationRequest(identifier: notificationId, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request)
+        }
     }
 
     private func cancelNotification() {

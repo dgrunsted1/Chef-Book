@@ -1012,7 +1012,7 @@ class Network: ObservableObject {
             completion(false)
             return
         }
-        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/ingr_list/records/\(id)", method: "PATCH", body: jsonData, contentType: "application/json") { data, response, error in
+        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/ingredients/records/\(id)", method: "PATCH", body: jsonData, contentType: "application/json") { data, response, error in
             if let error = error {
                 print("[update_ingredient] Network error: \(error.localizedDescription)")
             }
@@ -1036,7 +1036,7 @@ class Network: ObservableObject {
             completion(nil)
             return
         }
-        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/ingr_list/records", method: "POST", body: jsonData, contentType: "application/json") { data, response, error in
+        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/ingredients/records", method: "POST", body: jsonData, contentType: "application/json") { data, response, error in
             if let error = error {
                 print("[create_ingredient] Network error: \(error.localizedDescription)")
             }
@@ -1059,7 +1059,7 @@ class Network: ObservableObject {
     }
 
     func delete_ingredient(id: String, recipeId: String, completion: @escaping (Bool) -> Void) {
-        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/ingr_list/records/\(id)", method: "DELETE") { data, response, error in
+        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/ingredients/records/\(id)", method: "DELETE") { data, response, error in
             if let error = error {
                 print("[delete_ingredient] Network error: \(error.localizedDescription)")
             }

@@ -1,0 +1,23 @@
+{
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Chef_BookApp.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/Chef_BookApp.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/Chef_BookApp.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/Chef_BookApp.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/Chef_BookApp.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/Chef_BookApp.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/views/RegisterView.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/RegisterView.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/RegisterView.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/RegisterView.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/RegisterView.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/RegisterView.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/views/TodayView.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/TodayView.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/TodayView.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/TodayView.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/TodayView.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/TodayView.swiftdeps"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/AlertState.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/AlertState.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/AlertState.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/AlertState.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/AlertState.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/AlertState.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/GroceryListGenerator.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/GroceryListGenerator.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/GroceryListGenerator.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/GroceryListGenerator.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/GroceryListGenerator.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/GroceryListGenerator.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/IngredientParser.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/IngredientParser.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/IngredientParser.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/IngredientParser.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/IngredientParser.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/IngredientParser.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/PocketBaseRealtime.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/PocketBaseRealtime.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/PocketBaseRealtime.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/PocketBaseRealtime.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/PocketBaseRealtime.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/PocketBaseRealtime.swiftdeps"
+  }
+}

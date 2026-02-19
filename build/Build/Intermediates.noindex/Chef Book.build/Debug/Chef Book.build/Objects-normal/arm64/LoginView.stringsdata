@@ -1,0 +1,40 @@
+{
+  "source": "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/views/LoginView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "username",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 18
+        }
+      },
+      {
+        "comment": "",
+        "key": "password",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 22
+        }
+      },
+      {
+        "comment": "",
+        "key": "log in",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 31
+        }
+      },
+      {
+        "comment": "",
+        "key": "Don't have an account? Register",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 39
+        }
+      }
+    ]
+  },
+  "version": 1
+}

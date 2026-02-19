@@ -1,0 +1,23 @@
+{
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/Ingredient.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/Ingredient.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/Ingredient.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/Ingredient.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/Ingredient.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/Ingredient.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/views/AddRecipeView.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/AddRecipeView.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/AddRecipeView.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/AddRecipeView.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/AddRecipeView.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/AddRecipeView.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/views/TodayCardView.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/TodayCardView.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/TodayCardView.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/TodayCardView.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/TodayCardView.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_macos/Build/Intermediates.noindex/Chef Book.build/Debug/Chef Book.build/Objects-normal/arm64/TodayCardView.swiftdeps"
+  }
+}

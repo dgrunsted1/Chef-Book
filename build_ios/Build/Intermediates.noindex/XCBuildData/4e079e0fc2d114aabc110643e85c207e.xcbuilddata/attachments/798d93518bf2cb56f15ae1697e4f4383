@@ -1,0 +1,49 @@
+{
+  "" : {
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetExtension-primary.dia",
+    "emit-module-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetExtension-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetExtension-primary-emit-module.dia",
+    "pch" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetExtension-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetExtension-primary.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/CookTimerAttributes.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerAttributes.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerAttributes.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerAttributes.dia",
+    "index-unit-output-path" : "/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerAttributes.o",
+    "llvm-bc" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerAttributes.bc",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerAttributes.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerAttributes.swiftdeps",
+    "swiftmodule" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerAttributes~partial.swiftmodule"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/CookTimerWidget/CookTimerLiveActivity.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerLiveActivity.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerLiveActivity.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerLiveActivity.dia",
+    "index-unit-output-path" : "/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerLiveActivity.o",
+    "llvm-bc" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerLiveActivity.bc",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerLiveActivity.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerLiveActivity.swiftdeps",
+    "swiftmodule" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerLiveActivity~partial.swiftmodule"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/CookTimerWidget/CookTimerWidgetBundle.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetBundle.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetBundle.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetBundle.dia",
+    "index-unit-output-path" : "/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetBundle.o",
+    "llvm-bc" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetBundle.bc",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetBundle.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetBundle.swiftdeps",
+    "swiftmodule" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/CookTimerWidgetBundle~partial.swiftmodule"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build_ios/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/CookTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

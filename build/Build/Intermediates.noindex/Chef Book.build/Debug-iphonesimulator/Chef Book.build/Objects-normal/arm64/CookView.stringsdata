@@ -1,0 +1,152 @@
+{
+  "source": "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/views/CookView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Original",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 403
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 416
+        }
+      },
+      {
+        "comment": "",
+        "key": "Ingredients",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 456
+        }
+      },
+      {
+        "comment": "",
+        "key": "Qty",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 481
+        }
+      },
+      {
+        "comment": "",
+        "key": "Unit",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 486
+        }
+      },
+      {
+        "comment": "",
+        "key": "Ingredient",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 490
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 612
+        }
+      },
+      {
+        "comment": "",
+        "key": "Directions",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 632
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld.",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 654
+        }
+      },
+      {
+        "comment": "",
+        "key": "Direction step...",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 657
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 784
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 827
+        }
+      },
+      {
+        "comment": "",
+        "key": "Done!",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 877
+        }
+      },
+      {
+        "comment": "",
+        "key": "Notes",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 927
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add Note",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 930
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add a note...",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 943
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 947
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit note...",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 957
+        }
+      }
+    ]
+  },
+  "version": 1
+}

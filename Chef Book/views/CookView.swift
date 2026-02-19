@@ -824,38 +824,47 @@ private struct CookDirectionsPane: View {
 
             List {
                 ForEach(Array(recipe.directions.enumerated()), id: \.offset) { index, direction in
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            if blurred.contains(index) {
-                                blurred.remove(index)
-                            } else {
-                                blurred.insert(index)
-                            }
-                        }
-                    } label: {
-                        DirectionRowView(
-                            index: index,
-                            direction: direction,
-                            isBlurred: blurred.contains(index),
-                            timer: timers[index],
-                            onTimerStart: { parsed in
-                                if timers[index] == nil {
-                                    let snippet = String(direction.prefix(60))
-                                    let t = CookTimer(
-                                        totalSeconds: parsed.totalSeconds,
-                                        displayLabel: parsed.displayLabel,
-                                        stepNumber: index + 1,
-                                        stepSnippet: snippet,
-                                        recipeName: recipe.title,
-                                        recipeImageURL: recipe.image
-                                    )
-                                    timers[index] = t
-                                    t.start()
+                    DirectionRowView(
+                        index: index,
+                        direction: direction,
+                        isBlurred: blurred.contains(index),
+                        timer: timers[index],
+                        onToggleBlur: {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                if blurred.contains(index) {
+                                    blurred.remove(index)
+                                } else {
+                                    blurred.insert(index)
+                                    // Reset timer to mini state when crossing off
+                                    if let timer = timers[index] {
+                                        timer.reset()
+                                        timers.removeValue(forKey: index)
+                                    }
                                 }
                             }
-                        )
-                    }
-                    .buttonStyle(.plain)
+                        },
+                        onTimerStart: { parsed in
+                            if timers[index] == nil {
+                                let snippet = String(direction.prefix(60))
+                                let t = CookTimer(
+                                    totalSeconds: parsed.totalSeconds,
+                                    displayLabel: parsed.displayLabel,
+                                    stepNumber: index + 1,
+                                    stepSnippet: snippet,
+                                    recipeName: recipe.title,
+                                    recipeImageURL: recipe.image
+                                )
+                                timers[index] = t
+                                t.start()
+                            }
+                        },
+                        onTimerDismiss: {
+                            if let timer = timers[index] {
+                                timer.reset()
+                                timers.removeValue(forKey: index)
+                            }
+                        }
+                    )
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         if recipe.directions.count > 1 {
                             Button(role: .destructive) {
@@ -934,7 +943,9 @@ private struct DirectionRowView: View {
     let direction: String
     let isBlurred: Bool
     let timer: CookTimer?
+    let onToggleBlur: () -> Void
     let onTimerStart: (ParsedTimer) -> Void
+    let onTimerDismiss: () -> Void
 
     private var parsedTimers: [ParsedTimer] {
         TimerParser.parse(direction: direction)
@@ -942,46 +953,50 @@ private struct DirectionRowView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            HStack(alignment: .top) {
-                if isBlurred {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
-                        .font(.caption)
+            // Direction text — tapping crosses off/un-crosses the direction
+            Button {
+                onToggleBlur()
+            } label: {
+                HStack(alignment: .top) {
+                    if isBlurred {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                            .font(.caption)
+                    }
+                    Text("\(index + 1).")
+                        .bold()
+                        .foregroundColor(Color("MyPrimaryColor"))
+                    Text(direction)
+                        .strikethrough(isBlurred)
+                        .opacity(isBlurred ? 0.3 : 1.0)
+                    Spacer()
                 }
-                Text("\(index + 1).")
-                    .bold()
-                    .foregroundColor(Color("MyPrimaryColor"))
-                Text(direction)
-                    .strikethrough(isBlurred)
-                    .opacity(isBlurred ? 0.3 : 1.0)
-                Spacer()
             }
+            .buttonStyle(.plain)
 
-            // Timer buttons
-            if !parsedTimers.isEmpty {
+            // Timer buttons — only when no active timer and not crossed out
+            if !isBlurred, timer == nil, !parsedTimers.isEmpty {
                 HStack(spacing: 8) {
                     ForEach(Array(parsedTimers.enumerated()), id: \.offset) { _, parsed in
-                        if timer == nil {
-                            Button {
-                                onTimerStart(parsed)
-                            } label: {
-                                Label(parsed.displayLabel, systemImage: "timer")
-                                    .font(.caption)
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 5)
-                                    .background(Color("MyPrimaryColor").opacity(0.15))
-                                    .foregroundColor(Color("MyPrimaryColor"))
-                                    .clipShape(Capsule())
-                            }
-                            .buttonStyle(.plain)
+                        Button {
+                            onTimerStart(parsed)
+                        } label: {
+                            Label(parsed.displayLabel, systemImage: "timer")
+                                .font(.caption)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(Color("MyPrimaryColor").opacity(0.15))
+                                .foregroundColor(Color("MyPrimaryColor"))
+                                .clipShape(Capsule())
                         }
+                        .buttonStyle(.plain)
                     }
                 }
             }
 
-            // Active timer display
-            if let timer {
-                CookTimerView(timer: timer)
+            // Active timer display — tapping dismisses back to mini state
+            if !isBlurred, let timer {
+                CookTimerView(timer: timer, onDismiss: onTimerDismiss)
                     .padding(.top, 2)
             }
         }
@@ -992,6 +1007,7 @@ private struct DirectionRowView: View {
 
 private struct CookTimerView: View {
     @Bindable var timer: CookTimer
+    var onDismiss: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
@@ -1050,16 +1066,22 @@ private struct CookTimerView: View {
                     }
                 } label: {
                     Image(systemName: timer.isRunning ? "pause.fill" : "play.fill")
+                        .font(.title2)
                         .foregroundColor(Color("MyPrimaryColor"))
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }
 
             Button {
-                timer.reset()
+                onDismiss()
             } label: {
-                Image(systemName: "arrow.counterclockwise")
+                Image(systemName: "xmark.circle.fill")
+                    .font(.title2)
                     .foregroundColor(Color("NeutralColor"))
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
         }
@@ -1101,14 +1123,9 @@ private struct CookNotesSection: View {
             if !recipe.notes.isEmpty {
                 List {
                     ForEach(Array(recipe.notes.enumerated()), id: \.element.id) { index, note in
-                        Button {
-                            editingNote = NoteEditState(index: index, text: note.content)
-                        } label: {
-                            Text(note.content)
-                                .padding(.vertical, 2)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .buttonStyle(.plain)
+                        Text(note.content)
+                            .padding(.vertical, 2)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
                                 let noteId = recipe.notes[index].id

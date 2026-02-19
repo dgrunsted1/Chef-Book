@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>colors</key>
+	<array>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACColorNameAccentColor</string>
+			<key>relativePath</key>
+			<string>./AccentColor.colorset</string>
+			<key>swiftSymbol</key>
+			<string>accent</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACColorNameBase200Color</string>
+			<key>relativePath</key>
+			<string>./Base200Color.colorset</string>
+			<key>swiftSymbol</key>
+			<string>base200</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACColorNameBase300Color</string>
+			<key>relativePath</key>
+			<string>./Base300Color.colorset</string>
+			<key>swiftSymbol</key>
+			<string>base300</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACColorNameBaseColor</string>
+			<key>relativePath</key>
+			<string>./BaseColor.colorset</string>
+			<key>swiftSymbol</key>
+			<string>base</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACColorNameMyPrimaryColor</string>
+			<key>relativePath</key>
+			<string>./MyPrimaryColor.colorset</string>
+			<key>swiftSymbol</key>
+			<string>myPrimary</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACColorNameMySecondaryColor</string>
+			<key>relativePath</key>
+			<string>./MySecondaryColor.colorset</string>
+			<key>swiftSymbol</key>
+			<string>mySecondary</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACColorNameNeutralColor</string>
+			<key>relativePath</key>
+			<string>./NeutralColor.colorset</string>
+			<key>swiftSymbol</key>
+			<string>neutral</string>
+		</dict>
+		<dict>
+			<key>catalogPath</key>
+			<string>/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Assets.xcassets</string>
+			<key>objcSymbol</key>
+			<string>ACColorNameTextColor</string>
+			<key>relativePath</key>
+			<string>./TextColor.colorset</string>
+			<key>swiftSymbol</key>
+			<string>text</string>
+		</dict>
+	</array>
+	<key>images</key>
+	<array/>
+	<key>symbols</key>
+	<array/>
+</dict>
+</plist>

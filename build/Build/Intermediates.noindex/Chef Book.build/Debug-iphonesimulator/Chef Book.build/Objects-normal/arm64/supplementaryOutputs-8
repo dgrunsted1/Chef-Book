@@ -1,0 +1,23 @@
+{
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/CookTimerAttributes.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/CookTimerAttributes.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/CookTimerAttributes.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/CookTimerAttributes.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/CookTimerAttributes.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/CookTimerAttributes.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/CookTimerState.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/CookTimerState.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/CookTimerState.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/CookTimerState.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/CookTimerState.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/CookTimerState.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "source": "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/views/RecipesView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "No recipes found",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 42
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 150
+        }
+      },
+      {
+        "comment": "",
+        "key": "Search recipes...",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 158
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 216
+        }
+      }
+    ]
+  },
+  "version": 1
+}

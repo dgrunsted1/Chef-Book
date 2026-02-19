@@ -1,0 +1,30 @@
+{
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Item.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Item.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Item.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Item.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Item.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Item.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/Menu.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Menu.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Menu.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Menu.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Menu.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Menu.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/Response.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Response.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Response.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Response.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Response.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Response.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/User.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/User.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/User.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/User.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/User.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/User.swiftdeps"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/ContentView.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/ContentView.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/ContentView.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/Models/Network.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Network.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Network.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Network.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Network.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/Network.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/views/LoginView.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/LoginView.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/LoginView.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/LoginView.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/LoginView.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/LoginView.swiftdeps"
+  },
+  "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/views/RecipeCardView.swift" : {
+    "const-values" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/RecipeCardView.swiftconstvalues",
+    "dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/RecipeCardView.d",
+    "diagnostics" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/RecipeCardView.dia",
+    "object" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/RecipeCardView.o",
+    "swift-dependencies" : "/Users/davidgrunsted/Personal/repos/Chef-Book/build/Build/Intermediates.noindex/Chef Book.build/Debug-iphonesimulator/Chef Book.build/Objects-normal/arm64/RecipeCardView.swiftdeps"
+  }
+}

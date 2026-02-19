@@ -262,6 +262,7 @@ struct CookView: View {
     @State private var blurredIngredients: Set<Int> = []
     @State private var blurredDirections: Set<Int> = []
     @State private var timers: [Int: CookTimer] = [:]
+    @State private var viewportHeight: CGFloat = 600
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -307,6 +308,7 @@ struct CookView: View {
                 .padding(.vertical, 12)
 
                 if useSplitLayout {
+                    let paneHeight = viewportHeight - 60 // leave room for padding
                     GeometryReader { geo in
                         let availableWidth = geo.size.width - 32 - 16 // 32 for horizontal padding, 16 for spacing
                         HStack(alignment: .top, spacing: 16) {
@@ -328,8 +330,9 @@ struct CookView: View {
                         }
                         .padding(.horizontal)
                     }
-                    .frame(minHeight: 400)
+                    .frame(height: paneHeight)
                 } else {
+                    let paneHeight = viewportHeight - 60
                     GeometryReader { geo in
                         VStack(spacing: 16) {
                             CookIngredientsPane(
@@ -338,7 +341,7 @@ struct CookView: View {
                                 blurred: $blurredIngredients,
                                 servingMultiplier: servingMultiplier
                             )
-                            .frame(height: min(CGFloat(recipe.ingredients.count * 38 + 40), geo.size.height * 0.35))
+                            .frame(height: min(CGFloat(recipe.ingredients.count * 38 + 40), paneHeight * 0.35))
 
                             CookDirectionsPane(
                                 recipe: $recipe,
@@ -346,15 +349,11 @@ struct CookView: View {
                                 blurred: $blurredDirections,
                                 timers: $timers
                             )
-                            .frame(height: geo.size.height * 0.6)
+                            .frame(height: paneHeight * 0.6)
                         }
                         .padding(.horizontal)
                     }
-                    #if os(iOS)
-                    .frame(height: UIScreen.main.bounds.height * 0.85)
-                    #else
-                    .frame(height: 600)
-                    #endif
+                    .frame(height: paneHeight)
                 }
 
                 CookNotesSection(
@@ -365,7 +364,15 @@ struct CookView: View {
                 .padding(.top, 20)
             }
         }
-        .background(Color("BaseColor"))
+        .background(
+            GeometryReader { proxy in
+                Color("BaseColor")
+                    .onAppear { viewportHeight = proxy.size.height }
+                    .onChange(of: proxy.size.height) { _, newHeight in
+                        viewportHeight = newHeight
+                    }
+            }
+        )
         .overlay {
             if isLoadingDetail {
                 ProgressView()

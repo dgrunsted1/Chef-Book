@@ -80,6 +80,7 @@ class CookTimer {
 
     #if os(iOS)
     private var activity: Activity<CookTimerAttributes>?
+    private var cachedImageData: Data?
     #endif
 
     private var notificationId: String {
@@ -110,7 +111,38 @@ class CookTimer {
         self.recipeImageURL = recipeImageURL
         self.remainingSeconds = totalSeconds
         setupBackgroundObservers()
+        #if os(iOS)
+        cacheRecipeImage()
+        #endif
     }
+
+    #if os(iOS)
+    private func cacheRecipeImage() {
+        guard !recipeImageURL.isEmpty, let url = URL(string: recipeImageURL) else { return }
+        // Try to get the image from URLCache synchronously (already loaded by AsyncImage)
+        let request = URLRequest(url: url)
+        let data: Data?
+        if let cached = URLCache.shared.cachedResponse(for: request)?.data {
+            data = cached
+        } else {
+            // Fallback: try synchronous load (image should be cached by OS)
+            data = try? Data(contentsOf: url)
+        }
+        guard let data, let original = UIImage(data: data) else { return }
+        let targetSize: CGFloat = 36
+        let aspect = original.size.width / original.size.height
+        let thumbSize: CGSize
+        if aspect > 1 {
+            thumbSize = CGSize(width: targetSize, height: targetSize / aspect)
+        } else {
+            thumbSize = CGSize(width: targetSize * aspect, height: targetSize)
+        }
+        let renderer = UIGraphicsImageRenderer(size: thumbSize)
+        cachedImageData = renderer.jpegData(withCompressionQuality: 0.3) { ctx in
+            original.draw(in: CGRect(origin: .zero, size: thumbSize))
+        }
+    }
+    #endif
 
     func start() {
         guard !isRunning, remainingSeconds > 0 else { return }
@@ -254,17 +286,20 @@ class CookTimer {
         #if os(iOS)
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
 
+        // Truncate snippet for Live Activity to stay under 4KB payload limit
+        let snippet = stepSnippet
         let attributes = CookTimerAttributes(
             stepNumber: stepNumber,
-            stepSnippet: stepSnippet,
+            stepSnippet: snippet,
             timerLabel: displayLabel,
             totalSeconds: totalSeconds,
             recipeName: recipeName,
-            recipeImageURL: recipeImageURL
+            recipeImageData: cachedImageData
         )
         let state = CookTimerAttributes.ContentState(
             remainingSeconds: remainingSeconds,
-            isComplete: false
+            isComplete: false,
+            targetDate: targetDate
         )
 
         do {
@@ -284,7 +319,8 @@ class CookTimer {
         guard let activity else { return }
         let state = CookTimerAttributes.ContentState(
             remainingSeconds: remainingSeconds,
-            isComplete: isComplete
+            isComplete: isComplete,
+            targetDate: isRunning ? targetDate : nil
         )
         Task {
             await activity.update(.init(state: state, staleDate: nil))
@@ -297,7 +333,8 @@ class CookTimer {
         guard let activity else { return }
         let finalState = CookTimerAttributes.ContentState(
             remainingSeconds: 0,
-            isComplete: true
+            isComplete: true,
+            targetDate: nil
         )
         Task {
             await activity.end(.init(state: finalState, staleDate: nil), dismissalPolicy: .immediate)
@@ -313,7 +350,7 @@ class CookTimer {
         cancelNotification()
         #if os(iOS)
         if let activity {
-            let finalState = CookTimerAttributes.ContentState(remainingSeconds: 0, isComplete: true)
+            let finalState = CookTimerAttributes.ContentState(remainingSeconds: 0, isComplete: true, targetDate: nil)
             Task {
                 await activity.end(.init(state: finalState, staleDate: nil), dismissalPolicy: .immediate)
             }

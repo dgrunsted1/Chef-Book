@@ -13,71 +13,86 @@ struct CookTimerLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: CookTimerAttributes.self) { context in
             // Lock screen / notification banner view
-            HStack(spacing: 12) {
+            HStack(spacing: 10) {
                 // Circular progress
                 ZStack {
                     Circle()
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 4)
-                        .frame(width: 50, height: 50)
+                        .stroke(Color.gray.opacity(0.3), lineWidth: 3)
 
                     Circle()
                         .trim(from: 0, to: progressValue(context: context))
                         .stroke(
                             context.state.isComplete ? Color.green : Color.orange,
-                            style: StrokeStyle(lineWidth: 4, lineCap: .round)
+                            style: StrokeStyle(lineWidth: 3, lineCap: .round)
                         )
-                        .frame(width: 50, height: 50)
                         .rotationEffect(.degrees(-90))
 
                     if context.state.isComplete {
                         Image(systemName: "checkmark")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.system(size: 14, weight: .bold))
                             .foregroundColor(.green)
+                    } else if let target = context.state.targetDate {
+                        Text(timerInterval: Date.now...target, countsDown: true)
+                            .font(.system(size: 10, design: .monospaced))
+                            .bold()
+                            .multilineTextAlignment(.center)
                     } else {
                         Text(timeString(context.state.remainingSeconds))
-                            .font(.system(size: 11, design: .monospaced))
+                            .font(.system(size: 10, design: .monospaced))
                             .bold()
                     }
                 }
+                .frame(width: 40, height: 40)
 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(context.attributes.recipeName)
-                        .font(.subheadline)
+                        .font(.caption)
                         .bold()
                         .foregroundColor(context.state.isComplete ? .green : .primary)
                         .lineLimit(1)
 
-                    Text(context.attributes.stepSnippet)
+                    Text("\(context.attributes.stepSnippet)")
                         .font(.caption2)
                         .foregroundColor(.secondary)
-                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
-                Spacer()
 
                 if context.state.isComplete {
                     Text("Done!")
-                        .font(.headline)
+                        .font(.subheadline)
                         .foregroundColor(.green)
+                        .bold()
                 } else {
-                    RecipeImageView(url: context.attributes.recipeImageURL, size: 44)
+                    RecipeImageView(imageData: context.attributes.recipeImageData, size: 56)
                 }
             }
-            .padding()
+            .padding(.leading, 12)
+            .padding(.trailing, 6)
+            .padding(.vertical, 14)
             .activityBackgroundTint(.black.opacity(0.8))
             .activitySystemActionForegroundColor(.white)
 
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    RecipeImageView(url: context.attributes.recipeImageURL, size: 36)
+                    AppIconView(size: 36)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text(timeString(context.state.remainingSeconds))
-                        .font(.system(.title, design: .monospaced))
-                        .bold()
-                        .monospacedDigit()
-                        .foregroundColor(context.state.isComplete ? .green : .orange)
+                    if let target = context.state.targetDate {
+                        Text(timerInterval: Date.now...target, countsDown: true)
+                            .font(.system(.title, design: .monospaced))
+                            .bold()
+                            .monospacedDigit()
+                            .multilineTextAlignment(.trailing)
+                            .foregroundColor(context.state.isComplete ? .green : .orange)
+                    } else {
+                        Text(timeString(context.state.remainingSeconds))
+                            .font(.system(.title, design: .monospaced))
+                            .bold()
+                            .monospacedDigit()
+                            .foregroundColor(context.state.isComplete ? .green : .orange)
+                    }
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     VStack(alignment: .leading, spacing: 2) {
@@ -85,22 +100,21 @@ struct CookTimerLiveActivity: Widget {
                             .font(.caption)
                             .bold()
                             .lineLimit(1)
-                        Text("Step \(context.attributes.stepNumber) - \(context.attributes.stepSnippet)")
+                        Text(context.attributes.stepSnippet)
                             .font(.caption2)
                             .lineLimit(1)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
             } compactLeading: {
-                RecipeImageView(url: context.attributes.recipeImageURL, size: 24)
+                AppIconView(size: 24)
             } compactTrailing: {
                 Text(timeString(context.state.remainingSeconds))
-                    .font(.system(.caption, design: .monospaced))
-                    .bold()
+                    .font(.system(.caption2))
                     .monospacedDigit()
                     .foregroundColor(context.state.isComplete ? .green : .orange)
             } minimal: {
-                RecipeImageView(url: context.attributes.recipeImageURL, size: 22)
+                AppIconView(size: 22)
             }
         }
     }
@@ -120,28 +134,28 @@ struct CookTimerLiveActivity: Widget {
 // MARK: - Recipe Image View
 
 private struct RecipeImageView: View {
-    let url: String
+    let imageData: Data?
     let size: CGFloat
 
     var body: some View {
-        if !url.isEmpty, let imageURL = URL(string: url) {
-            AsyncImage(url: imageURL) { phase in
-                switch phase {
-                case .success(let image):
-                    image.resizable()
-                        .scaledToFill()
-                        .frame(width: size, height: size)
-                        .clipShape(RoundedRectangle(cornerRadius: size * 0.2))
-                default:
-                    fallbackIcon
-                }
-            }
+        if let imageData, let uiImage = UIImage(data: imageData) {
+            Image(uiImage: uiImage)
+                .resizable()
+                .scaledToFill()
+                .frame(width: size, height: size)
+                .clipShape(RoundedRectangle(cornerRadius: size * 0.2))
         } else {
-            fallbackIcon
+            AppIconView(size: size)
         }
     }
+}
 
-    private var fallbackIcon: some View {
+// MARK: - App Icon View
+
+private struct AppIconView: View {
+    let size: CGFloat
+
+    var body: some View {
         Image("AppIconImage")
             .resizable()
             .scaledToFill()

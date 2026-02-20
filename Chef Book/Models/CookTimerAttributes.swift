@@ -13,6 +13,7 @@ struct CookTimerAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         var remainingSeconds: Int
         var isComplete: Bool
+        var targetDate: Date?
     }
 
     var stepNumber: Int
@@ -20,6 +21,6 @@ struct CookTimerAttributes: ActivityAttributes {
     var timerLabel: String
     var totalSeconds: Int
     var recipeName: String
-    var recipeImageURL: String
+    var recipeImageData: Data?
 }
 #endif

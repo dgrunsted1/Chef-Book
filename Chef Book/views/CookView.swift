@@ -852,12 +852,11 @@ private struct CookDirectionsPane: View {
                         },
                         onTimerStart: { parsed in
                             if timers[index] == nil {
-                                let snippet = String(direction.prefix(60))
                                 let t = CookTimer(
                                     totalSeconds: parsed.totalSeconds,
                                     displayLabel: parsed.displayLabel,
                                     stepNumber: index + 1,
-                                    stepSnippet: snippet,
+                                    stepSnippet: direction,
                                     recipeName: recipe.title,
                                     recipeImageURL: recipe.image
                                 )

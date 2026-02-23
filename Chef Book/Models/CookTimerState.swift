@@ -68,6 +68,7 @@ class CookTimer {
     let displayLabel: String
     let stepNumber: Int
     let stepSnippet: String
+    let nextStepSnippet: String?
     let recipeName: String
     let recipeImageURL: String
     private(set) var remainingSeconds: Int
@@ -102,11 +103,12 @@ class CookTimer {
         return String(format: "%d:%02d", mins, secs)
     }
 
-    init(totalSeconds: Int, displayLabel: String, stepNumber: Int, stepSnippet: String, recipeName: String, recipeImageURL: String) {
+    init(totalSeconds: Int, displayLabel: String, stepNumber: Int, stepSnippet: String, nextStepSnippet: String? = nil, recipeName: String, recipeImageURL: String) {
         self.totalSeconds = totalSeconds
         self.displayLabel = displayLabel
         self.stepNumber = stepNumber
         self.stepSnippet = stepSnippet
+        self.nextStepSnippet = nextStepSnippet
         self.recipeName = recipeName
         self.recipeImageURL = recipeImageURL
         self.remainingSeconds = totalSeconds
@@ -231,8 +233,13 @@ class CookTimer {
         cancelNotification()
 
         let content = UNMutableNotificationContent()
-        content.title = "\(stepLabel) Timer Done"
-        content.body = stepSnippet
+        content.title = recipeName
+        content.subtitle = "\(stepLabel) Timer Done"
+        if let nextStepSnippet {
+            content.body = "Next: \(nextStepSnippet)"
+        } else {
+            content.body = stepSnippet
+        }
         content.sound = .default
 
         let trigger = UNTimeIntervalNotificationTrigger(

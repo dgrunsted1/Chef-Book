@@ -77,6 +77,7 @@ struct CookTimerLiveActivity: Widget {
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     AppIconView(size: 36)
+                        .padding(.leading, 6)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     if let target = context.state.targetDate {
@@ -86,12 +87,14 @@ struct CookTimerLiveActivity: Widget {
                             .monospacedDigit()
                             .multilineTextAlignment(.trailing)
                             .foregroundColor(context.state.isComplete ? .green : .orange)
+                            .padding(.trailing, 6)
                     } else {
                         Text(timeString(context.state.remainingSeconds))
                             .font(.system(.title, design: .monospaced))
                             .bold()
                             .monospacedDigit()
                             .foregroundColor(context.state.isComplete ? .green : .orange)
+                            .padding(.trailing, 6)
                     }
                 }
                 DynamicIslandExpandedRegion(.bottom) {
@@ -105,6 +108,7 @@ struct CookTimerLiveActivity: Widget {
                             .lineLimit(1)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 6)
                 }
             } compactLeading: {
                 AppIconView(size: 24)

@@ -18,6 +18,10 @@ class Network: ObservableObject {
     @Published var today: MyMenu?
     @Published var menus: [MyMenu] = []
     @Published var isLoading: Bool = false
+    @Published var recipeTotalItems: Int = 0
+    @Published var hasMoreRecipes: Bool = false
+    @Published var isLoadingMore: Bool = false
+    var recipePage: Int = 1
     var recipeDetailCache: [String: Recipe] = [:]
 
     private let baseURL = "https://db.ivebeenwastingtime.com"
@@ -139,6 +143,7 @@ class Network: ObservableObject {
         guard let url = URL(string: "\(baseURL)/api/search") else { return }
 
         isLoading = true
+        recipePage = 1
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -148,7 +153,7 @@ class Network: ObservableObject {
             "search_val": search,
             "sort_val": sort,
             "page": 1,
-            "per_page": 200,
+            "per_page": 30,
             "selected_categories": categories,
             "selected_countries": countries,
             "selected_cuisines": cuisines,
@@ -176,42 +181,10 @@ class Network: ObservableObject {
                     let existingById = Dictionary(uniqueKeysWithValues: self.recipes.filter { $0.isDetailLoaded }.map { ($0.id, $0) })
 
                     self.recipes = decoded.recipes.map { r in
-                        // If we already have a detail-loaded version, keep it but update summary fields
-                        if var existing = existingById[r.id] {
-                            existing.title = r.title
-                            existing.author = r.author
-                            existing.image = r.image
-                            existing.category = r.category
-                            existing.cuisine = r.cuisine
-                            existing.country = r.country
-                            existing.servings = r.servings
-                            return existing
-                        }
-                        return Recipe(
-                            id: r.id,
-                            title: r.title,
-                            description: "",
-                            link_to_original_web_page: "",
-                            author: r.author,
-                            time_in_seconds: 0,
-                            time_display: r.time,
-                            directions: [],
-                            image: r.image,
-                            servings: r.servings,
-                            cuisine: r.cuisine,
-                            country: r.country,
-                            notes: [],
-                            ingredients: [],
-                            category: r.category,
-                            made: false,
-                            favorite: false,
-                            url_id: r.url_id,
-                            ingredientCount: Int(r.ingr_list) ?? 0,
-                            directionCount: Int(r.directions) ?? 0,
-                            user: r.user,
-                            isDetailLoaded: false
-                        )
+                        self.mapSearchRecipe(r, existingById: existingById)
                     }
+                    self.recipeTotalItems = decoded.totalItems
+                    self.hasMoreRecipes = decoded.page < decoded.totalPages
                     self.categories = decoded.categories.map { $0.id }
                     self.cuisines = decoded.cuisines.map { $0.id }
                     self.countries = decoded.countries.map { $0.id }
@@ -223,6 +196,104 @@ class Network: ObservableObject {
             }
         }
         dataTask.resume()
+    }
+
+    func loadMoreRecipes(categories: [String] = [], cuisines: [String] = [], countries: [String] = [], authors: [String] = [], sort: String = "Most Recent", search: String = "") {
+        guard hasMoreRecipes, !isLoadingMore else { return }
+
+        isLoadingMore = true
+        let nextPage = recipePage + 1
+
+        guard let url = URL(string: "\(baseURL)/api/search") else {
+            isLoadingMore = false
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: Any] = [
+            "search_val": search,
+            "sort_val": sort,
+            "page": nextPage,
+            "per_page": 30,
+            "selected_categories": categories,
+            "selected_countries": countries,
+            "selected_cuisines": cuisines,
+            "selected_authors": authors
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        let dataTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                DispatchQueue.main.async { self.isLoadingMore = false }
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200,
+                  let data = data else {
+                DispatchQueue.main.async { self.isLoadingMore = false }
+                return
+            }
+
+            DispatchQueue.main.async {
+                do {
+                    let decoded = try JSONDecoder().decode(SearchResponse.self, from: data)
+                    let existingById = Dictionary(uniqueKeysWithValues: self.recipes.filter { $0.isDetailLoaded }.map { ($0.id, $0) })
+
+                    let newRecipes = decoded.recipes.map { r in
+                        self.mapSearchRecipe(r, existingById: existingById)
+                    }
+                    self.recipes.append(contentsOf: newRecipes)
+                    self.recipePage = nextPage
+                    self.recipeTotalItems = decoded.totalItems
+                    self.hasMoreRecipes = decoded.page < decoded.totalPages
+                } catch let error {
+                    print("Error decoding: ", error)
+                }
+                self.isLoadingMore = false
+            }
+        }
+        dataTask.resume()
+    }
+
+    private func mapSearchRecipe(_ r: SearchRecipeData, existingById: [String: Recipe]) -> Recipe {
+        if var existing = existingById[r.id] {
+            existing.title = r.title
+            existing.author = r.author
+            existing.image = r.image
+            existing.category = r.category
+            existing.cuisine = r.cuisine
+            existing.country = r.country
+            existing.servings = r.servings
+            return existing
+        }
+        return Recipe(
+            id: r.id,
+            title: r.title,
+            description: "",
+            link_to_original_web_page: "",
+            author: r.author,
+            time_in_seconds: 0,
+            time_display: r.time,
+            directions: [],
+            image: r.image,
+            servings: r.servings,
+            cuisine: r.cuisine,
+            country: r.country,
+            notes: [],
+            ingredients: [],
+            category: r.category,
+            made: false,
+            favorite: false,
+            url_id: r.url_id,
+            ingredientCount: Int(r.ingr_list) ?? 0,
+            directionCount: Int(r.directions) ?? 0,
+            user: r.user,
+            isDetailLoaded: false
+        )
     }
 
     func getRecipeDetail(urlId: String, completion: @escaping (Recipe?) -> Void) {

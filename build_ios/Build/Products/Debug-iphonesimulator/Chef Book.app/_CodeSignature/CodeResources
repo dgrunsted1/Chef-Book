@@ -18,7 +18,7 @@
 		</data>
 		<key>Chef Book.debug.dylib</key>
 		<data>
-		jHjMyBu0soBXGO86HAnIwmx3af8=
+		5APgzo95uSDX0pR+dc6YCSsT57M=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -34,11 +34,11 @@
 		</data>
 		<key>PlugIns/CookTimerWidgetExtension.appex/CookTimerWidgetExtension</key>
 		<data>
-		rLt39jiYwzmTJw62QB8fs53Wtws=
+		wLufdsmoyIrF1O41ZRCNDaCFSWQ=
 		</data>
 		<key>PlugIns/CookTimerWidgetExtension.appex/CookTimerWidgetExtension.debug.dylib</key>
 		<data>
-		23q2b11x1nqbzH0kBJnYBWS2N2I=
+		ZnymKJggBsdrzHAyD5uGVhk8kao=
 		</data>
 		<key>PlugIns/CookTimerWidgetExtension.appex/Info.plist</key>
 		<data>
@@ -46,7 +46,7 @@
 		</data>
 		<key>PlugIns/CookTimerWidgetExtension.appex/_CodeSignature/CodeResources</key>
 		<data>
-		RBhAUCqx4A1vn/+4O6AFZ9zv1qc=
+		eOQUrxqRliZk/2d9EBj42xd1vD4=
 		</data>
 		<key>PlugIns/CookTimerWidgetExtension.appex/__preview.dylib</key>
 		<data>
@@ -84,7 +84,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Z3SbRc83jjuk7dHb3I9jy1K2OBgTuMnEpe+szlrLKz8=
+			lk7/qv7lkFPmbViEhtFcpLS8YE2LAIVpNCV0kmvDtBI=
 			</data>
 		</dict>
 		<key>PlugIns/CookTimerWidgetExtension.appex/Assets.car</key>
@@ -98,14 +98,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			U0D/0ed7mG9YTTSRkeQ5DeUSrBww5I71vsNwQeGMoeA=
+			lMh/rs5LjwP+j20M7Xbm3UKo0t0PZujT+67D6NRUcd8=
 			</data>
 		</dict>
 		<key>PlugIns/CookTimerWidgetExtension.appex/CookTimerWidgetExtension.debug.dylib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			G8vyLGtKg10uI1xlMLi+DFbVMllt9ahXDu+VwCLWicc=
+			c3SVwcXOLcLhFlkie6Uz4lVMlJq8ays6Br/YXAy0k4k=
 			</data>
 		</dict>
 		<key>PlugIns/CookTimerWidgetExtension.appex/Info.plist</key>
@@ -119,7 +119,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			tuI1iDuCAx4ZhJj0Jtc/bytmZ+RMEgtV/PVMHbasVp8=
+			esw0qzEK0J7H8DkUdymmCiZ7sfZOrq2b2Bm64r+H5bM=
 			</data>
 		</dict>
 		<key>PlugIns/CookTimerWidgetExtension.appex/__preview.dylib</key>

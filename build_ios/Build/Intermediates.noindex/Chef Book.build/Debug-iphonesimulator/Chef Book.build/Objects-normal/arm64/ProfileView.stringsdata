@@ -1,0 +1,56 @@
+{
+  "source": "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/views/ProfileView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Search menus...",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 46
+        }
+      },
+      {
+        "comment": "",
+        "key": "No menus yet",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 65
+        }
+      },
+      {
+        "comment": "",
+        "key": "Create one from the Create tab",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 67
+        }
+      },
+      {
+        "comment": "",
+        "key": "Set as Today",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 85
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 91
+        }
+      },
+      {
+        "comment": "",
+        "key": "Log Out",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 110
+        }
+      }
+    ]
+  },
+  "version": 1
+}

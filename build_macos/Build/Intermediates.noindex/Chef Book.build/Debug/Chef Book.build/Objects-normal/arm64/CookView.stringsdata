@@ -4,10 +4,26 @@
     "Localizable": [
       {
         "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 116
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 118
+        }
+      },
+      {
+        "comment": "",
         "key": "%@ servings",
         "location": {
-          "startingColumn": 31,
-          "startingLine": 212
+          "startingColumn": 19,
+          "startingLine": 230
         }
       },
       {
@@ -15,7 +31,7 @@
         "key": "Original",
         "location": {
           "startingColumn": 27,
-          "startingLine": 264
+          "startingLine": 573
         }
       },
       {
@@ -23,31 +39,63 @@
         "key": "",
         "location": {
           "startingColumn": 24,
-          "startingLine": 277
+          "startingLine": 586
         }
       },
       {
         "comment": "",
         "key": "Ingredients",
         "location": {
-          "startingColumn": 18,
-          "startingLine": 309
+          "startingColumn": 22,
+          "startingLine": 643
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 685
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 697
         }
       },
       {
         "comment": "",
         "key": "Directions",
         "location": {
-          "startingColumn": 18,
-          "startingLine": 381
+          "startingColumn": 22,
+          "startingLine": 817
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 889
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 895
         }
       },
       {
         "comment": "",
         "key": "%lld.",
         "location": {
-          "startingColumn": 22,
-          "startingLine": 456
+          "startingColumn": 26,
+          "startingLine": 974
         }
       },
       {
@@ -55,7 +103,7 @@
         "key": "Done!",
         "location": {
           "startingColumn": 22,
-          "startingLine": 543
+          "startingLine": 1059
         }
       },
       {
@@ -63,7 +111,7 @@
         "key": "Notes",
         "location": {
           "startingColumn": 22,
-          "startingLine": 593
+          "startingLine": 1120
         }
       },
       {
@@ -71,31 +119,23 @@
         "key": "Add Note",
         "location": {
           "startingColumn": 24,
-          "startingLine": 596
+          "startingLine": 1123
         }
       },
       {
         "comment": "",
-        "key": "Add a note...",
+        "key": "Delete",
         "location": {
-          "startingColumn": 31,
-          "startingLine": 609
+          "startingColumn": 39,
+          "startingLine": 1143
         }
       },
       {
         "comment": "",
-        "key": "Save",
+        "key": "Edit",
         "location": {
-          "startingColumn": 28,
-          "startingLine": 613
-        }
-      },
-      {
-        "comment": "",
-        "key": "Edit note...",
-        "location": {
-          "startingColumn": 35,
-          "startingLine": 623
+          "startingColumn": 39,
+          "startingLine": 1148
         }
       }
     ]

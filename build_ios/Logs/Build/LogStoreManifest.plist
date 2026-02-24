@@ -6,7 +6,7 @@
 	<integer>12</integer>
 	<key>logs</key>
 	<dict>
-		<key>215570FA-B1D2-4077-A4C2-E7628C7AA6DD</key>
+		<key>53400368-3FD9-40EB-8BF0-E2BEDB5070BC</key>
 		<dict>
 			<key>className</key>
 			<string>IDECommandLineBuildLog</string>
@@ -15,7 +15,7 @@
 			<key>domainType</key>
 			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
 			<key>fileName</key>
-			<string>215570FA-B1D2-4077-A4C2-E7628C7AA6DD.xcactivitylog</string>
+			<string>53400368-3FD9-40EB-8BF0-E2BEDB5070BC.xcactivitylog</string>
 			<key>hasPrimaryLog</key>
 			<true/>
 			<key>primaryObservable</key>
@@ -29,7 +29,7 @@
 				<key>totalNumberOfTestFailures</key>
 				<integer>0</integer>
 				<key>totalNumberOfWarnings</key>
-				<integer>6</integer>
+				<integer>9</integer>
 			</dict>
 			<key>schemeIdentifier-containerName</key>
 			<string>Chef Book project</string>
@@ -40,13 +40,13 @@
 			<key>signature</key>
 			<string>Building project Chef Book with scheme Chef Book</string>
 			<key>timeStartedRecording</key>
-			<real>792829900.66063094</real>
+			<real>793584996.97009301</real>
 			<key>timeStoppedRecording</key>
-			<real>792829904.11017501</real>
+			<real>793585002.48377204</real>
 			<key>title</key>
 			<string>Building project Chef Book with scheme Chef Book</string>
 			<key>uniqueIdentifier</key>
-			<string>215570FA-B1D2-4077-A4C2-E7628C7AA6DD</string>
+			<string>53400368-3FD9-40EB-8BF0-E2BEDB5070BC</string>
 		</dict>
 	</dict>
 </dict>

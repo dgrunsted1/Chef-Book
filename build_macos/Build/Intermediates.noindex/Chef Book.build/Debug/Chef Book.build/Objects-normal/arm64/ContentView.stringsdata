@@ -4,10 +4,26 @@
     "Localizable": [
       {
         "comment": "",
+        "key": "Profile",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 25
+        }
+      },
+      {
+        "comment": "",
         "key": "Recipes",
         "location": {
           "startingColumn": 38,
-          "startingLine": 20
+          "startingLine": 30
+        }
+      },
+      {
+        "comment": "",
+        "key": "Today",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 36
         }
       },
       {
@@ -15,15 +31,7 @@
         "key": "Create",
         "location": {
           "startingColumn": 38,
-          "startingLine": 24
-        }
-      },
-      {
-        "comment": "",
-        "key": "My Menus",
-        "location": {
-          "startingColumn": 38,
-          "startingLine": 28
+          "startingLine": 43
         }
       },
       {
@@ -31,15 +39,7 @@
         "key": "Add",
         "location": {
           "startingColumn": 38,
-          "startingLine": 32
-        }
-      },
-      {
-        "comment": "",
-        "key": "today",
-        "location": {
-          "startingColumn": 38,
-          "startingLine": 36
+          "startingLine": 48
         }
       }
     ]

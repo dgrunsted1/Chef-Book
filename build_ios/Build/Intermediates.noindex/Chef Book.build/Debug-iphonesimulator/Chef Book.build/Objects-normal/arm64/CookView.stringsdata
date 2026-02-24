@@ -4,82 +4,10 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "%@ servings",
+        "key": "Cancel",
         "location": {
-          "startingColumn": 31,
-          "startingLine": 210
-        }
-      },
-      {
-        "comment": "",
-        "key": "Original",
-        "location": {
-          "startingColumn": 27,
-          "startingLine": 262
-        }
-      },
-      {
-        "comment": "",
-        "key": "",
-        "location": {
-          "startingColumn": 24,
-          "startingLine": 275
-        }
-      },
-      {
-        "comment": "",
-        "key": "Ingredients",
-        "location": {
-          "startingColumn": 18,
-          "startingLine": 307
-        }
-      },
-      {
-        "comment": "",
-        "key": "Directions",
-        "location": {
-          "startingColumn": 18,
-          "startingLine": 379
-        }
-      },
-      {
-        "comment": "",
-        "key": "%lld.",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 454
-        }
-      },
-      {
-        "comment": "",
-        "key": "Done!",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 541
-        }
-      },
-      {
-        "comment": "",
-        "key": "Notes",
-        "location": {
-          "startingColumn": 22,
-          "startingLine": 591
-        }
-      },
-      {
-        "comment": "",
-        "key": "Add Note",
-        "location": {
-          "startingColumn": 24,
-          "startingLine": 594
-        }
-      },
-      {
-        "comment": "",
-        "key": "Add a note...",
-        "location": {
-          "startingColumn": 31,
-          "startingLine": 607
+          "startingColumn": 28,
+          "startingLine": 60
         }
       },
       {
@@ -87,15 +15,127 @@
         "key": "Save",
         "location": {
           "startingColumn": 28,
-          "startingLine": 611
+          "startingLine": 63
         }
       },
       {
         "comment": "",
-        "key": "Edit note...",
+        "key": "%@ servings",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 230
+        }
+      },
+      {
+        "comment": "",
+        "key": "Original",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 573
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 586
+        }
+      },
+      {
+        "comment": "",
+        "key": "Ingredients",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 643
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 685
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
         "location": {
           "startingColumn": 35,
-          "startingLine": 621
+          "startingLine": 697
+        }
+      },
+      {
+        "comment": "",
+        "key": "Directions",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 817
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 889
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 895
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 974
+        }
+      },
+      {
+        "comment": "",
+        "key": "Done!",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 1059
+        }
+      },
+      {
+        "comment": "",
+        "key": "Notes",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 1120
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add Note",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 1123
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 1143
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 1148
         }
       }
     ]

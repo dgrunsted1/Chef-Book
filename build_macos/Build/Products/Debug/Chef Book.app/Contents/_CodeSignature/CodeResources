@@ -19,7 +19,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			GdjZZk54oE5vDqpWHSOQnCBXI9E=
+			T/McGUwFr8mnmuS4fj3Zcp3EDw0=
 			</data>
 			<key>requirement</key>
 			<string>identifier "Chef Book.debug" and anchor apple generic and certificate leaf[subject.CN] = "Apple Development: David Grunsted (2W5KJ3QMES)" and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */</string>

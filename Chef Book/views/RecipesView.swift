@@ -23,6 +23,10 @@ struct RecipesView: View {
         network.getRecipes(categories: selectedCats, cuisines: selectedCuisines, countries: selectedCountries, authors: selectedAuthors, sort: sort_val, search: search_val)
     }
 
+    private func loadMore() {
+        network.loadMoreRecipes(categories: selectedCats, cuisines: selectedCuisines, countries: selectedCountries, authors: selectedAuthors, sort: sort_val, search: search_val)
+    }
+
     private func toggle(_ value: String, in array: inout [String]) {
         if let idx = array.firstIndex(of: value) {
             array.remove(at: idx)
@@ -45,16 +49,27 @@ struct RecipesView: View {
                 Spacer()
             } else {
                 ScrollView {
-                    if network.isLoading {
-                        ProgressView()
-                            .padding()
-                    }
-                    ForEach(network.recipes) { recipe in
-                        NavigationLink(destination: CookView(recipe: recipe).environmentObject(network)) {
-                            RecipeCardView(recipe: recipe, edit: false)
-                                .padding(.horizontal, 5)
+                    LazyVStack {
+                        if network.isLoading {
+                            ProgressView()
+                                .padding()
                         }
-                        .buttonStyle(.plain)
+                        ForEach(network.recipes) { recipe in
+                            NavigationLink(destination: CookView(recipe: recipe).environmentObject(network)) {
+                                RecipeCardView(recipe: recipe, edit: false)
+                                    .padding(.horizontal, 5)
+                            }
+                            .buttonStyle(.plain)
+                            .onAppear {
+                                if recipe.id == network.recipes.last?.id {
+                                    loadMore()
+                                }
+                            }
+                        }
+                        if network.isLoadingMore {
+                            ProgressView()
+                                .padding()
+                        }
                     }
                 }
                 .refreshable {
@@ -147,7 +162,7 @@ struct RecipesView: View {
                         fetchRecipes()
                     }
 
-                    Text("\(network.recipes.count)")
+                    Text("\(network.recipeTotalItems)")
                         .font(.caption.weight(.semibold))
                         .foregroundColor(Color("TextColor"))
 

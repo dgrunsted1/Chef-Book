@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct RecipeCardView: View {
+    @EnvironmentObject var network: Network
     var recipe: Recipe
     let edit: Bool
     
@@ -62,7 +63,7 @@ struct RecipeCardView: View {
                     }
                 }
                 .frame(width: 50, height:50)
-            } else {
+            } else if recipe.user != network.user?.record.id {
                 Image(systemName: "plus.app.fill")
                     .resizable()
                     .frame(width:30, height:30)
@@ -83,6 +84,7 @@ struct CardView_Previews: PreviewProvider {
 //    var network = Network()
     static var previews: some View {
         RecipeCardView(recipe: Recipe.sampleData[0], edit: false)
+            .environmentObject(Network())
             .previewLayout(.fixed(width: 355, height: 100))
 //
     }

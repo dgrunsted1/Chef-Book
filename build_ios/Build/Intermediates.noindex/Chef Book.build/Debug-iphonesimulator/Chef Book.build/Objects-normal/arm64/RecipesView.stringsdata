@@ -7,7 +7,7 @@
         "key": "No recipes found",
         "location": {
           "startingColumn": 26,
-          "startingLine": 42
+          "startingLine": 46
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 26,
-          "startingLine": 150
+          "startingLine": 165
         }
       },
       {
@@ -23,7 +23,7 @@
         "key": "Search recipes...",
         "location": {
           "startingColumn": 35,
-          "startingLine": 158
+          "startingLine": 173
         }
       },
       {
@@ -31,7 +31,7 @@
         "key": "%lld",
         "location": {
           "startingColumn": 26,
-          "startingLine": 216
+          "startingLine": 231
         }
       }
     ]

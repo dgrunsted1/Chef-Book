@@ -4,74 +4,122 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "New Menu",
+        "key": "",
         "location": {
-          "startingColumn": 30,
-          "startingLine": 69
+          "startingColumn": 20,
+          "startingLine": 102
         }
       },
       {
         "comment": "",
-        "key": "%lld recipes selected",
+        "key": "%lld",
         "location": {
           "startingColumn": 26,
-          "startingLine": 26
+          "startingLine": 52
+        }
+      },
+      {
+        "comment": "",
+        "key": "Recipes",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 54
+        }
+      },
+      {
+        "comment": "",
+        "key": "Time",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 61
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 66
+        }
+      },
+      {
+        "comment": "",
+        "key": "Servings",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 68
         }
       },
       {
         "comment": "",
         "key": "Menu Title",
         "location": {
-          "startingColumn": 31,
-          "startingLine": 22
-        }
-      },
-      {
-        "comment": "",
-        "key": "Original: %@ servings",
-        "location": {
-          "startingColumn": 38,
-          "startingLine": 48
-        }
-      },
-      {
-        "comment": "",
-        "key": "Servings:",
-        "location": {
-          "startingColumn": 38,
-          "startingLine": 54
-        }
-      },
-      {
-        "comment": "",
-        "key": "",
-        "location": {
-          "startingColumn": 43,
-          "startingLine": 56
-        }
-      },
-      {
-        "comment": "",
-        "key": "Cancel",
-        "location": {
-          "startingColumn": 28,
-          "startingLine": 72
+          "startingColumn": 27,
+          "startingLine": 79
         }
       },
       {
         "comment": "",
         "key": "Save",
         "location": {
-          "startingColumn": 34,
-          "startingLine": 81
+          "startingColumn": 30,
+          "startingLine": 87
+        }
+      },
+      {
+        "comment": "",
+        "key": "Recipes",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 103
+        }
+      },
+      {
+        "comment": "",
+        "key": "Grocery List",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 104
         }
       },
       {
         "comment": "",
         "key": "OK",
         "location": {
-          "startingColumn": 24,
-          "startingLine": 89
+          "startingColumn": 20,
+          "startingLine": 117
+        }
+      },
+      {
+        "comment": "",
+        "key": "Original: %@ servings",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 148
+        }
+      },
+      {
+        "comment": "",
+        "key": "Servings:",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 154
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 156
+        }
+      },
+      {
+        "comment": "",
+        "key": "No ingredients",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 176
         }
       }
     ]

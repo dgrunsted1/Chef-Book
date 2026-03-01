@@ -97,6 +97,8 @@ struct SearchRecipeData: Decodable {
     var ingr_list: String
     var servings: String
     var user: String
+    var made: Bool
+    var favorite: Bool
 }
 
 struct IdItem: Decodable {

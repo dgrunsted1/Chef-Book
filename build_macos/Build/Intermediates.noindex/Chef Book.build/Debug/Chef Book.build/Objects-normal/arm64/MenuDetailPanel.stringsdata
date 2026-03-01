@@ -1,0 +1,64 @@
+{
+  "source": "/Users/davidgrunsted/Personal/repos/Chef-Book/Chef Book/views/MenuDetailPanel.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 37
+        }
+      },
+      {
+        "comment": "",
+        "key": "Done",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 28
+        }
+      },
+      {
+        "comment": "",
+        "key": "Recipes",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 38
+        }
+      },
+      {
+        "comment": "",
+        "key": "Grocery List",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 39
+        }
+      },
+      {
+        "comment": "",
+        "key": "No recipes yet",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 58
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@ servings",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 81
+        }
+      },
+      {
+        "comment": "",
+        "key": "No grocery list",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 117
+        }
+      }
+    ]
+  },
+  "version": 1
+}

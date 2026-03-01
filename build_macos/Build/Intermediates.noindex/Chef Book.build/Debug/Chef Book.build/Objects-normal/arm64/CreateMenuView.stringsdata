@@ -4,10 +4,10 @@
     "Localizable": [
       {
         "comment": "",
-        "key": "Search recipes...",
+        "key": "No recipes found",
         "location": {
-          "startingColumn": 31,
-          "startingLine": 36
+          "startingColumn": 26,
+          "startingLine": 172
         }
       },
       {
@@ -15,23 +15,55 @@
         "key": "%lld ingredients",
         "location": {
           "startingColumn": 50,
-          "startingLine": 80
+          "startingLine": 215
         }
       },
       {
         "comment": "",
         "key": "%lld recipes selected",
         "location": {
-          "startingColumn": 30,
-          "startingLine": 98
+          "startingColumn": 26,
+          "startingLine": 246
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add to Menu",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 255
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld recipes selected",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 274
         }
       },
       {
         "comment": "",
         "key": "Create Menu",
         "location": {
-          "startingColumn": 34,
-          "startingLine": 102
+          "startingColumn": 30,
+          "startingLine": 278
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 381
+        }
+      },
+      {
+        "comment": "",
+        "key": "Search recipes...",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 389
         }
       }
     ]

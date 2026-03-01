@@ -24,7 +24,11 @@ class Network: ObservableObject {
     var recipePage: Int = 1
     var recipeDetailCache: [String: Recipe] = [:]
 
+    #if DEBUG
+    private let baseURL = "http://127.0.0.1:8090"
+    #else
     private let baseURL = "https://db.ivebeenwastingtime.com"
+    #endif
     private var realtime: PocketBaseRealtime?
 
     init() {
@@ -139,7 +143,7 @@ class Network: ObservableObject {
         task.resume()
     }
     
-    func getRecipes(categories: [String] = [], cuisines: [String] = [], countries: [String] = [], authors: [String] = [], sort: String = "Most Recent", search: String = "") {
+    func getRecipes(categories: [String] = [], cuisines: [String] = [], countries: [String] = [], authors: [String] = [], sort: String = "Most Recent", search: String = "", made: Bool = false, fav: Bool = false, userId: String = "") {
         guard let url = URL(string: "\(baseURL)/api/search") else { return }
 
         isLoading = true
@@ -149,7 +153,7 @@ class Network: ObservableObject {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let body: [String: Any] = [
+        var body: [String: Any] = [
             "search_val": search,
             "sort_val": sort,
             "page": 1,
@@ -157,8 +161,13 @@ class Network: ObservableObject {
             "selected_categories": categories,
             "selected_countries": countries,
             "selected_cuisines": cuisines,
-            "selected_authors": authors
+            "selected_authors": authors,
+            "made": made,
+            "fav": fav
         ]
+        if !userId.isEmpty {
+            body["user_id"] = userId
+        }
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
         let dataTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -198,7 +207,7 @@ class Network: ObservableObject {
         dataTask.resume()
     }
 
-    func loadMoreRecipes(categories: [String] = [], cuisines: [String] = [], countries: [String] = [], authors: [String] = [], sort: String = "Most Recent", search: String = "") {
+    func loadMoreRecipes(categories: [String] = [], cuisines: [String] = [], countries: [String] = [], authors: [String] = [], sort: String = "Most Recent", search: String = "", made: Bool = false, fav: Bool = false, userId: String = "") {
         guard hasMoreRecipes, !isLoadingMore else { return }
 
         isLoadingMore = true
@@ -213,7 +222,7 @@ class Network: ObservableObject {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let body: [String: Any] = [
+        var body: [String: Any] = [
             "search_val": search,
             "sort_val": sort,
             "page": nextPage,
@@ -221,8 +230,13 @@ class Network: ObservableObject {
             "selected_categories": categories,
             "selected_countries": countries,
             "selected_cuisines": cuisines,
-            "selected_authors": authors
+            "selected_authors": authors,
+            "made": made,
+            "fav": fav
         ]
+        if !userId.isEmpty {
+            body["user_id"] = userId
+        }
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
         let dataTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -286,8 +300,8 @@ class Network: ObservableObject {
             notes: [],
             ingredients: [],
             category: r.category,
-            made: false,
-            favorite: false,
+            made: r.made,
+            favorite: r.favorite,
             url_id: r.url_id,
             ingredientCount: Int(r.ingr_list) ?? 0,
             directionCount: Int(r.directions) ?? 0,
@@ -494,6 +508,21 @@ class Network: ObservableObject {
             return "\(hours) hr"
         } else {
             return "\(minutes) min"
+        }
+    }
+
+    func loadRecipeDetailsIfNeeded(for recipeIds: [String]) {
+        for id in recipeIds {
+            guard let recipe = recipes.first(where: { $0.id == id }),
+                  !recipe.isDetailLoaded,
+                  !recipe.url_id.isEmpty else { continue }
+
+            getRecipeDetail(urlId: recipe.url_id) { detail in
+                if let detail = detail,
+                   let idx = self.recipes.firstIndex(where: { $0.id == detail.id }) {
+                    self.recipes[idx] = detail
+                }
+            }
         }
     }
 
@@ -707,9 +736,9 @@ class Network: ObservableObject {
         }
     }
 
-    func create_menu(title: String, recipeIds: [String], servings: [String: String], completion: @escaping (Bool) -> Void) {
+    func create_menu(title: String, recipeIds: [String], servings: [String: String], today: Bool = false, completion: @escaping (String?) -> Void) {
         guard let userId = self.user?.record.id else {
-            completion(false)
+            completion(nil)
             return
         }
         let body: [String: Any] = [
@@ -717,25 +746,28 @@ class Network: ObservableObject {
             "recipes": recipeIds,
             "servings": servings,
             "user": userId,
-            "today": false,
+            "today": today,
             "made": [String: Bool](),
             "sub_recipes": [String: [Any]](),
             "notes": "",
             "description": ""
         ]
         guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
-            completion(false)
+            completion(nil)
             return
         }
         makeAuthenticatedRequest(to: "\(baseURL)/api/collections/menus/records", method: "POST", body: jsonData, contentType: "application/json") { data, response, error in
             guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                DispatchQueue.main.async { completion(false) }
+                  (200...299).contains(httpResponse.statusCode),
+                  let data = data,
+                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let menuId = json["id"] as? String else {
+                DispatchQueue.main.async { completion(nil) }
                 return
             }
             DispatchQueue.main.async {
                 self.get_menus()
-                completion(true)
+                completion(menuId)
             }
         }
     }

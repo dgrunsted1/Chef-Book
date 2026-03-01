@@ -46,6 +46,7 @@
 		CC0000062D5B000100000006 /* MenuCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0000062D5B000000000006 /* MenuCardView.swift */; };
 		CC0000072D5B000100000007 /* MenuDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0000072D5B000000000007 /* MenuDetailView.swift */; };
 		CC0000082D5B000100000008 /* MenuDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0000082D5B000000000008 /* MenuDetailSheet.swift */; };
+		CC000000AD5B00010000000A /* MenuDetailPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC000000AD5B00000000000A /* MenuDetailPanel.swift */; };
 		CC0000092D5B000100000009 /* CookTimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0000092D5B000000000009 /* CookTimerState.swift */; };
 		F27A5B961C2B45C1FD9897E4 /* CookTimerWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53EAAA73B0E7BAAE16D45DA /* CookTimerWidgetBundle.swift */; };
 /* End PBXBuildFile section */
@@ -132,6 +133,7 @@
 		CC0000062D5B000000000006 /* MenuCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCardView.swift; sourceTree = "<group>"; };
 		CC0000072D5B000000000007 /* MenuDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuDetailView.swift; sourceTree = "<group>"; };
 		CC0000082D5B000000000008 /* MenuDetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuDetailSheet.swift; sourceTree = "<group>"; };
+		CC000000AD5B00000000000A /* MenuDetailPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuDetailPanel.swift; sourceTree = "<group>"; };
 		CC0000092D5B000000000009 /* CookTimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookTimerState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -266,6 +268,7 @@
 				CC0000062D5B000000000006 /* MenuCardView.swift */,
 				CC0000072D5B000000000007 /* MenuDetailView.swift */,
 				CC0000082D5B000000000008 /* MenuDetailSheet.swift */,
+				CC000000AD5B00000000000A /* MenuDetailPanel.swift */,
 				64A172085B468759508AE1A8 /* ProfileView.swift */,
 			);
 			path = views;
@@ -484,6 +487,7 @@
 				CC0000062D5B000100000006 /* MenuCardView.swift in Sources */,
 				CC0000072D5B000100000007 /* MenuDetailView.swift in Sources */,
 				CC0000082D5B000100000008 /* MenuDetailSheet.swift in Sources */,
+				CC000000AD5B00010000000A /* MenuDetailPanel.swift in Sources */,
 				CC0000092D5B000100000009 /* CookTimerState.swift in Sources */,
 				44FAF27DDCE3ACF5F52BDB0F /* CookTimerAttributes.swift in Sources */,
 				B63526B2983AF29C8F1C436D /* ProfileView.swift in Sources */,
@@ -667,6 +671,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Chef Book/Info.plist";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -713,6 +718,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Chef Book/Info.plist";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;

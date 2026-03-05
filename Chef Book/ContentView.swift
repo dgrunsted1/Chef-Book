@@ -39,7 +39,7 @@ struct ContentView: View {
                     .tag(AppTab.today)
                     .environmentObject(network)
 
-                CreateMenuView()
+                CreateMenuView(selectedTab: $selectedTab)
                     .tabItem { Label("Create", systemImage: "flame") }
                     .tag(AppTab.create)
                     .environmentObject(network)

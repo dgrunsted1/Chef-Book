@@ -674,7 +674,7 @@ private struct CookIngredientsPane: View {
                         )
                     }
                     .buttonStyle(.plain)
-                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         if recipe.ingredients.count > 1 {
                             Button(role: .destructive) {
                                 let ingrId = recipe.ingredients[index].id
@@ -685,6 +685,8 @@ private struct CookIngredientsPane: View {
                                 Label("Delete", systemImage: "trash")
                             }
                         }
+                    }
+                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
                         Button {
                             sheetIngredient = IngredientEditState(
                                 index: index,
@@ -873,7 +875,7 @@ private struct CookDirectionsPane: View {
                             }
                         }
                     )
-                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         if recipe.directions.count > 1 {
                             Button(role: .destructive) {
                                 recipe.directions.remove(at: index)
@@ -889,6 +891,8 @@ private struct CookDirectionsPane: View {
                                 Label("Delete", systemImage: "trash")
                             }
                         }
+                    }
+                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
                         Button {
                             sheetDirection = DirectionEditState(index: index, isNew: false, text: direction)
                         } label: {
@@ -1134,7 +1138,7 @@ private struct CookNotesSection: View {
                         Text(note.content)
                             .padding(.vertical, 2)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
                                 let noteId = recipe.notes[index].id
                                 recipe.notes.remove(at: index)
@@ -1142,6 +1146,8 @@ private struct CookNotesSection: View {
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
+                        }
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             Button {
                                 editingNote = NoteEditState(index: index, text: note.content)
                             } label: {

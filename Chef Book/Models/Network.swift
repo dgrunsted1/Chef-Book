@@ -24,11 +24,7 @@ class Network: ObservableObject {
     var recipePage: Int = 1
     var recipeDetailCache: [String: Recipe] = [:]
 
-    #if DEBUG
-    private let baseURL = "http://127.0.0.1:8090"
-    #else
     private let baseURL = "https://db.ivebeenwastingtime.com"
-    #endif
     private var realtime: PocketBaseRealtime?
 
     init() {
@@ -311,8 +307,10 @@ class Network: ObservableObject {
     }
 
     func getRecipeDetail(urlId: String, completion: @escaping (Recipe?) -> Void) {
-        let encodedFilter = "url_id%3D%22\(urlId)%22"
-        guard let url = URL(string: "\(baseURL)/api/collections/recipes/records?filter=\(encodedFilter)&expand=notes%2Cingr_list") else {
+        let encodedUrlId = urlId.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? urlId
+        let encodedFilter = "url_id%3D%22\(encodedUrlId)%22"
+        let urlString = "\(baseURL)/api/collections/recipes/records?filter=\(encodedFilter)&expand=notes%2Cingr_list"
+        guard let url = URL(string: urlString) else {
             completion(nil)
             return
         }
@@ -756,18 +754,175 @@ class Network: ObservableObject {
             completion(nil)
             return
         }
-        makeAuthenticatedRequest(to: "\(baseURL)/api/collections/menus/records", method: "POST", body: jsonData, contentType: "application/json") { data, response, error in
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode),
-                  let data = data,
-                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                  let menuId = json["id"] as? String else {
-                DispatchQueue.main.async { completion(nil) }
+
+        let createMenu = {
+            self.makeAuthenticatedRequest(to: "\(self.baseURL)/api/collections/menus/records", method: "POST", body: jsonData, contentType: "application/json") { data, response, error in
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode),
+                      let data = data,
+                      let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                      let menuId = json["id"] as? String else {
+                    DispatchQueue.main.async { completion(nil) }
+                    return
+                }
+                if today {
+                    // Generate grocery list for today's menu
+                    self.generateAndSaveGroceryList(menuId: menuId, recipeIds: recipeIds, servings: servings) {
+                        DispatchQueue.main.async {
+                            self.get_menus()
+                            self.get_todays_menu()
+                            completion(menuId)
+                        }
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.get_menus()
+                        completion(menuId)
+                    }
+                }
+            }
+        }
+
+        if today {
+            unsetTodayMenus { createMenu() }
+        } else {
+            createMenu()
+        }
+    }
+
+    // MARK: - Grocery List Generation
+
+    func generateAndSaveGroceryList(menuId: String, recipeIds: [String], servings: [String: String], completion: @escaping () -> Void) {
+        // Load full recipe details for all recipes so we have ingredients
+        loadRecipeDetailsForIds(recipeIds) { recipes in
+            let groceryItems = GroceryListGenerator.generate(recipes: recipes, servings: servings)
+            guard !groceryItems.isEmpty else {
+                completion()
                 return
             }
-            DispatchQueue.main.async {
-                self.get_menus()
-                completion(menuId)
+            self.saveGroceryItemsToPocketBase(menuId: menuId, items: groceryItems, completion: completion)
+        }
+    }
+
+    private func loadRecipeDetailsForIds(_ recipeIds: [String], completion: @escaping ([Recipe]) -> Void) {
+        var loadedRecipes: [Recipe] = []
+        let group = DispatchGroup()
+
+        for recipeId in recipeIds {
+            // Check cache first
+            if let cached = recipeDetailCache[recipeId], cached.isDetailLoaded {
+                loadedRecipes.append(cached)
+                continue
+            }
+            // Check if already detail-loaded in recipes array
+            if let existing = recipes.first(where: { $0.id == recipeId }), existing.isDetailLoaded {
+                loadedRecipes.append(existing)
+                continue
+            }
+            // Need to fetch detail
+            guard let recipe = recipes.first(where: { $0.id == recipeId }),
+                  !recipe.url_id.isEmpty else { continue }
+
+            group.enter()
+            getRecipeDetail(urlId: recipe.url_id) { detail in
+                if let detail = detail {
+                    loadedRecipes.append(detail)
+                }
+                group.leave()
+            }
+        }
+
+        group.notify(queue: .main) {
+            completion(loadedRecipes)
+        }
+    }
+
+    private func saveGroceryItemsToPocketBase(menuId: String, items: [GroceryListGenerator.GroceryItem], completion: @escaping () -> Void) {
+        var itemIds: [String] = []
+        let group = DispatchGroup()
+
+        for item in items {
+            guard !item.name.isEmpty else { continue }
+            group.enter()
+
+            let body: [String: Any] = [
+                "qty": item.qty,
+                "unit": item.unit,
+                "name": item.name,
+                "checked": false,
+                "active": true
+            ]
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
+                group.leave()
+                continue
+            }
+
+            makeAuthenticatedRequest(to: "\(baseURL)/api/collections/grocery_items/records", method: "POST", body: jsonData, contentType: "application/json") { data, response, error in
+                if let data = data,
+                   let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let id = json["id"] as? String {
+                    itemIds.append(id)
+                }
+                group.leave()
+            }
+        }
+
+        group.notify(queue: .global()) {
+            // Create grocery_lists record linking all items
+            let listBody: [String: Any] = [
+                "items": itemIds,
+                "active": true,
+                "menu": menuId
+            ]
+            guard let listData = try? JSONSerialization.data(withJSONObject: listBody) else {
+                completion()
+                return
+            }
+
+            self.makeAuthenticatedRequest(to: "\(self.baseURL)/api/collections/grocery_lists/records", method: "POST", body: listData, contentType: "application/json") { data, response, error in
+                guard let data = data,
+                      let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode),
+                      let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                      let groceryListId = json["id"] as? String else {
+                    completion()
+                    return
+                }
+                // Link grocery list to menu
+                self.update_menu(id: menuId, fields: ["grocery_list": groceryListId]) { _ in
+                    completion()
+                }
+            }
+        }
+    }
+
+    private func unsetTodayMenus(completion: @escaping () -> Void) {
+        guard let userId = self.user?.record.id else {
+            completion()
+            return
+        }
+        let urlStr = "\(baseURL)/api/collections/menus/records?perPage=200&filter=user%3D%22\(userId)%22%20%26%26%20today%3DTrue"
+        makeAuthenticatedRequest(to: urlStr) { data, response, error in
+            guard let data = data,
+                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let items = json["items"] as? [[String: Any]] else {
+                DispatchQueue.main.async { completion() }
+                return
+            }
+            let ids = items.compactMap { $0["id"] as? String }
+            guard !ids.isEmpty else {
+                DispatchQueue.main.async { completion() }
+                return
+            }
+            let group = DispatchGroup()
+            for id in ids {
+                group.enter()
+                self.update_menu(id: id, fields: ["today": false]) { _ in
+                    group.leave()
+                }
+            }
+            group.notify(queue: .main) {
+                completion()
             }
         }
     }

@@ -118,7 +118,7 @@ struct GroceryListView: View {
         var map: [String: [String]] = [:]
         for recipe in today.recipes {
             for ingredient in recipe.ingredients {
-                let key = ingredient.name.lowercased()
+                let key = GroceryListGenerator.normalizeItemName(ingredient.name)
                 map[key, default: []].append(recipe.title)
             }
         }
@@ -168,12 +168,6 @@ struct GroceryListView: View {
                         GroceryItemRow(item: item, groceryListId: today.grocery_list_id, recipeNames: recipeNamesForItem[item.ingredient.name.lowercased()] ?? [])
                             .environmentObject(network)
                             .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-                    }
-                    .onDelete { indexSet in
-                        for index in indexSet {
-                            let item = sortedItems[index]
-                            network.delete_grocery_item(itemId: item.id, groceryListId: today.grocery_list_id) { _ in }
-                        }
                     }
                 }
                 .listStyle(.plain)
@@ -264,7 +258,6 @@ struct GroceryItemRow: View {
                 .buttonStyle(.plain)
 
                 Button {
-                    // Reset fields
                     editQty = item.ingredient.quantity == 0 ? "" : String(format: "%g", item.ingredient.quantity)
                     editUnit = item.ingredient.unit
                     editName = item.ingredient.name
@@ -284,9 +277,6 @@ struct GroceryItemRow: View {
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
-                }
-                .onTapGesture {
-                    isEditing = true
                 }
                 Spacer()
                 Button {
@@ -308,6 +298,14 @@ struct GroceryItemRow: View {
             } label: {
                 Label("Delete", systemImage: "trash")
             }
+        }
+        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+            Button {
+                isEditing = true
+            } label: {
+                Label("Edit", systemImage: "pencil")
+            }
+            .tint(.blue)
         }
         .onChange(of: item.checked) { _, newValue in
             checked = newValue

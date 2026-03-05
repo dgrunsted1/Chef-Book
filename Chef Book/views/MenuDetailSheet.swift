@@ -28,7 +28,7 @@ struct MenuDetailSheet: View {
         selectedRecipes.reduce(0) { $0 + $1.time_in_seconds }
     }
 
-    private var groceryPreview: [GroceryListGenerator.MergedItem] {
+    private var groceryPreview: [GroceryListGenerator.GroceryItem] {
         var effectiveServings = servings
         for recipe in selectedRecipes {
             if effectiveServings[recipe.id] == nil {
@@ -180,8 +180,8 @@ struct MenuDetailSheet: View {
                 } else {
                     ForEach(groceryPreview) { item in
                         HStack(spacing: 4) {
-                            if item.quantity > 0 {
-                                Text(formatQuantity(item.quantity))
+                            if item.qty > 0 {
+                                Text(formatQuantity(item.qty))
                                     .font(.callout)
                                     .bold()
                             }

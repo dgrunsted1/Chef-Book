@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CreateMenuView: View {
     @EnvironmentObject var network: Network
+    @Binding var selectedTab: AppTab
     @State private var search_val: String = ""
     @State private var sort_val: String = "Most Recent"
     @State private var selectedCats: [String] = []
@@ -227,7 +228,7 @@ struct CreateMenuView: View {
         selectedRecipes.reduce(0) { $0 + $1.time_in_seconds }
     }
 
-    private var macosGroceryPreview: [GroceryListGenerator.MergedItem] {
+    private var macosGroceryPreview: [GroceryListGenerator.GroceryItem] {
         var effectiveServings = menuServings
         for recipe in selectedRecipes {
             if effectiveServings[recipe.id] == nil {
@@ -300,8 +301,8 @@ struct CreateMenuView: View {
                 } else {
                     ForEach(macosGroceryPreview) { item in
                         HStack(spacing: 4) {
-                            if item.quantity > 0 {
-                                Text(macosFormatQuantity(item.quantity))
+                            if item.qty > 0 {
+                                Text(macosFormatQuantity(item.qty))
                                     .font(.callout)
                                     .bold()
                             }
@@ -341,12 +342,15 @@ struct CreateMenuView: View {
         let recipeIds = selectedRecipes.map { $0.id }
         network.create_menu(title: menuTitle, recipeIds: recipeIds, servings: menuServings, today: today) { menuId in
             isSavingMenu = false
-            if let menuId = menuId {
-                activeMenuId = menuId
+            if menuId != nil {
                 selectedRecipeIds.removeAll()
                 menuTitle = ""
                 menuServings = [:]
                 macosMenuTab = 0
+                activeMenuId = nil
+                if today {
+                    selectedTab = .today
+                }
             } else {
                 macosMenuAlert = "Failed to save menu"
                 showMacosMenuAlert = true
@@ -373,7 +377,7 @@ struct CreateMenuView: View {
         selectedRecipes.reduce(0) { $0 + $1.time_in_seconds }
     }
 
-    private var groceryPreview: [GroceryListGenerator.MergedItem] {
+    private var groceryPreview: [GroceryListGenerator.GroceryItem] {
         var effectiveServings = menuServings
         for recipe in selectedRecipes {
             if effectiveServings[recipe.id] == nil {
@@ -583,8 +587,8 @@ struct CreateMenuView: View {
                 } else {
                     ForEach(groceryPreview) { item in
                         HStack(spacing: 4) {
-                            if item.quantity > 0 {
-                                Text(formatQuantity(item.quantity))
+                            if item.qty > 0 {
+                                Text(formatQuantity(item.qty))
                                     .font(.callout)
                                     .bold()
                             }
@@ -625,14 +629,17 @@ struct CreateMenuView: View {
         let recipeIds = selectedRecipes.map { $0.id }
         network.create_menu(title: menuTitle, recipeIds: recipeIds, servings: menuServings, today: today) { menuId in
             isSavingMenu = false
-            if let menuId = menuId {
-                activeMenuId = menuId
+            if menuId != nil {
                 selectedRecipeIds.removeAll()
                 menuTitle = ""
                 menuServings = [:]
                 menuPanelExpanded = false
                 createMenuTab = 0
-                showMenuPanel = true
+                activeMenuId = nil
+                showMenuPanel = false
+                if today {
+                    selectedTab = .today
+                }
             } else {
                 menuAlertMessage = "Failed to save menu"
                 showMenuAlert = true
@@ -1153,6 +1160,6 @@ struct CreateMenuView: View {
 }
 
 #Preview {
-    CreateMenuView()
+    CreateMenuView(selectedTab: .constant(.create))
         .environmentObject(Network())
 }

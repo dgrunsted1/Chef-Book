@@ -182,19 +182,24 @@ struct CreateMenuView: View {
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                 } else {
-                    Menu {
-                        Button("Save") { macosSaveMenu(today: false) }
-                        Button("Save as Today") { macosSaveMenu(today: true) }
-                    } label: {
-                        Text("Save")
-                            .bold()
-                            .foregroundColor(.black)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(menuTitle.isEmpty || selectedRecipes.isEmpty ? Color.gray.opacity(0.3) : Color("MyPrimaryColor"))
-                            .cornerRadius(8)
+                    Button(action: { macosSaveMenu(today: false) }) {
+                        Text("Save").bold().foregroundColor(.black)
                     }
-                    .disabled(menuTitle.isEmpty || selectedRecipes.isEmpty)
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(macosSaveDisabled ? Color.gray.opacity(0.3) : Color("MyPrimaryColor"))
+                    .cornerRadius(8)
+                    .disabled(macosSaveDisabled)
+                    Button(action: { macosSaveMenu(today: true) }) {
+                        Text("+ Today").bold().foregroundColor(.black)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 8)
+                    .background(macosSaveDisabled ? Color.gray.opacity(0.3) : Color("MyPrimaryColor").opacity(0.7))
+                    .cornerRadius(8)
+                    .disabled(macosSaveDisabled)
                 }
             }
             .padding(.horizontal)
@@ -215,6 +220,10 @@ struct CreateMenuView: View {
                 macosGroceryTab
             }
         }
+    }
+
+    private var macosSaveDisabled: Bool {
+        menuTitle.isEmpty || selectedRecipes.isEmpty
     }
 
     private var macosTotalServings: Int {

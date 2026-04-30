@@ -21,6 +21,7 @@ class Network: ObservableObject {
     @Published var recipeTotalItems: Int = 0
     @Published var hasMoreRecipes: Bool = false
     @Published var isLoadingMore: Bool = false
+    @Published var activeSessions: [ActiveCookingSession] = []
     var recipePage: Int = 1
     var recipeDetailCache: [String: Recipe] = [:]
 

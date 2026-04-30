@@ -7,7 +7,6 @@
 
 import SwiftUI
 import AudioToolbox
-import UserNotifications
 
 // MARK: - EditSheet
 
@@ -259,22 +258,28 @@ struct CookView: View {
     @State var menuServings: String
     let hasMenuContext: Bool
     @State var isLoadingDetail: Bool = false
-    @State private var blurredIngredients: Set<Int> = []
-    @State private var blurredDirections: Set<Int> = []
-    @State private var timers: [Int: CookTimer] = [:]
+    @State private var session: ActiveCookingSession
     @State private var viewportHeight: CGFloat = 600
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     #endif
 
-    init(recipe: Recipe, menuMade: Bool = false, menuServings: String = "") {
+    let sourceTab: AppTab
+
+    init(recipe: Recipe, menuMade: Bool = false, menuServings: String = "", sourceTab: AppTab = .recipes) {
         _recipe = State(initialValue: recipe)
         _is_made = State(initialValue: recipe.made)
         _is_menu_made = State(initialValue: menuMade)
         _is_favorite = State(initialValue: recipe.favorite)
         _menuServings = State(initialValue: menuServings)
         self.hasMenuContext = !menuServings.isEmpty
+        self.sourceTab = sourceTab
+        _session = State(initialValue: ActiveCookingSession(recipe: recipe, sourceTab: sourceTab))
+    }
+
+    private var isActive: Bool {
+        network.activeSessions.contains { $0.id == recipe.id }
     }
 
     private var servingMultiplier: Double {
@@ -302,7 +307,16 @@ struct CookView: View {
                     is_made: $is_made,
                     is_menu_made: $is_menu_made,
                     is_favorite: $is_favorite,
-                    network: network
+                    network: network,
+                    isActive: isActive,
+                    onStartCooking: {
+                        network.activeSessions.append(session)
+                        session.startLiveActivity()
+                    },
+                    onStopCooking: {
+                        session.stopAllTimers()
+                        network.activeSessions.removeAll { $0.id == recipe.id }
+                    }
                 )
                 .padding(.horizontal)
                 .padding(.vertical, 12)
@@ -315,7 +329,7 @@ struct CookView: View {
                             CookIngredientsPane(
                                 recipe: $recipe,
                                 network: network,
-                                blurred: $blurredIngredients,
+                                session: session,
                                 servingMultiplier: servingMultiplier
                             )
                             .frame(width: availableWidth * 2 / 5)
@@ -323,8 +337,7 @@ struct CookView: View {
                             CookDirectionsPane(
                                 recipe: $recipe,
                                 network: network,
-                                blurred: $blurredDirections,
-                                timers: $timers
+                                session: session
                             )
                             .frame(width: availableWidth * 3 / 5)
                         }
@@ -338,7 +351,7 @@ struct CookView: View {
                             CookIngredientsPane(
                                 recipe: $recipe,
                                 network: network,
-                                blurred: $blurredIngredients,
+                                session: session,
                                 servingMultiplier: servingMultiplier
                             )
                             .frame(height: min(CGFloat(recipe.ingredients.count * 38 + 40), paneHeight * 0.35))
@@ -346,8 +359,7 @@ struct CookView: View {
                             CookDirectionsPane(
                                 recipe: $recipe,
                                 network: network,
-                                blurred: $blurredDirections,
-                                timers: $timers
+                                session: session
                             )
                             .frame(height: paneHeight * 0.6)
                         }
@@ -383,16 +395,22 @@ struct CookView: View {
                 network.getRecipeDetail(urlId: recipe.url_id) { detail in
                     if let detail = detail {
                         recipe = detail
+                        session.recipe = detail
                         is_made = detail.made
                         is_menu_made = network.today?.made[detail.id] ?? false
                         is_favorite = detail.favorite
+                        if self.isActive { session.startLiveActivity() }
                     }
                     continuation.resume()
                 }
             }
         }
         .onAppear {
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+            // If already active (e.g. returned via deep link), reuse the existing session
+            if let existing = network.activeSessions.first(where: { $0.id == recipe.id }) {
+                session = existing
+            }
+            // Don't auto-register — user must tap Start to activate
             if !recipe.isDetailLoaded {
                 isLoadingDetail = true
             }
@@ -400,14 +418,17 @@ struct CookView: View {
                 isLoadingDetail = false
                 if let detail = detail {
                     recipe = detail
+                    session.recipe = detail
                     is_made = detail.made
                     is_menu_made = network.today?.made[detail.id] ?? false
                     is_favorite = detail.favorite
+                    if self.isActive { session.startLiveActivity() }
                 }
             }
         }
         .onDisappear {
-            timers.values.forEach { $0.pause() }
+            // Timers keep running — session stays alive in network.activeSessions
+            session.recipe = recipe
             recipe.made = is_made
             recipe.favorite = is_favorite
             if let idx = network.recipes.firstIndex(where: { $0.id == recipe.id }) {
@@ -564,6 +585,9 @@ private struct CookActionBar: View {
     @Binding var is_menu_made: Bool
     @Binding var is_favorite: Bool
     let network: Network
+    let isActive: Bool
+    let onStartCooking: () -> Void
+    let onStopCooking: () -> Void
 
     var body: some View {
         HStack(spacing: 16) {
@@ -579,6 +603,17 @@ private struct CookActionBar: View {
                 }
                 .foregroundColor(Color("TextColor"))
             }
+
+            Button(action: isActive ? onStopCooking : onStartCooking) {
+                Label(isActive ? "Stop" : "Start", systemImage: isActive ? "stop.circle" : "play.circle")
+                    .font(.subheadline)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color("Base200Color"))
+                    .clipShape(Capsule())
+            }
+            .foregroundColor(isActive ? .red : Color("MyPrimaryColor"))
+            .buttonStyle(.plain)
 
             Spacer()
 
@@ -633,7 +668,7 @@ private struct IngredientEditState: Identifiable, Equatable {
 private struct CookIngredientsPane: View {
     @Binding var recipe: Recipe
     let network: Network
-    @Binding var blurred: Set<Int>
+    let session: ActiveCookingSession
     let servingMultiplier: Double
     @State private var sheetIngredient: IngredientEditState?
 
@@ -660,17 +695,17 @@ private struct CookIngredientsPane: View {
                 ForEach(Array(recipe.ingredients.enumerated()), id: \.offset) { index, ingredient in
                     Button {
                         withAnimation(.easeInOut(duration: 0.2)) {
-                            if blurred.contains(index) {
-                                blurred.remove(index)
+                            if session.blurredIngredients.contains(index) {
+                                session.blurredIngredients.remove(index)
                             } else {
-                                blurred.insert(index)
+                                session.blurredIngredients.insert(index)
                             }
                         }
                     } label: {
                         IngredientRowView(
                             ingredient: ingredient,
                             servingMultiplier: servingMultiplier,
-                            isBlurred: blurred.contains(index)
+                            isBlurred: session.blurredIngredients.contains(index)
                         )
                     }
                     .buttonStyle(.plain)
@@ -679,7 +714,7 @@ private struct CookIngredientsPane: View {
                             Button(role: .destructive) {
                                 let ingrId = recipe.ingredients[index].id
                                 recipe.ingredients.remove(at: index)
-                                blurred = Set(blurred.compactMap { $0 > index ? $0 - 1 : ($0 == index ? nil : $0) })
+                                session.blurredIngredients = Set(session.blurredIngredients.compactMap { $0 > index ? $0 - 1 : ($0 == index ? nil : $0) })
                                 network.delete_ingredient(id: ingrId, recipeId: recipe.id) { _ in }
                             } label: {
                                 Label("Delete", systemImage: "trash")
@@ -809,8 +844,7 @@ private struct DirectionEditState: Identifiable, Equatable {
 private struct CookDirectionsPane: View {
     @Binding var recipe: Recipe
     let network: Network
-    @Binding var blurred: Set<Int>
-    @Binding var timers: [Int: CookTimer]
+    let session: ActiveCookingSession
     @State private var sheetDirection: DirectionEditState?
 
     var body: some View {
@@ -836,24 +870,24 @@ private struct CookDirectionsPane: View {
                     DirectionRowView(
                         index: index,
                         direction: direction,
-                        isBlurred: blurred.contains(index),
-                        timer: timers[index],
+                        isBlurred: session.blurredDirections.contains(index),
+                        timer: session.timers[index],
                         onToggleBlur: {
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                if blurred.contains(index) {
-                                    blurred.remove(index)
+                                if session.blurredDirections.contains(index) {
+                                    session.blurredDirections.remove(index)
                                 } else {
-                                    blurred.insert(index)
+                                    session.blurredDirections.insert(index)
                                     // Reset timer to mini state when crossing off
-                                    if let timer = timers[index] {
+                                    if let timer = session.timers[index] {
                                         timer.reset()
-                                        timers.removeValue(forKey: index)
+                                        session.timers.removeValue(forKey: index)
                                     }
                                 }
                             }
                         },
                         onTimerStart: { parsed in
-                            if timers[index] == nil {
+                            if session.timers[index] == nil {
                                 let nextStep = (index + 1 < recipe.directions.count) ? recipe.directions[index + 1] : nil
                                 let t = CookTimer(
                                     totalSeconds: parsed.totalSeconds,
@@ -864,14 +898,15 @@ private struct CookDirectionsPane: View {
                                     recipeName: recipe.title,
                                     recipeImageURL: recipe.image
                                 )
-                                timers[index] = t
+                                t.onChange = { [weak session] in session?.updateLiveActivity() }
+                                session.timers[index] = t
                                 t.start()
                             }
                         },
                         onTimerDismiss: {
-                            if let timer = timers[index] {
+                            if let timer = session.timers[index] {
                                 timer.reset()
-                                timers.removeValue(forKey: index)
+                                session.timers.removeValue(forKey: index)
                             }
                         }
                     )
@@ -879,13 +914,13 @@ private struct CookDirectionsPane: View {
                         if recipe.directions.count > 1 {
                             Button(role: .destructive) {
                                 recipe.directions.remove(at: index)
-                                blurred = Set(blurred.compactMap { $0 > index ? $0 - 1 : ($0 == index ? nil : $0) })
+                                session.blurredDirections = Set(session.blurredDirections.compactMap { $0 > index ? $0 - 1 : ($0 == index ? nil : $0) })
                                 var newTimers: [Int: CookTimer] = [:]
-                                for (k, v) in timers {
+                                for (k, v) in session.timers {
                                     if k < index { newTimers[k] = v }
                                     else if k > index { newTimers[k - 1] = v }
                                 }
-                                timers = newTimers
+                                session.timers = newTimers
                                 pushDirections()
                             } label: {
                                 Label("Delete", systemImage: "trash")

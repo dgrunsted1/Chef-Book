@@ -11,6 +11,10 @@ struct TodayCardView: View {
     @EnvironmentObject var network: Network
     var recipe: Recipe
 
+    private var activeSession: ActiveCookingSession? {
+        network.activeSessions.first(where: { $0.id == recipe.id })
+    }
+
     private var madeBinding: Binding<Bool> {
         Binding(
             get: { network.today?.made[recipe.id] ?? false },
@@ -25,6 +29,11 @@ struct TodayCardView: View {
     }
 
     var body: some View {
+        let isActive = activeSession != nil
+        let activeTimer = activeSession?.timers.values
+            .filter { $0.isRunning && !$0.isComplete }
+            .min(by: { $0.remainingSeconds < $1.remainingSeconds })
+
         VStack(spacing: 0) {
             if recipe.image != "" {
                 AsyncImage(url: URL(string: recipe.image)) { image in
@@ -41,10 +50,23 @@ struct TodayCardView: View {
             }
             VStack(spacing: 4) {
                 HStack {
-                    Text(recipe.title)
-                        .font(.headline)
-                        .accessibilityAddTraits(.isHeader)
-                        .lineLimit(1)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(recipe.title)
+                            .font(.headline)
+                            .accessibilityAddTraits(.isHeader)
+                            .lineLimit(1)
+                        if isActive {
+                            if let timer = activeTimer {
+                                Label(timer.timeString, systemImage: "timer")
+                                    .font(.caption.monospacedDigit().weight(.medium))
+                                    .foregroundColor(Color("MyPrimaryColor"))
+                            } else {
+                                Label("Now Cooking", systemImage: "fork.knife")
+                                    .font(.caption.weight(.medium))
+                                    .foregroundColor(Color("MyPrimaryColor"))
+                            }
+                        }
+                    }
                     Spacer()
                     Toggle("", isOn: madeBinding)
                         .toggleStyle(.switch)
@@ -83,6 +105,10 @@ struct TodayCardView: View {
         }
         .background(Color("Base200Color"))
         .cornerRadius(10.0)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .strokeBorder(Color("MyPrimaryColor"), lineWidth: isActive ? 2 : 0)
+        )
     }
 
 }

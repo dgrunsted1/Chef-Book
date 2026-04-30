@@ -48,6 +48,7 @@
 		CC0000082D5B000100000008 /* MenuDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0000082D5B000000000008 /* MenuDetailSheet.swift */; };
 		CC000000AD5B00010000000A /* MenuDetailPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC000000AD5B00000000000A /* MenuDetailPanel.swift */; };
 		CC0000092D5B000100000009 /* CookTimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0000092D5B000000000009 /* CookTimerState.swift */; };
+		AA0000012D6B000100000001 /* ActiveCookingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000012D6B000000000001 /* ActiveCookingSession.swift */; };
 		F27A5B961C2B45C1FD9897E4 /* CookTimerWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53EAAA73B0E7BAAE16D45DA /* CookTimerWidgetBundle.swift */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +93,7 @@
 /* Begin PBXFileReference section */
 		1A2B3C4D5E6F708192A3B4C6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2CE7D46DB9635D8C22C32141 /* CookTimerAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CookTimerAttributes.swift; sourceTree = "<group>"; };
+		AA0000012D6B000000000001 /* ActiveCookingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveCookingSession.swift; sourceTree = "<group>"; };
 		2D9E6F63977A7F0290BE6D62 /* CookTimerLiveActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CookTimerLiveActivity.swift; sourceTree = "<group>"; };
 		6375465A2C2648BB002FEFA3 /* Chef Book.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chef Book.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6375465D2C2648BB002FEFA3 /* Chef_BookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chef_BookApp.swift; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 				CC0000052D5B000000000005 /* AlertState.swift */,
 				CC0000092D5B000000000009 /* CookTimerState.swift */,
 				2CE7D46DB9635D8C22C32141 /* CookTimerAttributes.swift */,
+				AA0000012D6B000000000001 /* ActiveCookingSession.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -490,6 +493,7 @@
 				CC000000AD5B00010000000A /* MenuDetailPanel.swift in Sources */,
 				CC0000092D5B000100000009 /* CookTimerState.swift in Sources */,
 				44FAF27DDCE3ACF5F52BDB0F /* CookTimerAttributes.swift in Sources */,
+				AA0000012D6B000100000001 /* ActiveCookingSession.swift in Sources */,
 				B63526B2983AF29C8F1C436D /* ProfileView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

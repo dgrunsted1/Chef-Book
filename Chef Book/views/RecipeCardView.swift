@@ -12,8 +12,17 @@ struct RecipeCardView: View {
     var recipe: Recipe
     let edit: Bool
     
+    private var activeSession: ActiveCookingSession? {
+        network.activeSessions.first(where: { $0.id == recipe.id })
+    }
+
     @ViewBuilder
     var body: some View {
+        let isActive = activeSession != nil
+        let activeTimer = activeSession?.timers.values
+            .filter { $0.isRunning && !$0.isComplete }
+            .min(by: { $0.remainingSeconds < $1.remainingSeconds })
+
         HStack {
             if recipe.image != "" {
                 AsyncImage(url: URL(string: recipe.image)) { image in
@@ -28,14 +37,26 @@ struct RecipeCardView: View {
             } else {
                 Spacer()
             }
-            
+
             VStack(alignment: .leading) {
-                Text(recipe.title)
-                    .font(.headline)
-                    .accessibilityAddTraits(.isHeader)
+                HStack(alignment: .firstTextBaseline) {
+                    Text(recipe.title)
+                        .font(.headline)
+                        .accessibilityAddTraits(.isHeader)
+                    if isActive {
+                        if let timer = activeTimer {
+                            Label(timer.timeString, systemImage: "timer")
+                                .font(.caption.monospacedDigit().weight(.medium))
+                                .foregroundColor(Color("MyPrimaryColor"))
+                        } else {
+                            Label("Now Cooking", systemImage: "fork.knife")
+                                .font(.caption.weight(.medium))
+                                .foregroundColor(Color("MyPrimaryColor"))
+                        }
+                    }
+                }
                 Spacer()
                 HStack {
-
                     Text("\(recipe.ingredientCount) ingredients")
                         .accessibilityLabel("\(recipe.ingredientCount) ingredients")
                     Spacer()
@@ -71,11 +92,15 @@ struct RecipeCardView: View {
                     .foregroundColor(Color("MyPrimaryColor"))
                     .padding([.trailing], 10)
             }
-                
+
         }
         .background(Color("Base200Color"))
         .cornerRadius(10.0)
         .frame(height: 80)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .strokeBorder(Color("MyPrimaryColor"), lineWidth: isActive ? 2 : 0)
+        )
     }
 
 }

@@ -12,53 +12,60 @@ import WidgetKit
 struct CookTimerLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: CookTimerAttributes.self) { context in
-            // Lock screen / notification banner view
+            // Lock screen / notification banner
             HStack(spacing: 10) {
-                // Circular progress
-                ZStack {
-                    Circle()
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 3)
+                // Left: progress ring when timer is active, app logo otherwise
+                if context.state.totalSeconds > 0 {
+                    ZStack {
+                        Circle()
+                            .stroke(Color.gray.opacity(0.3), lineWidth: 3)
 
-                    Circle()
-                        .trim(from: 0, to: progressValue(context: context))
-                        .stroke(
-                            context.state.isComplete ? Color.green : Color.orange,
-                            style: StrokeStyle(lineWidth: 3, lineCap: .round)
-                        )
-                        .rotationEffect(.degrees(-90))
+                        Circle()
+                            .trim(from: 0, to: progressValue(context: context))
+                            .stroke(
+                                context.state.isTimerComplete ? Color.green : Color.orange,
+                                style: StrokeStyle(lineWidth: 3, lineCap: .round)
+                            )
+                            .rotationEffect(.degrees(-90))
 
-                    if context.state.isComplete {
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(.green)
-                    } else if let target = context.state.targetDate {
-                        Text(timerInterval: Date.now...target, countsDown: true)
-                            .font(.system(size: 10, design: .monospaced))
-                            .bold()
-                            .multilineTextAlignment(.center)
-                    } else {
-                        Text(timeString(context.state.remainingSeconds))
-                            .font(.system(size: 10, design: .monospaced))
-                            .bold()
+                        if context.state.isTimerComplete {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(.green)
+                        } else if let target = context.state.targetDate, target > Date.now {
+                            Text(timerInterval: Date.now...target, countsDown: true)
+                                .font(.system(size: 10, design: .monospaced))
+                                .bold()
+                                .multilineTextAlignment(.center)
+                        } else {
+                            Text(timeString(context.state.remainingSeconds))
+                                .font(.system(size: 10, design: .monospaced))
+                                .bold()
+                        }
                     }
+                    .frame(width: 40, height: 40)
+                } else {
+                    AppIconView(size: 40)
                 }
-                .frame(width: 40, height: 40)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(context.attributes.recipeName)
                         .font(.caption)
                         .bold()
-                        .foregroundColor(context.state.isComplete ? .green : .primary)
+                        .foregroundColor(context.state.isTimerComplete ? .green : .primary)
                         .lineLimit(1)
 
-                    Text("\(context.attributes.stepSnippet)")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                    if context.state.stepNumber > 0 {
+                        Text(context.state.stepSnippet)
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
 
+                Spacer()
 
-                if context.state.isComplete {
+                if context.state.isTimerComplete {
                     Text("Done!")
                         .font(.subheadline)
                         .foregroundColor(.green)
@@ -72,51 +79,106 @@ struct CookTimerLiveActivity: Widget {
             .padding(.vertical, 14)
             .activityBackgroundTint(.black.opacity(0.8))
             .activitySystemActionForegroundColor(.white)
+            .widgetURL(URL(string: "chefbook://cook/\(context.attributes.recipeId)"))
 
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    AppIconView(size: 36)
-                        .padding(.leading, 6)
+                    if let url = URL(string: "chefbook://cook/\(context.attributes.recipeId)") {
+                        Link(destination: url) {
+                            AppIconView(size: 36)
+                                .padding(.leading, 6)
+                        }
+                    }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    if let target = context.state.targetDate {
-                        Text(timerInterval: Date.now...target, countsDown: true)
-                            .font(.system(.title, design: .monospaced))
-                            .bold()
-                            .monospacedDigit()
-                            .multilineTextAlignment(.trailing)
-                            .foregroundColor(context.state.isComplete ? .green : .orange)
-                            .padding(.trailing, 6)
-                    } else {
-                        Text(timeString(context.state.remainingSeconds))
-                            .font(.system(.title, design: .monospaced))
-                            .bold()
-                            .monospacedDigit()
-                            .foregroundColor(context.state.isComplete ? .green : .orange)
-                            .padding(.trailing, 6)
+                    if let url = URL(string: "chefbook://cook/\(context.attributes.recipeId)") {
+                        Link(destination: url) {
+                            if context.state.totalSeconds > 0 {
+                                if context.state.isTimerComplete {
+                                    Text("Done!")
+                                        .font(.system(.title3, design: .monospaced))
+                                        .bold()
+                                        .foregroundColor(.green)
+                                        .padding(.trailing, 6)
+                                } else if let target = context.state.targetDate, target > Date.now {
+                                    Text(timerInterval: Date.now...target, countsDown: true)
+                                        .font(.system(.title, design: .monospaced))
+                                        .bold()
+                                        .monospacedDigit()
+                                        .multilineTextAlignment(.trailing)
+                                        .foregroundColor(.orange)
+                                        .padding(.trailing, 6)
+                                } else {
+                                    Text(timeString(context.state.remainingSeconds))
+                                        .font(.system(.title, design: .monospaced))
+                                        .bold()
+                                        .monospacedDigit()
+                                        .foregroundColor(.orange)
+                                        .padding(.trailing, 6)
+                                }
+                            } else if context.state.stepNumber > 0 {
+                                Text("Step \(context.state.stepNumber)")
+                                    .font(.system(.subheadline).bold())
+                                    .foregroundColor(.primary)
+                                    .padding(.trailing, 6)
+                            }
+                        }
                     }
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(context.attributes.recipeName)
-                            .font(.caption)
-                            .bold()
-                            .lineLimit(1)
-                        Text(context.attributes.stepSnippet)
-                            .font(.caption2)
-                            .lineLimit(1)
+                    if let url = URL(string: "chefbook://cook/\(context.attributes.recipeId)") {
+                        Link(destination: url) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(context.attributes.recipeName)
+                                    .font(.caption)
+                                    .bold()
+                                    .lineLimit(1)
+                                if context.state.stepNumber > 0 {
+                                    Text("Step \(context.state.stepNumber): \(context.state.stepSnippet)")
+                                        .font(.caption2)
+                                        .lineLimit(1)
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 6)
+                        }
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 6)
                 }
             } compactLeading: {
-                AppIconView(size: 24)
+                if let url = URL(string: "chefbook://cook/\(context.attributes.recipeId)") {
+                    Link(destination: url) {
+                        AppIconView(size: 24)
+                    }
+                }
             } compactTrailing: {
-                Text(timeString(context.state.remainingSeconds))
-                    .font(.system(.caption2))
-                    .monospacedDigit()
-                    .foregroundColor(context.state.isComplete ? .green : .orange)
+                if let url = URL(string: "chefbook://cook/\(context.attributes.recipeId)") {
+                    Link(destination: url) {
+                        if context.state.totalSeconds > 0 {
+                            ZStack {
+                                Circle()
+                                    .stroke(Color.gray.opacity(0.3), lineWidth: 2.5)
+                                Circle()
+                                    .trim(from: 0, to: progressValue(context: context))
+                                    .stroke(
+                                        context.state.isTimerComplete ? Color.green : Color.orange,
+                                        style: StrokeStyle(lineWidth: 2.5, lineCap: .round)
+                                    )
+                                    .rotationEffect(.degrees(-90))
+                                if context.state.isTimerComplete {
+                                    Image(systemName: "checkmark")
+                                        .font(.system(size: 8, weight: .bold))
+                                        .foregroundColor(.green)
+                                }
+                            }
+                            .frame(width: 20, height: 20)
+                        } else {
+                            Image(systemName: "fork.knife")
+                                .font(.caption2)
+                                .foregroundColor(.primary)
+                        }
+                    }
+                }
             } minimal: {
                 AppIconView(size: 22)
             }
@@ -124,8 +186,13 @@ struct CookTimerLiveActivity: Widget {
     }
 
     private func progressValue(context: ActivityViewContext<CookTimerAttributes>) -> Double {
-        guard context.attributes.totalSeconds > 0 else { return 0 }
-        return Double(context.attributes.totalSeconds - context.state.remainingSeconds) / Double(context.attributes.totalSeconds)
+        guard context.state.totalSeconds > 0 else { return 0 }
+        if context.state.isTimerComplete { return 1.0 }
+        if let target = context.state.targetDate, target > Date.now {
+            let remaining = target.timeIntervalSinceNow
+            return 1.0 - (remaining / TimeInterval(context.state.totalSeconds))
+        }
+        return Double(context.state.totalSeconds - context.state.remainingSeconds) / Double(context.state.totalSeconds)
     }
 
     private func timeString(_ seconds: Int) -> String {

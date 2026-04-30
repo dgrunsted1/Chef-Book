@@ -7,10 +7,8 @@
 
 import Foundation
 import AudioToolbox
-import UserNotifications
 #if os(iOS)
 import UIKit
-import ActivityKit
 #endif
 
 struct ParsedTimer {
@@ -75,18 +73,13 @@ class CookTimer {
     private(set) var isRunning: Bool = false
     private(set) var isComplete: Bool = false
     private var timer: Timer?
-    private var targetDate: Date?
+    private(set) var targetDate: Date?
     private var backgroundObserver: Any?
     private var foregroundObserver: Any?
 
-    #if os(iOS)
-    private var activity: Activity<CookTimerAttributes>?
-    private var cachedImageData: Data?
-    #endif
-
-    private var notificationId: String {
-        "cooktimer-step\(stepNumber)"
-    }
+    /// Called whenever the timer starts, pauses, completes, or resets.
+    /// The owning ActiveCookingSession sets this to update the Live Activity.
+    var onChange: (() -> Void)?
 
     var stepLabel: String {
         "Step \(stepNumber)"
@@ -113,50 +106,15 @@ class CookTimer {
         self.recipeImageURL = recipeImageURL
         self.remainingSeconds = totalSeconds
         setupBackgroundObservers()
-        #if os(iOS)
-        cacheRecipeImage()
-        #endif
     }
-
-    #if os(iOS)
-    private func cacheRecipeImage() {
-        guard !recipeImageURL.isEmpty, let url = URL(string: recipeImageURL) else { return }
-        // Try to get the image from URLCache synchronously (already loaded by AsyncImage)
-        let request = URLRequest(url: url)
-        let data: Data?
-        if let cached = URLCache.shared.cachedResponse(for: request)?.data {
-            data = cached
-        } else {
-            // Fallback: try synchronous load (image should be cached by OS)
-            data = try? Data(contentsOf: url)
-        }
-        guard let data, let original = UIImage(data: data) else { return }
-        let targetSize: CGFloat = 36
-        let aspect = original.size.width / original.size.height
-        let thumbSize: CGSize
-        if aspect > 1 {
-            thumbSize = CGSize(width: targetSize, height: targetSize / aspect)
-        } else {
-            thumbSize = CGSize(width: targetSize * aspect, height: targetSize)
-        }
-        let renderer = UIGraphicsImageRenderer(size: thumbSize)
-        cachedImageData = renderer.jpegData(withCompressionQuality: 0.3) { ctx in
-            original.draw(in: CGRect(origin: .zero, size: thumbSize))
-        }
-    }
-    #endif
 
     func start() {
         guard !isRunning, remainingSeconds > 0 else { return }
         isRunning = true
         isComplete = false
         targetDate = Date().addingTimeInterval(TimeInterval(remainingSeconds))
-        cancelNotification()
-        scheduleNotification()
-        // End any stale activity before starting a new one
-        endLiveActivity()
-        startLiveActivity()
         startTicking()
+        onChange?()
     }
 
     func pause() {
@@ -164,8 +122,7 @@ class CookTimer {
         timer?.invalidate()
         timer = nil
         targetDate = nil
-        cancelNotification()
-        updateLiveActivity()
+        onChange?()
     }
 
     func reset() {
@@ -175,8 +132,7 @@ class CookTimer {
         targetDate = nil
         remainingSeconds = totalSeconds
         isComplete = false
-        cancelNotification()
-        endLiveActivity()
+        onChange?()
     }
 
     private func startTicking() {
@@ -194,7 +150,7 @@ class CookTimer {
             complete()
         } else {
             remainingSeconds = remaining
-            updateLiveActivity()
+            onChange?()
         }
     }
 
@@ -216,152 +172,17 @@ class CookTimer {
         isComplete = true
         timer?.invalidate()
         timer = nil
-        updateLiveActivity()
+        targetDate = nil
         AudioServicesPlaySystemSound(1005)
         #if os(iOS)
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         #endif
-        // End the live activity after a short delay so user sees "Done!"
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
-            self?.endLiveActivity()
-        }
-    }
-
-    // MARK: - Notifications
-
-    private func scheduleNotification() {
-        cancelNotification()
-
-        let content = UNMutableNotificationContent()
-        content.title = recipeName
-        content.subtitle = "\(stepLabel) Timer Done"
-        if let nextStepSnippet {
-            content.body = "Next: \(nextStepSnippet)"
-        } else {
-            content.body = stepSnippet
-        }
-        content.sound = .default
-
-        let trigger = UNTimeIntervalNotificationTrigger(
-            timeInterval: TimeInterval(remainingSeconds),
-            repeats: false
-        )
-
-        // Try to attach the recipe image
-        if !recipeImageURL.isEmpty, let url = URL(string: recipeImageURL) {
-            let task = URLSession.shared.dataTask(with: url) { [notificationId] data, response, _ in
-                if let data, !data.isEmpty {
-                    // Derive extension from URL path, MIME type, or default to jpg
-                    let ext: String
-                    let pathExt = url.pathExtension.lowercased()
-                    if ["jpg", "jpeg", "png", "gif", "webp"].contains(pathExt) {
-                        ext = pathExt
-                    } else if let mimeType = (response as? HTTPURLResponse)?.mimeType,
-                              let mimeSuffix = mimeType.split(separator: "/").last {
-                        ext = String(mimeSuffix)
-                    } else {
-                        ext = "jpg"
-                    }
-                    let tmpFile = FileManager.default.temporaryDirectory
-                        .appendingPathComponent(UUID().uuidString)
-                        .appendingPathExtension(ext)
-                    do {
-                        try data.write(to: tmpFile)
-                        let attachment = try UNNotificationAttachment(identifier: "image", url: tmpFile)
-                        content.attachments = [attachment]
-                    } catch {}
-                }
-                let request = UNNotificationRequest(identifier: notificationId, content: content, trigger: trigger)
-                UNUserNotificationCenter.current().add(request)
-            }
-            task.resume()
-        } else {
-            let request = UNNotificationRequest(identifier: notificationId, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request)
-        }
-    }
-
-    private func cancelNotification() {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(
-            withIdentifiers: [notificationId]
-        )
-    }
-
-    // MARK: - Live Activity
-
-    private func startLiveActivity() {
-        #if os(iOS)
-        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
-
-        // Truncate snippet for Live Activity to stay under 4KB payload limit
-        let snippet = stepSnippet
-        let attributes = CookTimerAttributes(
-            stepNumber: stepNumber,
-            stepSnippet: snippet,
-            timerLabel: displayLabel,
-            totalSeconds: totalSeconds,
-            recipeName: recipeName,
-            recipeImageData: cachedImageData
-        )
-        let state = CookTimerAttributes.ContentState(
-            remainingSeconds: remainingSeconds,
-            isComplete: false,
-            targetDate: targetDate
-        )
-
-        do {
-            activity = try Activity.request(
-                attributes: attributes,
-                content: .init(state: state, staleDate: nil),
-                pushType: nil
-            )
-        } catch {
-            print("Failed to start live activity: \(error)")
-        }
-        #endif
-    }
-
-    private func updateLiveActivity() {
-        #if os(iOS)
-        guard let activity else { return }
-        let state = CookTimerAttributes.ContentState(
-            remainingSeconds: remainingSeconds,
-            isComplete: isComplete,
-            targetDate: isRunning ? targetDate : nil
-        )
-        Task {
-            await activity.update(.init(state: state, staleDate: nil))
-        }
-        #endif
-    }
-
-    private func endLiveActivity() {
-        #if os(iOS)
-        guard let activity else { return }
-        let finalState = CookTimerAttributes.ContentState(
-            remainingSeconds: 0,
-            isComplete: true,
-            targetDate: nil
-        )
-        Task {
-            await activity.end(.init(state: finalState, staleDate: nil), dismissalPolicy: .immediate)
-        }
-        self.activity = nil
-        #endif
+        onChange?()
     }
 
     deinit {
         timer?.invalidate()
         if let foregroundObserver { NotificationCenter.default.removeObserver(foregroundObserver) }
         if let backgroundObserver { NotificationCenter.default.removeObserver(backgroundObserver) }
-        cancelNotification()
-        #if os(iOS)
-        if let activity {
-            let finalState = CookTimerAttributes.ContentState(remainingSeconds: 0, isComplete: true, targetDate: nil)
-            Task {
-                await activity.end(.init(state: finalState, staleDate: nil), dismissalPolicy: .immediate)
-            }
-        }
-        #endif
     }
 }

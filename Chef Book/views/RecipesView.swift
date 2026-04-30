@@ -54,8 +54,15 @@ struct RecipesView: View {
                             ProgressView()
                                 .padding()
                         }
-                        ForEach(network.recipes) { recipe in
-                            NavigationLink(destination: CookView(recipe: recipe).environmentObject(network)) {
+                        let activeIds = Set(network.activeSessions.map { $0.id })
+                        let sorted = network.recipes.sorted { a, b in
+                            let aActive = activeIds.contains(a.id)
+                            let bActive = activeIds.contains(b.id)
+                            if aActive != bActive { return aActive }
+                            return false
+                        }
+                        ForEach(sorted) { recipe in
+                            NavigationLink(destination: CookView(recipe: recipe, sourceTab: .recipes).environmentObject(network)) {
                                 RecipeCardView(recipe: recipe, edit: false)
                                     .padding(.horizontal, 5)
                             }

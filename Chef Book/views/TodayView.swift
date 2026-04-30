@@ -119,10 +119,17 @@ struct TodayView: View {
 
     @ViewBuilder
     private func recipeList(today: MyMenu) -> some View {
+        let activeIds = Set(network.activeSessions.map { $0.id })
+        let sorted = today.recipes.sorted { a, b in
+            let aActive = activeIds.contains(a.id)
+            let bActive = activeIds.contains(b.id)
+            if aActive != bActive { return aActive }
+            return false
+        }
         List {
-            ForEach(today.recipes) { recipe in
+            ForEach(sorted) { recipe in
                 ZStack(alignment: .leading) {
-                    NavigationLink(destination: CookView(recipe: recipe, menuMade: today.made[recipe.id] ?? false, menuServings: today.servings[recipe.id] ?? recipe.servings).environmentObject(network)) {
+                    NavigationLink(destination: CookView(recipe: recipe, menuMade: today.made[recipe.id] ?? false, menuServings: today.servings[recipe.id] ?? recipe.servings, sourceTab: .today).environmentObject(network)) {
                         EmptyView()
                     }
                     .opacity(0)
